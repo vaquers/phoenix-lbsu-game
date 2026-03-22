@@ -1,0 +1,131 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #020617 55%);
+  color: #e5e7eb;
+}
+
+.viewer-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.viewer-card {
+  width: 100%;
+  max-width: 960px;
+  background: rgba(15, 23, 42, 0.96);
+  border-radius: 16px;
+  border: 1px solid rgba(30, 64, 175, 0.7);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.9);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.viewer-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  letter-spacing: 0.02em;
+}
+
+.viewer-status-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(51, 65, 85, 0.9);
+}
+
+.viewer-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #4b5563;
+}
+
+.viewer-status-dot--ok {
+  background: #22c55e;
+}
+
+.viewer-status-dot--warn {
+  background: #facc15;
+}
+
+.viewer-status-dot--err {
+  background: #f97373;
+}
+
+.viewer-status-text {
+  font-size: 0.75rem;
+  color: #e5e7eb;
+}
+
+.viewer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .viewer-main {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.viewer-canvas-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewer-canvas {
+  width: min(100%, 512px);
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  background: #020617;
+  border: 1px solid rgba(30, 64, 175, 0.8);
+  image-rendering: pixelated;
+}
+
+.viewer-sidebar {
+  width: 100%;
+  max-width: 240px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.viewer-text-muted {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.viewer-text-error {
+  font-size: 0.85rem;
+  color: #f97373;
+}
+
