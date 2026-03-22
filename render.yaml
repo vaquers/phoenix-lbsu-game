@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: phoenix-server
+    env: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    disk:
+      name: phoenix-data
+      mountPath: /opt/render/project/src/server/data
+      sizeGB: 1
