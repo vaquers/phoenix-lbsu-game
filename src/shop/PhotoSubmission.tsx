@@ -237,7 +237,7 @@ export function PhotoSubmission() {
         </div>
 
         {/* Font Grid */}
-        <div className="grid grid-cols-4 gap-x-3 gap-y-4 mb-7">
+        <div className="grid grid-cols-4 gap-x-2 gap-y-3 mb-7">
           {fonts.map((fClass, idx) => {
             const isSelected = fontIndex === idx
             return (
@@ -245,10 +245,10 @@ export function PhotoSubmission() {
                 key={idx}
                 onClick={() => setFontIndex(idx)}
                 className={[
-                  'flex items-center justify-center py-2 transition-all',
+                  'flex items-center justify-center py-[10px] rounded-[14px] transition-all border-[2.5px]',
                   isSelected 
-                    ? 'ring-[3px] ring-[#007AFF] ring-offset-4 rounded-[12px] opacity-100'
-                    : 'opacity-70 hover:opacity-100'
+                    ? 'border-[#007AFF] bg-[#007AFF] bg-opacity-[0.08] opacity-100 shadow-sm'
+                    : 'border-transparent opacity-60 hover:opacity-100 hover:bg-[#F0F0F2]'
                 ].join(' ')}
               >
                 <span className={`text-[26px] text-black ${fClass}`}>Aa</span>
@@ -267,20 +267,26 @@ export function PhotoSubmission() {
             <svg className="w-[14px] h-[14px] text-[#007AFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
           </button>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <button 
               onClick={() => setColor('#FFFFFF')}
-              className={`w-[26px] h-[26px] rounded-full bg-white border border-gray-200 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-white border border-gray-200 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
             />
             <button 
               onClick={() => setColor('#000000')}
-              className={`w-[26px] h-[26px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
             />
-            {/* Rainbow mock button */}
-            <button 
-              onClick={() => setColor('#007AFF')}
-              className={`w-[26px] h-[26px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color === '#007AFF' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
-            />
+            {/* Real color picker overlapping the rainbow wheel */}
+            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`}>
+              <div className="w-full h-full rounded-full overflow-hidden absolute inset-0">
+                <input
+                  type="color"
+                  value={color !== '#FFFFFF' && color !== '#000000' ? color : '#007AFF'}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="absolute -top-4 -left-4 w-[200%] h-[200%] opacity-0 cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
