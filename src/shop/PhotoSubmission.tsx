@@ -3,6 +3,12 @@ import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import { DISPLAY_SUBMISSION_COST } from '../shared/config'
 
+import xmarkIcon from '../../assets/symbols/xmark.svg'
+import undoIcon from '../../assets/symbols/arrow.uturn.backward.svg'
+import redoIcon from '../../assets/symbols/arrow.uturn.forward.svg'
+import eyeIcon from '../../assets/symbols/eye.fill.svg'
+import plusIcon from '../../assets/symbols/plus.app.svg'
+
 export function PhotoSubmission() {
   const [step, setStep] = useState<'upload' | 'customize'>('upload')
   const [image, setImage] = useState<string | null>(null)
@@ -156,8 +162,7 @@ export function PhotoSubmission() {
         >
           Cancel
         </button>
-        {/* Dynamic Island placeholder area */}
-        <div className="w-20 h-6 bg-black/5 rounded-full blur-[2px]" /> 
+        <div className="w-20" /> 
         <button 
           onClick={handleSubmit}
           disabled={submitting || !canAfford}
@@ -170,15 +175,15 @@ export function PhotoSubmission() {
       {/* Action Bar */}
       <div className="flex items-center px-5 py-2">
         <div className="flex items-center gap-4 text-black/40">
-          <button onClick={() => setMessage({ text: 'Отмена недоступна', type: 'error' })} className="hover:text-black/60 transition"><svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg></button>
-          <button onClick={() => setMessage({ text: 'Повтор недоступен', type: 'error' })} className="hover:text-black/60 transition"><svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+          <button onClick={() => setMessage({ text: 'Отмена недоступна', type: 'error' })} className="hover:opacity-70 transition"><img src={undoIcon} alt="undo" className="w-[18px] h-[18px] cursor-not-allowed opacity-40" /></button>
+          <button onClick={() => setMessage({ text: 'Повтор недоступен', type: 'error' })} className="hover:opacity-70 transition"><img src={redoIcon} alt="redo" className="w-[18px] h-[18px] cursor-not-allowed opacity-40" /></button>
         </div>
         <div className="flex-1 text-center font-bold text-[15px] text-black tracking-wide">
           Customize
         </div>
         <div className="flex items-center gap-4 text-black">
-          <button onClick={() => setMessage({ text: 'Предпросмотр', type: 'success' })} className="hover:opacity-70 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
-          <button onClick={() => setMessage({ text: 'Добавление слоя', type: 'success' })} className="hover:opacity-70 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg></button>
+          <button onClick={() => setMessage({ text: 'Предпросмотр', type: 'success' })} className="hover:opacity-70 transition"><img src={eyeIcon} alt="preview" className="w-[22px] h-[22px]" /></button>
+          <button onClick={() => setMessage({ text: 'Добавление слоя', type: 'success' })} className="hover:opacity-70 transition"><img src={plusIcon} alt="add layer" className="w-[22px] h-[22px]" /></button>
         </div>
       </div>
 
@@ -235,7 +240,7 @@ export function PhotoSubmission() {
           <div className="w-8 h-8"></div>
           <span className="font-bold text-[16px] text-black">Style Text</span>
           <button onClick={handleReset} className="w-8 h-8 rounded-full bg-[#F0F0F2] flex items-center justify-center text-[#8E8E93] hover:bg-[#E5E5EA] transition cursor-pointer">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <img src={xmarkIcon} alt="close" className="w-[14px] h-[14px] opacity-60" />
           </button>
         </div>
 
