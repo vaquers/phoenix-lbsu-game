@@ -45,52 +45,66 @@ export function MerchCatalog() {
   }
 
   return (
-    <div className="mt-3">
+    <div>
       {message && (
         <div
           className={[
-            'mb-3 px-4 py-2 rounded-lg text-sm font-medium text-center',
+            'mb-4 px-4 py-2.5 rounded-xl text-sm font-medium text-center',
             message.type === 'success'
-              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'bg-red-500/20 text-red-300 border border-red-500/30',
+              ? 'bg-emerald-100 text-emerald-700'
+              : 'bg-red-100 text-red-700',
           ].join(' ')}
         >
           {message.text}
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-[14px] pb-6">
         {items.map((item) => {
           const canAfford = (user?.coins ?? 0) >= item.price
           const isBuying = purchasing === item.id
+          
           return (
             <div
               key={item.id}
-              className="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col"
+              className="bg-white rounded-[28px] p-3.5 flex flex-col shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-full"
             >
-              <div className="aspect-square bg-white/5 rounded-lg mb-2 flex items-center justify-center text-4xl">
-                {item.id === 'merch-1' && '🎨'}
-                {item.id === 'merch-2' && '📌'}
-                {item.id === 'merch-3' && '💎'}
-                {item.id === 'merch-4' && '🧢'}
-                {item.id === 'merch-5' && '👜'}
-                {item.id === 'merch-6' && '👕'}
+              <div className="w-full aspect-square rounded-[20px] mb-3 flex items-center justify-center overflow-hidden bg-white">
+                {/* Dynamically fallback to procedural initials if image is missing */}
+                <img 
+                  src="/merch/stickers.png" 
+                  alt={item.title}
+                  className="w-full h-full object-contain transform hover:scale-105 transition duration-300"
+                  onError={(e) => { 
+                    e.currentTarget.src = `https://api.dicebear.com/7.x/shapes/svg?seed=${item.id}&backgroundColor=ffffff` 
+                  }} 
+                />
               </div>
-              <h3 className="font-semibold text-sm leading-tight">{item.title}</h3>
-              <p className="text-white/40 text-xs mt-1 flex-1">{item.description}</p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-amber-400 font-bold text-sm">{item.price} 🪙</span>
+              
+              <h3 className="font-bold text-[15px] leading-tight text-black line-clamp-2">
+                {item.title}
+              </h3>
+              
+              <p className="text-[#8E8E93] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
+                {item.description}
+              </p>
+              
+              <div className="flex items-center justify-between mt-auto">
+                <span className="text-black font-semibold text-[16px] flex items-center gap-0.5">
+                  {item.price} <span className="text-[13px] opacity-90">💰</span>
+                </span>
+                
                 <button
                   onClick={() => handlePurchase(item)}
                   disabled={!canAfford || !item.available || isBuying}
                   className={[
-                    'px-3 py-1.5 rounded-lg text-xs font-semibold transition',
+                    'px-[14px] py-1.5 rounded-full text-[13px] font-semibold transition',
                     canAfford && item.available
-                      ? 'bg-emerald-500 hover:bg-emerald-400 text-white active:scale-95'
-                      : 'bg-white/10 text-white/30 cursor-not-allowed',
+                      ? 'bg-[#007AFF] text-white hover:bg-[#006CE0] active:scale-95'
+                      : 'bg-[#E5E5EA] text-[#8E8E93] cursor-not-allowed',
                   ].join(' ')}
                 >
-                  {isBuying ? '...' : !item.available ? 'Нет' : !canAfford ? 'Мало 🪙' : 'Купить'}
+                  {isBuying ? '...' : 'Купить'}
                 </button>
               </div>
             </div>
