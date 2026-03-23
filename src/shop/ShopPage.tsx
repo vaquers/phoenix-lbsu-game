@@ -8,28 +8,12 @@ export function ShopPage() {
   const [tab, setTab] = useState<ShopTab>('merch')
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#F0F0F2] text-black overflow-hidden font-sans">
-      {/* 
-        Mockup of the Native Telegram / iOS Header
-        Added to structurally match the "pixel-perfect" request exactly.
-      */}
-      <div className="pt-10 px-4 pb-1 flex justify-between items-center transition-all">
-        <button className="flex items-center gap-1.5 bg-[#999999]/90 text-white px-3 py-1.5 rounded-full text-[15px] font-medium tracking-wide">
-          <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          Close
-        </button>
-        <button className="flex items-center gap-1.5 bg-[#999999]/90 text-white px-3 py-1 rounded-full">
-          <svg className="w-5 h-5 opacity-90" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"></path>
-          </svg>
-          <span className="text-[20px] leading-none mb-1 opacity-90 tracking-widest">•••</span>
-        </button>
-      </div>
-
+    <div 
+      className="w-full h-full flex flex-col bg-[#F0F0F2] text-black overflow-hidden font-sans"
+      style={{ paddingTop: 'max(var(--safe-top), 16px)' }}
+    >
       {/* Segmented Control */}
-      <div className="px-4 py-3">
+      <div className="px-4 pb-3 pt-2">
         <div className="flex bg-[#E3E3E8] rounded-[24px] p-1 gap-1">
           <button
             onClick={() => setTab('merch')}
