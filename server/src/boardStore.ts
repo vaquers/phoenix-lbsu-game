@@ -25,7 +25,7 @@ function createEmptyBoard(): BoardState {
   return {
     width: BOARD_WIDTH,
     height: BOARD_HEIGHT,
-    pixels: new Array(BOARD_WIDTH * BOARD_HEIGHT).fill('#000000'),
+    pixels: new Array(BOARD_WIDTH * BOARD_HEIGHT).fill('#ffffff'),
   }
 }
 
