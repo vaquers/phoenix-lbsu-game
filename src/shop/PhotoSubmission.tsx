@@ -183,8 +183,11 @@ export function PhotoSubmission() {
       </div>
 
       {/* Preview Area */}
-      <div className="flex-1 min-h-0 mx-4 mt-2 mb-4 relative overflow-hidden flex flex-col justify-center max-h-[50vh]">
-        <div className="w-full aspect-square rounded-[32px] overflow-hidden bg-black relative shadow-lg mx-auto max-w-[400px]">
+      <div className="flex-1 min-h-0 mx-4 mt-2 mb-4 relative flex items-center justify-center">
+        <div 
+          className="rounded-[32px] overflow-hidden bg-black relative shadow-lg mx-auto"
+          style={{ width: 'min(100%, 45vh)', height: 'min(100%, 45vh)', aspectRatio: '1/1' }}
+        >
           {image && (
             <img
               src={image}
