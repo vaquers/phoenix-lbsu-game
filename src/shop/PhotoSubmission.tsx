@@ -184,18 +184,15 @@ export function PhotoSubmission() {
 
       {/* Preview Area */}
       <div className="flex-1 min-h-0 mx-4 mt-2 mb-4 relative flex items-center justify-center">
-        <div 
-          className="rounded-[32px] overflow-hidden bg-black relative shadow-lg mx-auto"
-          style={{ width: 'min(100%, 45vh)', height: 'min(100%, 45vh)', aspectRatio: '1/1' }}
-        >
+        <div className="w-[85vw] max-w-[340px] aspect-square rounded-[32px] overflow-hidden bg-black relative shadow-lg">
           {image && (
             <img
               src={image}
               alt="Photo preview"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover pointer-events-none"
             />
           )}
-          {text && (
+          {text !== undefined && (
             <div className="absolute inset-0 flex items-center justify-center p-6">
               {/* Note: The preview text is editable directly! */}
               <textarea
@@ -203,16 +200,16 @@ export function PhotoSubmission() {
                 onChange={(e) => setText(e.target.value)}
                 maxLength={40}
                 className={[
-                  'w-full bg-transparent border-none outline-none text-center resize-none overflow-hidden drop-shadow-md placeholder-white/50',
+                  'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible drop-shadow-md placeholder-white/50',
                   fonts[fontIndex],
                   isUppercase ? 'uppercase' : 'normal-case'
                 ].join(' ')}
                 style={{
                   color: color,
                   fontSize: `${fontSize}px`,
-                  lineHeight: '1.1'
+                  lineHeight: '1.2'
                 }}
-                rows={3}
+                rows={text.split('\n').length || 1}
                 placeholder="Текст"
               />
             </div>
