@@ -147,7 +147,7 @@ export function PhotoSubmission() {
 
   // CUSTOMIZE STEP
   return (
-    <div className="fixed inset-0 z-50 bg-[#F0F0F2] flex flex-col font-sans overflow-hidden" style={{ paddingTop: 'max(var(--safe-top), 16px)' }}>
+    <div className="fixed inset-0 z-[1001] bg-[#F0F0F2] flex flex-col font-sans overflow-hidden" style={{ paddingTop: 'max(var(--safe-top), 16px)' }}>
       {/* Top Bar */}
       <div className="flex items-center justify-between px-4 pb-2 pt-2">
         <button 
@@ -170,50 +170,53 @@ export function PhotoSubmission() {
       {/* Action Bar */}
       <div className="flex items-center px-5 py-2">
         <div className="flex items-center gap-4 text-black/40">
-          <svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          <svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          <button onClick={() => setMessage({ text: 'Отмена недоступна', type: 'error' })} className="hover:text-black/60 transition"><svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg></button>
+          <button onClick={() => setMessage({ text: 'Повтор недоступен', type: 'error' })} className="hover:text-black/60 transition"><svg className="w-5 h-5 cursor-not-allowed" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
         </div>
         <div className="flex-1 text-center font-bold text-[15px] text-black tracking-wide">
           Customize
         </div>
         <div className="flex items-center gap-4 text-black">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
+          <button onClick={() => setMessage({ text: 'Предпросмотр', type: 'success' })} className="hover:opacity-70 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></button>
+          <button onClick={() => setMessage({ text: 'Добавление слоя', type: 'success' })} className="hover:opacity-70 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg></button>
         </div>
       </div>
 
       {/* Preview Area */}
-      <div className="flex-1 min-h-0 mx-4 mt-2 mb-4 relative flex items-center justify-center">
-        <div className="w-[85vw] max-w-[340px] aspect-square rounded-[32px] overflow-hidden bg-black relative shadow-lg">
-          {image && (
-            <img
-              src={image}
-              alt="Photo preview"
-              className="w-full h-full object-cover pointer-events-none"
-            />
-          )}
-          {text !== undefined && (
-            <div className="absolute inset-0 flex items-center justify-center p-6">
-              {/* Note: The preview text is editable directly! */}
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                maxLength={40}
-                className={[
-                  'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible drop-shadow-md placeholder-white/50',
-                  fonts[fontIndex],
-                  isUppercase ? 'uppercase' : 'normal-case'
-                ].join(' ')}
-                style={{
-                  color: color,
-                  fontSize: `${fontSize}px`,
-                  lineHeight: '1.2'
-                }}
-                rows={text.split('\n').length || 1}
-                placeholder="Текст"
+      <div className="flex-1 min-h-0 w-full relative flex items-center justify-center p-4">
+        {/* Force max dimensions and exact square to prevent overflow */}
+        <div className="relative w-full h-full max-w-[340px] max-h-[340px] flex items-center justify-center">
+          <div className="w-full h-full aspect-square rounded-[32px] overflow-hidden bg-black shadow-lg relative"
+               style={{ maxHeight: '100%', maxWidth: '100%' }}>
+            {image && (
+              <img
+                src={image}
+                alt="Photo preview"
+                className="w-full h-full object-cover pointer-events-none"
               />
-            </div>
-          )}
+            )}
+            {text !== undefined && (
+              <div className="absolute inset-0 flex items-center justify-center p-6">
+                <textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  maxLength={40}
+                  className={[
+                    'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible drop-shadow-md placeholder-white/50',
+                    fonts[fontIndex],
+                    isUppercase ? 'uppercase' : 'normal-case'
+                  ].join(' ')}
+                  style={{
+                    color: color,
+                    fontSize: `${fontSize}px`,
+                    lineHeight: '1.2'
+                  }}
+                  rows={text.split('\n').length || 1}
+                  placeholder="Текст"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -231,7 +234,7 @@ export function PhotoSubmission() {
         <div className="flex justify-between items-center mb-6">
           <div className="w-8 h-8"></div>
           <span className="font-bold text-[16px] text-black">Style Text</span>
-          <button className="w-8 h-8 rounded-full bg-[#F0F0F2] flex items-center justify-center text-[#8E8E93] hover:bg-[#E5E5EA]">
+          <button onClick={handleReset} className="w-8 h-8 rounded-full bg-[#F0F0F2] flex items-center justify-center text-[#8E8E93] hover:bg-[#E5E5EA] transition cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
