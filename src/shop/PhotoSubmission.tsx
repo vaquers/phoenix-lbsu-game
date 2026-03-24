@@ -101,16 +101,16 @@ export function PhotoSubmission() {
   if (step === 'upload') {
     return (
       <div className="flex flex-col h-full space-y-4">
-        <div className="bg-white/60 border border-gray-200 rounded-2xl p-4 shadow-sm mt-2">
-          <h3 className="font-bold text-[17px] text-black mb-1">Разместить фото на TV</h3>
-          <p className="text-[#8E8E93] text-[14px] mb-3 leading-snug">
+        <div className="bg-[color:var(--surface-2)] border border-[color:var(--border)] rounded-2xl p-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)] mt-2">
+          <h3 className="font-bold text-[17px] text-[color:var(--text-primary)] mb-1">Разместить фото на TV</h3>
+          <p className="text-[color:var(--text-muted)] text-[14px] mb-3 leading-snug">
             Загрузите фото и добавьте текст — оно появится на большом экране на 60 секунд!
           </p>
           <div className="flex items-center justify-between">
-            <span className="font-medium text-black flex items-center gap-1">
+            <span className="font-medium text-[color:var(--text-secondary)] flex items-center gap-1">
               Стоимость:
             </span>
-            <span className="font-bold text-[16px] text-black">
+            <span className="font-bold text-[16px] text-[color:var(--text-primary)]">
               {DISPLAY_SUBMISSION_COST} <span className="text-[14px]">🪙</span>
             </span>
           </div>
@@ -119,17 +119,17 @@ export function PhotoSubmission() {
         {message && (
           <div
             className={[
-              'px-4 py-2.5 rounded-xl text-sm font-medium text-center',
+              'px-4 py-2.5 rounded-xl text-sm font-medium text-center border',
               message.type === 'success'
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'bg-red-100 text-red-700',
+                ? 'bg-[rgba(124,255,101,0.12)] text-[color:var(--accent-green)] border-[rgba(124,255,101,0.25)]'
+                : 'bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] border-[rgba(255,107,107,0.25)]',
             ].join(' ')}
           >
             {message.text}
           </div>
         )}
 
-        <div className="flex-1 min-h-0 bg-white rounded-[28px] border-2 border-dashed border-gray-300 flex items-center justify-center p-6 relative overflow-hidden transition-colors hover:bg-gray-50/50">
+        <div className="flex-1 min-h-0 bg-[color:var(--surface-1)] rounded-[28px] border border-dashed border-[color:var(--border)] flex items-center justify-center p-6 relative overflow-hidden transition-colors hover:bg-[color:var(--surface-2)]">
           <input
             ref={fileRef}
             type="file"
@@ -138,11 +138,11 @@ export function PhotoSubmission() {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
           />
           <div className="flex flex-col items-center pointer-events-none">
-            <div className="w-16 h-16 bg-[#F0F0F2] rounded-full flex items-center justify-center mb-4 text-[#8E8E93]">
+            <div className="w-16 h-16 bg-[color:var(--surface-2)] rounded-full flex items-center justify-center mb-4 text-[color:var(--text-muted)] border border-[color:var(--border)]">
               <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
             </div>
-            <span className="text-[17px] font-bold text-black mb-1">Добавить фото</span>
-            <span className="text-[#8E8E93] text-[13px] text-center max-w-[200px]">
+            <span className="text-[17px] font-bold text-[color:var(--text-primary)] mb-1">Добавить фото</span>
+            <span className="text-[color:var(--text-muted)] text-[13px] text-center max-w-[200px]">
               Поддерживаются JPG, PNG (до 5 МБ)
             </span>
           </div>
@@ -153,12 +153,12 @@ export function PhotoSubmission() {
 
   // CUSTOMIZE STEP
   return (
-    <div className="fixed inset-0 z-[1001] bg-[#F0F0F2] flex flex-col font-sans overflow-hidden" style={{ paddingTop: 'max(var(--safe-top), 16px)' }}>
+    <div className="fixed inset-0 z-[1001] bg-[color:var(--bg)] flex flex-col font-sans overflow-hidden" style={{ paddingTop: 'max(var(--safe-top), 16px)' }}>
       {/* Top Bar */}
       <div className="flex items-center justify-between px-4 pb-2 pt-2">
         <button 
           onClick={handleReset}
-          className="bg-[#E5E5EA] text-[#1E1E1E] px-4 py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition"
+          className="bg-[color:var(--surface-2)] text-[color:var(--text-secondary)] px-4 py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition border border-[color:var(--border)]"
         >
           Cancel
         </button>
@@ -166,7 +166,7 @@ export function PhotoSubmission() {
         <button 
           onClick={handleSubmit}
           disabled={submitting || !canAfford}
-          className="bg-[#FFCC00] text-black px-[18px] py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition"
+          className="bg-[color:var(--accent-yellow)] text-black px-[18px] py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition shadow-[0_0_16px_rgba(244,221,74,0.35)]"
         >
           {submitting ? '...' : 'Done'}
         </button>
@@ -174,14 +174,14 @@ export function PhotoSubmission() {
 
       {/* Action Bar */}
       <div className="flex items-center px-5 py-2">
-        <div className="flex items-center gap-4 text-black/40">
+        <div className="flex items-center gap-4 text-[color:var(--text-muted)]">
           <button onClick={() => setMessage({ text: 'Отмена недоступна', type: 'error' })} className="hover:opacity-70 transition"><img src={undoIcon} alt="undo" className="w-[18px] h-[18px] cursor-not-allowed opacity-40" /></button>
           <button onClick={() => setMessage({ text: 'Повтор недоступен', type: 'error' })} className="hover:opacity-70 transition"><img src={redoIcon} alt="redo" className="w-[18px] h-[18px] cursor-not-allowed opacity-40" /></button>
         </div>
-        <div className="flex-1 text-center font-bold text-[15px] text-black tracking-wide">
+        <div className="flex-1 text-center font-bold text-[15px] text-[color:var(--text-primary)] tracking-wide">
           Customize
         </div>
-        <div className="flex items-center gap-4 text-black">
+        <div className="flex items-center gap-4 text-[color:var(--text-primary)]">
           <button onClick={() => setMessage({ text: 'Предпросмотр', type: 'success' })} className="hover:opacity-70 transition"><img src={eyeIcon} alt="preview" className="w-[22px] h-[22px]" /></button>
           <button onClick={() => setMessage({ text: 'Добавление слоя', type: 'success' })} className="hover:opacity-70 transition"><img src={plusIcon} alt="add layer" className="w-[22px] h-[22px]" /></button>
         </div>
@@ -202,23 +202,25 @@ export function PhotoSubmission() {
             )}
             {text !== undefined && (
               <div className="absolute inset-0 flex items-center justify-center p-6">
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  maxLength={40}
-                  className={[
-                    'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible drop-shadow-md placeholder-white/50',
-                    fonts[fontIndex],
-                    isUppercase ? 'uppercase' : 'normal-case'
-                  ].join(' ')}
-                  style={{
-                    color: color,
-                    fontSize: `${fontSize}px`,
-                    lineHeight: '1.2'
-                  }}
-                  rows={text.split('\n').length || 1}
-                  placeholder="Текст"
-                />
+                <div className="max-w-[85%] w-full bg-white/90 rounded-[20px] px-5 py-3 shadow-sm">
+                  <textarea
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    maxLength={40}
+                    className={[
+                      'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible placeholder-black/40 text-black',
+                      fonts[fontIndex],
+                      isUppercase ? 'uppercase' : 'normal-case'
+                    ].join(' ')}
+                    style={{
+                      color: '#000000',
+                      fontSize: `${fontSize}px`,
+                      lineHeight: '1.2'
+                    }}
+                    rows={text.split('\n').length || 1}
+                    placeholder="Текст"
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -227,20 +229,20 @@ export function PhotoSubmission() {
 
       {/* Error Message */}
       {message && message.type === 'error' && (
-        <div className="mx-4 mb-2 bg-red-100 text-red-700 px-4 py-2 rounded-xl text-center text-sm font-medium">
+        <div className="mx-4 mb-2 bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] px-4 py-2 rounded-xl text-center text-sm font-medium border border-[rgba(255,107,107,0.25)]">
           {message.text}
         </div>
       )}
 
       {/* Bottom Sheet - Style Text */}
-      <div className="bg-white rounded-t-[32px] px-6 pt-5 pb-[max(var(--safe-bottom,20px),20px)] shadow-[0_-4px_24px_rgba(0,0,0,0.06)] mt-auto border border-gray-100/50">
+      <div className="bg-[color:var(--surface-2)] rounded-t-[32px] px-6 pt-5 pb-[max(var(--safe-bottom,20px),20px)] shadow-[0_-8px_32px_rgba(0,0,0,0.45)] mt-auto border border-[color:var(--border)]">
         
         {/* Sheet Header */}
         <div className="flex justify-between items-center mb-6">
           <div className="w-8 h-8"></div>
-          <span className="font-bold text-[16px] text-black">Style Text</span>
-          <button onClick={handleReset} className="w-8 h-8 rounded-full bg-[#F0F0F2] flex items-center justify-center text-[#8E8E93] hover:bg-[#E5E5EA] transition cursor-pointer">
-            <img src={xmarkIcon} alt="close" className="w-[14px] h-[14px] opacity-60" />
+          <span className="font-bold text-[16px] text-[color:var(--text-primary)]">Style Text</span>
+          <button onClick={handleReset} className="w-8 h-8 rounded-full bg-[color:var(--surface-3)] flex items-center justify-center text-[color:var(--text-muted)] hover:brightness-110 transition cursor-pointer border border-[color:var(--border)]">
+            <img src={xmarkIcon} alt="close" className="w-[14px] h-[14px] opacity-70" />
           </button>
         </div>
 
@@ -255,41 +257,41 @@ export function PhotoSubmission() {
                 className={[
                   'flex items-center justify-center py-[10px] rounded-[14px] transition-all border-[2.5px]',
                   isSelected 
-                    ? 'border-[#007AFF] bg-[#007AFF] bg-opacity-[0.08] opacity-100 shadow-sm'
-                    : 'border-transparent opacity-60 hover:opacity-100 hover:bg-[#F0F0F2]'
+                    ? 'border-[color:var(--accent-blue)] bg-[rgba(59,130,246,0.12)] opacity-100 shadow-[0_0_16px_rgba(59,130,246,0.25)]'
+                    : 'border-transparent opacity-60 hover:opacity-100 hover:bg-[color:var(--surface-3)]'
                 ].join(' ')}
               >
-                <span className={`text-[26px] text-black ${fClass}`}>Aa</span>
+                <span className={`text-[26px] text-[color:var(--text-primary)] ${fClass}`}>Aa</span>
               </button>
             )
           })}
         </div>
 
         {/* Text Options Row */}
-        <div className="flex justify-between items-center mb-7 text-black">
+        <div className="flex justify-between items-center mb-7 text-[color:var(--text-primary)]">
           <button 
             onClick={() => setIsUppercase(!isUppercase)}
             className="flex items-center gap-1 text-[15px] font-medium"
           >
             Uppercase
-            <svg className="w-[14px] h-[14px] text-[#007AFF]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+            <svg className="w-[14px] h-[14px] text-[color:var(--accent-blue)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
           </button>
           
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setColor('#FFFFFF')}
-              className={`w-[28px] h-[28px] rounded-full bg-white border border-gray-200 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-white border border-white/20 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`} 
             />
             <button 
               onClick={() => setColor('#000000')}
-              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`} 
             />
             {/* Real color picker overlapping the rainbow wheel */}
-            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`}>
+            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`}>
               <div className="w-full h-full rounded-full overflow-hidden absolute inset-0">
                 <input
                   type="color"
-                  value={color !== '#FFFFFF' && color !== '#000000' ? color : '#007AFF'}
+                  value={color !== '#FFFFFF' && color !== '#000000' ? color : '#3B82F6'}
                   onChange={(e) => setColor(e.target.value)}
                   className="absolute -top-4 -left-4 w-[200%] h-[200%] opacity-0 cursor-pointer"
                 />
@@ -300,26 +302,26 @@ export function PhotoSubmission() {
 
         {/* Font Size Row */}
         <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center gap-2 text-black">
-            <div className="w-7 h-7 rounded-full bg-[#E5E5EA] flex items-center justify-center text-[#8E8E93]">
+          <div className="flex items-center gap-2 text-[color:var(--text-primary)]">
+            <div className="w-7 h-7 rounded-full bg-[color:var(--surface-3)] flex items-center justify-center text-[color:var(--text-muted)] border border-[color:var(--border)]">
               <span className="text-[12px] font-bold">Ai</span>
             </div>
             <span className="text-[15px] font-medium">Font Size</span>
           </div>
           
-          <div className="flex items-center bg-[#F0F0F2] rounded-full overflow-hidden border border-[#E5E5EA]">
+          <div className="flex items-center bg-[color:var(--surface-3)] rounded-full overflow-hidden border border-[color:var(--border)]">
             <button 
               onClick={() => setFontSize(Math.max(16, fontSize - 4))}
-              className="px-4 py-1.5 hover:bg-[#E5E5EA] transition"
+              className="px-4 py-1.5 hover:bg-[color:var(--surface-2)] transition"
             >
-              <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4"></path></svg>
+              <svg className="w-3 h-3 text-[color:var(--text-primary)]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4"></path></svg>
             </button>
-            <div className="w-[1px] h-4 bg-[#D1D1D6]"></div>
+            <div className="w-[1px] h-4 bg-[color:var(--border)]"></div>
             <button 
               onClick={() => setFontSize(Math.min(72, fontSize + 4))}
-              className="px-4 py-1.5 hover:bg-[#E5E5EA] transition"
+              className="px-4 py-1.5 hover:bg-[color:var(--surface-2)] transition"
             >
-              <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
+              <svg className="w-3 h-3 text-[color:var(--text-primary)]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
             </button>
           </div>
         </div>

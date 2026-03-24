@@ -12,8 +12,24 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #0D3B66;
-  color: white;
+  background: radial-gradient(circle at top, #0b120f 0%, #050706 55%);
+  color: #f3f5f4;
+  color-scheme: dark;
+}
+
+:root {
+  --bg: #050706;
+  --surface-1: #0b0f0d;
+  --surface-2: #121816;
+  --surface-3: #151c19;
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f3f5f4;
+  --text-secondary: #a7b0ab;
+  --text-muted: #6f7a74;
+  --accent-green: #7cff65;
+  --accent-blue: #3b82f6;
+  --accent-yellow: #f4dd4a;
+  --accent-red: #ff6b6b;
 }
 
 @font-face {

@@ -20,21 +20,21 @@ export function HUD() {
       }}
     >
       <div className="flex flex-col gap-1">
-        <span className="text-white font-bold text-2xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--text-primary)] font-bold text-2xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           {Math.floor(score)}
         </span>
-        <span className="text-amber-400 text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--accent-yellow)] text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           🪙 {coinsCollected}
         </span>
-        <span className="text-slate-300 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--text-secondary)] text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           Рекорд: {Math.floor(highScore)}
         </span>
       </div>
       <div className="flex flex-col items-end gap-1">
-        <span className="text-slate-300 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--text-secondary)] text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           Скорость: {Math.round(speed)}
         </span>
-        <span className="text-amber-300 text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--accent-yellow)] text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           Баланс: {Math.floor(userCoins)} 🪙
         </span>
       </div>

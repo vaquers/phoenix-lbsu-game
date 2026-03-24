@@ -15,7 +15,7 @@ export function MainMenu() {
 
   return (
     <div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-[#0D3B66]/95 text-white z-20"
+      className="absolute inset-0 flex flex-col items-center justify-center bg-[color:var(--bg)]/95 text-[color:var(--text-primary)] z-20"
       style={{
         padding:
           'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
@@ -24,15 +24,15 @@ export function MainMenu() {
       <h1 className="text-5xl md:text-6xl font-bold mb-2 tracking-tight drop-shadow-lg">
         Lane Runner 3D
       </h1>
-      <p className="text-slate-300 text-lg mb-10">Беги, собирай монеты, уворачивайся!</p>
+      <p className="text-[color:var(--text-secondary)] text-lg mb-10">Беги, собирай монеты, уворачивайся!</p>
       <button
         onClick={onStart}
-        className="px-10 py-4 text-xl font-semibold rounded-full bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg transition active:scale-95"
+        className="px-10 py-4 text-xl font-semibold rounded-full bg-[color:var(--accent-yellow)] text-black shadow-[0_0_18px_rgba(244,221,74,0.35)] transition active:scale-95 hover:brightness-105"
       >
         Start
       </button>
-      <div className="mt-14 text-slate-400 text-sm max-w-xs text-center space-y-2">
-        <p className="font-medium text-slate-300">Управление:</p>
+      <div className="mt-14 text-[color:var(--text-muted)] text-sm max-w-xs text-center space-y-2">
+        <p className="font-medium text-[color:var(--text-secondary)]">Управление:</p>
         <p>A / D или ← / → — смена полосы</p>
         <p>W / ↑ / Пробел — прыжок</p>
         <p>S / ↓ — подкат</p>

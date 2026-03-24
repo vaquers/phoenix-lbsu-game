@@ -9,19 +9,19 @@ export function ShopPage() {
 
   return (
     <div 
-      className="w-full h-full flex flex-col bg-[#F0F0F2] text-black overflow-hidden font-sans"
+      className="w-full h-full flex flex-col bg-[color:var(--bg)] text-[color:var(--text-primary)] overflow-hidden font-sans"
       style={{ paddingTop: 'max(var(--safe-top), 16px)' }}
     >
       {/* Segmented Control */}
       <div className="px-4 pb-3 pt-2">
-        <div className="flex bg-[#E3E3E8] rounded-[24px] p-1 gap-1">
+        <div className="flex bg-[color:var(--surface-2)] rounded-[24px] p-1 gap-1 border border-[color:var(--border)]">
           <button
             onClick={() => setTab('merch')}
             className={[
               'flex-1 py-2 rounded-[20px] text-[15px] font-semibold transition',
               tab === 'merch'
-                ? 'bg-white text-black shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-                : 'text-[#8E8E93] hover:text-[#6c6c70]'
+                ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] shadow-[0_2px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/10'
+                : 'text-[color:var(--text-muted)] hover:text-[color:var(--text-secondary)]'
             ].join(' ')}
           >
             Мерч
@@ -31,8 +31,8 @@ export function ShopPage() {
             className={[
               'flex-1 py-2 rounded-[20px] text-[15px] font-semibold transition',
               tab === 'photo'
-                ? 'bg-white text-black shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-                : 'text-[#8E8E93] hover:text-[#6c6c70]'
+                ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] shadow-[0_2px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/10'
+                : 'text-[color:var(--text-muted)] hover:text-[color:var(--text-secondary)]'
             ].join(' ')}
           >
             Фото на ТВ

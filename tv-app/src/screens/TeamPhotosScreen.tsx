@@ -51,10 +51,10 @@ export function TeamPhotosScreen() {
   const gradientClass = GRADIENT_COLORS[currentIndex % GRADIENT_COLORS.length]
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative">
+    <div className="w-full h-full flex flex-col items-center justify-center relative text-[color:var(--text-primary)]">
       <div className="absolute top-8 left-10">
         <h1 className="text-5xl font-bold tracking-tight opacity-90">Phoenix Team</h1>
-        <p className="text-xl text-white/40 mt-2">Наша команда</p>
+        <p className="text-xl text-[color:var(--text-muted)] mt-2">Наша команда</p>
       </div>
 
       <div
@@ -69,7 +69,7 @@ export function TeamPhotosScreen() {
           />
         ) : (
           <div
-            className={`w-[60vw] h-[50vh] rounded-3xl bg-gradient-to-br ${gradientClass} flex items-center justify-center shadow-2xl`}
+            className={`w-[60vw] h-[50vh] rounded-3xl bg-gradient-to-br ${gradientClass} flex items-center justify-center shadow-2xl ring-1 ring-white/10`}
           >
             <span className="text-8xl">🔥</span>
           </div>
@@ -81,7 +81,7 @@ export function TeamPhotosScreen() {
         style={{ opacity: fade ? 1 : 0 }}
       >
         <p className="text-3xl font-semibold">{current?.caption}</p>
-        <p className="text-lg text-white/30 mt-2">
+        <p className="text-lg text-[color:var(--text-muted)] mt-2">
           {currentIndex + 1} / {photos.length}
         </p>
       </div>

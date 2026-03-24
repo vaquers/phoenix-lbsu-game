@@ -70,13 +70,13 @@ export function PixelBoardScreen() {
   const canvasSize = Math.min(1080, typeof window !== 'undefined' ? window.innerHeight - 160 : 900)
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full h-full flex flex-col items-center justify-center text-[color:var(--text-primary)]">
       <h1 className="text-5xl font-bold tracking-tight mb-6 opacity-90">
         🎨 Pixel Board
       </h1>
 
       {!board && (
-        <div className="text-white/30 text-2xl">Загрузка доски...</div>
+        <div className="text-[color:var(--text-muted)] text-2xl">Загрузка доски...</div>
       )}
 
       {board && (
@@ -92,7 +92,7 @@ export function PixelBoardScreen() {
               imageRendering: 'pixelated',
             }}
           />
-          <p className="text-lg text-white/20 mt-4">
+          <p className="text-lg text-[color:var(--text-muted)] mt-4">
             {board.width} × {board.height} пикселей
           </p>
         </>

@@ -93,7 +93,7 @@ export function PixelBoardPage() {
     <div
       className="w-full h-full flex flex-col relative overflow-hidden"
       style={{
-        background: '#ECECEC',
+        background: 'var(--bg)',
         paddingBottom: 'var(--tabbar-height)',
       }}
     >
@@ -104,7 +104,7 @@ export function PixelBoardPage() {
         ref={containerRef}
         className="flex-1 min-h-0 relative overflow-hidden"
         style={{
-          background: '#E2E2E2',
+          background: 'var(--surface-1)',
           borderRadius: 24,
           marginLeft: 'calc(var(--safe-left) + 12px)',
           marginRight: 'calc(var(--safe-right) + 12px)',
@@ -119,16 +119,16 @@ export function PixelBoardPage() {
 
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="bg-white/90 backdrop-blur rounded-xl px-6 py-4 shadow-sm">
-              <p className="text-gray-500 text-sm">Loading board...</p>
+            <div className="glass-panel rounded-xl px-6 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
+              <p className="text-[color:var(--text-muted)] text-sm">Loading board...</p>
             </div>
           </div>
         )}
 
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="bg-red-50 rounded-xl px-6 py-4">
-              <p className="text-red-600 text-sm">{error}</p>
+            <div className="bg-[rgba(255,107,107,0.12)] rounded-xl px-6 py-4 border border-[rgba(255,107,107,0.25)]">
+              <p className="text-[color:var(--accent-red)] text-sm">{error}</p>
             </div>
           </div>
         )}
@@ -138,10 +138,10 @@ export function PixelBoardPage() {
           className={[
             'absolute bottom-3 right-3 w-2 h-2 rounded-full z-20 pointer-events-none transition-colors',
             connectionStatus === 'connected'
-              ? 'bg-emerald-400'
+              ? 'bg-[color:var(--accent-green)]'
               : connectionStatus === 'connecting'
-                ? 'bg-amber-400'
-                : 'bg-red-400',
+                ? 'bg-[color:var(--accent-yellow)]'
+                : 'bg-[color:var(--accent-red)]',
           ].join(' ')}
         />
       </div>

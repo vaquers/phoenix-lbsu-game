@@ -41,7 +41,7 @@ export function MerchCatalog() {
   }
 
   if (loading) {
-    return <p className="text-slate-400 text-sm mt-4 text-center">Загрузка каталога...</p>
+    return <p className="text-[color:var(--text-muted)] text-sm mt-4 text-center">Загрузка каталога...</p>
   }
 
   return (
@@ -51,8 +51,8 @@ export function MerchCatalog() {
           className={[
             'mb-4 px-4 py-2.5 rounded-xl text-sm font-medium text-center',
             message.type === 'success'
-              ? 'bg-emerald-100 text-emerald-700'
-              : 'bg-red-100 text-red-700',
+              ? 'bg-[rgba(124,255,101,0.12)] text-[color:var(--accent-green)] border border-[rgba(124,255,101,0.25)]'
+              : 'bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] border border-[rgba(255,107,107,0.25)]',
           ].join(' ')}
         >
           {message.text}
@@ -67,9 +67,9 @@ export function MerchCatalog() {
           return (
             <div
               key={item.id}
-              className="bg-white rounded-[28px] p-3.5 flex flex-col shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-full"
+              className="bg-[color:var(--surface-2)] rounded-[28px] p-3.5 flex flex-col border border-[color:var(--border)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] h-full"
             >
-              <div className="w-full aspect-square rounded-[20px] mb-3 flex items-center justify-center overflow-hidden bg-white">
+              <div className="w-full aspect-square rounded-[20px] mb-3 flex items-center justify-center overflow-hidden bg-[color:var(--surface-3)] border border-[color:var(--border)]">
                 {/* Dynamically fallback to procedural initials if image is missing */}
                 <img 
                   src="/merch/stickers.png" 
@@ -81,16 +81,16 @@ export function MerchCatalog() {
                 />
               </div>
               
-              <h3 className="font-bold text-[15px] leading-tight text-black line-clamp-2">
+              <h3 className="font-bold text-[15px] leading-tight text-[color:var(--text-primary)] line-clamp-2">
                 {item.title}
               </h3>
               
-              <p className="text-[#8E8E93] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
+              <p className="text-[color:var(--text-muted)] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
                 {item.description}
               </p>
               
               <div className="flex items-center justify-between mt-auto">
-                <span className="text-black font-semibold text-[16px] flex items-center gap-0.5">
+                <span className="text-[color:var(--text-primary)] font-semibold text-[16px] flex items-center gap-0.5">
                   {item.price} <span className="text-[13px] opacity-90">💰</span>
                 </span>
                 
@@ -100,8 +100,8 @@ export function MerchCatalog() {
                   className={[
                     'px-[14px] py-1.5 rounded-full text-[13px] font-semibold transition',
                     canAfford && item.available
-                      ? 'bg-[#007AFF] text-white hover:bg-[#006CE0] active:scale-95'
-                      : 'bg-[#E5E5EA] text-[#8E8E93] cursor-not-allowed',
+                      ? 'bg-[color:var(--accent-blue)] text-white hover:brightness-110 active:scale-95 shadow-[0_0_16px_rgba(59,130,246,0.35)]'
+                      : 'bg-[color:var(--surface-3)] text-[color:var(--text-muted)] cursor-not-allowed border border-[color:var(--border)]',
                   ].join(' ')}
                 >
                   {isBuying ? '...' : 'Купить'}

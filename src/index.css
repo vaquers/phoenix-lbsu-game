@@ -3,6 +3,20 @@
 @tailwind utilities;
 
 :root {
+  --bg: #050706;
+  --bg-glow: radial-gradient(circle at top, #0b120f 0%, #050706 55%);
+  --surface-1: #0b0f0d;
+  --surface-2: #121816;
+  --surface-3: #151c19;
+  --border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f3f5f4;
+  --text-secondary: #a7b0ab;
+  --text-muted: #6f7a74;
+  --accent-green: #7cff65;
+  --accent-blue: #3b82f6;
+  --accent-yellow: #f4dd4a;
+  --accent-red: #ff6b6b;
+
   /* Raw device safe area (overridden by TelegramSafeAreaProvider at runtime) */
   --tg-safe-top: 0px;
   --tg-safe-bottom: 0px;
@@ -36,7 +50,9 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
   touch-action: none;
-  background: #0D3B66;
+  background: var(--bg-glow);
+  color: var(--text-primary);
+  color-scheme: dark;
 }
 
 body {
@@ -46,4 +62,48 @@ body {
 canvas {
   display: block;
   touch-action: none;
+}
+
+@layer components {
+  .surface {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+  }
+
+  .surface-2 {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+
+  .surface-3 {
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+  }
+
+  .glass-panel {
+    background: rgba(17, 24, 21, 0.72);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+  }
+
+  .text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .ring-accent {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.6), 0 0 24px rgba(59, 130, 246, 0.3);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 24px rgba(124, 255, 101, 0.28);
+  }
 }

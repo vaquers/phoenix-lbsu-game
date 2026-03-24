@@ -33,9 +33,9 @@ export function UserPhotosScreen() {
 
   if (submissions.length === 0) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-center text-[color:var(--text-primary)]">
         <h1 className="text-6xl font-bold mb-6">📸 Фото от участников</h1>
-        <div className="text-center text-white/30">
+        <div className="text-center text-[color:var(--text-muted)]">
           <p className="text-5xl mb-4">🖼️</p>
           <p className="text-3xl">Пока нет фотографий</p>
           <p className="text-xl mt-2">Купи размещение фото в приложении!</p>
@@ -47,7 +47,7 @@ export function UserPhotosScreen() {
   const current = submissions[currentIndex % submissions.length]
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center relative">
+    <div className="w-full h-full flex flex-col items-center justify-center relative text-[color:var(--text-primary)]">
       <div className="absolute top-8 left-10 z-10">
         <h1 className="text-4xl font-bold tracking-tight opacity-80">📸 Фото участников</h1>
       </div>
@@ -67,10 +67,10 @@ export function UserPhotosScreen() {
 
         {current.text && (
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-3xl px-10 py-8">
-            <p className="text-4xl font-bold text-white text-center drop-shadow-lg">
+            <p className="text-4xl font-bold text-[color:var(--text-primary)] text-center drop-shadow-lg">
               {current.text}
             </p>
-            <p className="text-lg text-white/40 text-center mt-2">
+            <p className="text-lg text-[color:var(--text-muted)] text-center mt-2">
               — {current.userName}
             </p>
           </div>
@@ -84,7 +84,7 @@ export function UserPhotosScreen() {
             className={[
               'w-2.5 h-2.5 rounded-full transition-all duration-300',
               i === currentIndex % submissions.length
-                ? 'bg-white/70 scale-125'
+                ? 'bg-[rgba(124,255,101,0.7)] scale-125'
                 : 'bg-white/15',
             ].join(' ')}
           />

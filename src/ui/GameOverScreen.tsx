@@ -47,17 +47,17 @@ export function GameOverScreen() {
         padding: 'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        backgroundColor: 'rgba(5, 7, 6, 0.72)',
       }}
     >
       <div
         style={{
-          background: 'linear-gradient(135deg, rgba(30, 30, 45, 0.95), rgba(20, 20, 35, 0.98))',
-          borderRadius: '20px',
+          background: 'linear-gradient(135deg, rgba(18, 24, 22, 0.95), rgba(11, 15, 13, 0.98))',
+          borderRadius: '22px',
           padding: '32px 28px',
           width: '85%',
           maxWidth: '340px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 24px rgba(124, 255, 101, 0.12)',
           display: 'flex',
           flexDirection: 'column' as const,
           alignItems: 'center',
@@ -82,7 +82,7 @@ export function GameOverScreen() {
             <p
               style={{
                 fontSize: '13px',
-                color: '#ffd43b',
+                color: '#f4dd4a',
                 marginTop: '6px',
                 fontWeight: 600,
                 letterSpacing: '1px',
@@ -98,7 +98,7 @@ export function GameOverScreen() {
         <div
           style={{
             width: '100%',
-            background: 'rgba(255, 255, 255, 0.05)',
+            background: 'rgba(255, 255, 255, 0.04)',
             borderRadius: '14px',
             padding: '16px',
             display: 'flex',
@@ -107,17 +107,17 @@ export function GameOverScreen() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
+            <span style={{ fontSize: '14px', color: 'rgba(243,245,244,0.6)', fontWeight: 500 }}>
               Счёт
             </span>
-            <span style={{ fontSize: '26px', color: '#fff', fontWeight: 700 }}>{roundedScore}</span>
+            <span style={{ fontSize: '26px', color: '#f3f5f4', fontWeight: 700 }}>{roundedScore}</span>
           </div>
           <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>
+            <span style={{ fontSize: '14px', color: 'rgba(243,245,244,0.6)', fontWeight: 500 }}>
               Лучший
             </span>
-            <span style={{ fontSize: '18px', color: '#ffa94d', fontWeight: 600 }}>{roundedHigh}</span>
+            <span style={{ fontSize: '18px', color: '#f4dd4a', fontWeight: 600 }}>{roundedHigh}</span>
           </div>
         </div>
 
@@ -127,15 +127,15 @@ export function GameOverScreen() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.1))',
-            border: '1px solid rgba(255, 193, 7, 0.25)',
+            background: 'linear-gradient(135deg, rgba(244, 221, 74, 0.16), rgba(244, 221, 74, 0.08))',
+            border: '1px solid rgba(244, 221, 74, 0.3)',
             borderRadius: '12px',
             padding: '10px 20px',
           }}
         >
           <span style={{ fontSize: '20px' }}>🪙</span>
-          <span style={{ fontSize: '18px', fontWeight: 700, color: '#ffd43b' }}>+{coinsEarned}</span>
-          <span style={{ fontSize: '12px', color: 'rgba(255, 212, 59, 0.6)', fontWeight: 500 }}>
+          <span style={{ fontSize: '18px', fontWeight: 700, color: '#f4dd4a' }}>+{coinsEarned}</span>
+          <span style={{ fontSize: '12px', color: 'rgba(244, 221, 74, 0.6)', fontWeight: 500 }}>
             за игру
           </span>
         </div>
@@ -149,19 +149,19 @@ export function GameOverScreen() {
             padding: '14px 0',
             fontSize: '17px',
             fontWeight: 700,
-            color: '#fff',
-            background: 'linear-gradient(135deg, #51cf66, #40c057)',
+            color: '#0b0f0d',
+            background: 'linear-gradient(135deg, #7cff65, #55e64d)',
             border: 'none',
             borderRadius: '14px',
             cursor: 'pointer',
-            boxShadow: '0 4px 20px rgba(81, 207, 102, 0.3)',
+            boxShadow: '0 4px 20px rgba(124, 255, 101, 0.35)',
             letterSpacing: '0.5px',
           }}
         >
           Restart
         </button>
 
-        <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.25)', margin: 0 }}>
+        <p style={{ fontSize: '12px', color: 'rgba(243, 245, 244, 0.35)', margin: 0 }}>
           или нажми Enter
         </p>
       </div>
