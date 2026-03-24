@@ -17,6 +17,7 @@ export function PhotoSubmission() {
   const [text, setText] = useState('ОСЕННИЙ ВАЙБ')
   const [fontIndex, setFontIndex] = useState(0)
   const [isUppercase, setIsUppercase] = useState(true)
+  const [color, setColor] = useState('#FFFFFF')
   const [fontSize, setFontSize] = useState(36)
   
   const [submitting, setSubmitting] = useState(false)
@@ -201,25 +202,23 @@ export function PhotoSubmission() {
             )}
             {text !== undefined && (
               <div className="absolute inset-0 flex items-center justify-center p-6">
-                <div className="max-w-[85%] w-full bg-white/90 rounded-[20px] px-5 py-3 shadow-sm">
                 <textarea
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   maxLength={40}
                   className={[
-                    'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible placeholder-black/40 text-black',
+                    'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible drop-shadow-md placeholder-white/50',
                     fonts[fontIndex],
                     isUppercase ? 'uppercase' : 'normal-case'
                   ].join(' ')}
                   style={{
-                    color: '#000000',
+                    color: color,
                     fontSize: `${fontSize}px`,
                     lineHeight: '1.2'
                   }}
                   rows={text.split('\n').length || 1}
                   placeholder="Текст"
                 />
-                </div>
               </div>
             )}
           </div>
@@ -278,22 +277,21 @@ export function PhotoSubmission() {
           
           <div className="flex items-center gap-4">
             <button 
-              disabled
-              className="w-[28px] h-[28px] rounded-full bg-white border border-gray-200 shadow-sm opacity-40 cursor-not-allowed" 
+              onClick={() => setColor('#FFFFFF')}
+              className={`w-[28px] h-[28px] rounded-full bg-white border border-gray-200 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
             />
             <button 
-              disabled
-              className="w-[28px] h-[28px] rounded-full bg-black shadow-sm ring-2 ring-offset-2 ring-[#007AFF] cursor-not-allowed" 
+              onClick={() => setColor('#000000')}
+              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`} 
             />
             {/* Real color picker overlapping the rainbow wheel */}
-            <div className="relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] opacity-40 cursor-not-allowed">
+            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-[#007AFF]' : ''}`}>
               <div className="w-full h-full rounded-full overflow-hidden absolute inset-0">
                 <input
                   type="color"
-                  value="#000000"
-                  onChange={() => {}}
-                  disabled
-                  className="absolute -top-4 -left-4 w-[200%] h-[200%] opacity-0 cursor-not-allowed"
+                  value={color !== '#FFFFFF' && color !== '#000000' ? color : '#007AFF'}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="absolute -top-4 -left-4 w-[200%] h-[200%] opacity-0 cursor-pointer"
                 />
               </div>
             </div>
