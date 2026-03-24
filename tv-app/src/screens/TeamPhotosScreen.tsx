@@ -13,11 +13,11 @@ const PLACEHOLDER_PHOTOS: TeamPhoto[] = [
 ]
 
 const GRADIENT_COLORS = [
-  'from-indigo-600 to-purple-700',
   'from-slate-700 to-slate-900',
-  'from-rose-600 to-pink-700',
-  'from-amber-600 to-orange-700',
-  'from-orange-600 to-red-700',
+  'from-neutral-700 to-neutral-900',
+  'from-zinc-700 to-zinc-900',
+  'from-stone-700 to-stone-900',
+  'from-gray-700 to-gray-900',
 ]
 
 export function TeamPhotosScreen() {

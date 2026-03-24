@@ -22,9 +22,9 @@ export function LeaderboardScreen() {
   }
 
   const getRankBg = (rank: number) => {
-    if (rank === 1) return 'bg-[rgba(255,138,61,0.12)] border-[rgba(255,138,61,0.35)]'
-    if (rank === 2) return 'bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.3)]'
-    if (rank === 3) return 'bg-[rgba(244,221,74,0.12)] border-[rgba(244,221,74,0.3)]'
+    if (rank === 1) return 'bg-white/10 border-white/20'
+    if (rank === 2) return 'bg-white/8 border-white/16'
+    if (rank === 3) return 'bg-white/6 border-white/12'
     return 'bg-white/5 border-white/10'
   }
 
@@ -75,8 +75,8 @@ export function LeaderboardScreen() {
                 </span>
                 <span
                   className={[
-                    'font-bold text-amber-400 shrink-0',
-                    isTop3 ? 'text-4xl text-[color:var(--accent-yellow)]' : 'text-2xl text-[color:var(--accent-yellow)]',
+                    'font-bold text-[color:var(--text-secondary)] shrink-0',
+                    isTop3 ? 'text-4xl' : 'text-2xl',
                   ].join(' ')}
                 >
                   {Math.floor(entry.score)}

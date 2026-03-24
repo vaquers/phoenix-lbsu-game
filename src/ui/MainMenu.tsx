@@ -27,7 +27,7 @@ export function MainMenu() {
       <p className="text-[color:var(--text-secondary)] text-lg mb-10">Беги, собирай монеты, уворачивайся!</p>
       <button
         onClick={onStart}
-        className="px-10 py-4 text-xl font-semibold rounded-full bg-[color:var(--accent-yellow)] text-black shadow-[0_0_18px_rgba(244,221,74,0.35)] transition active:scale-95 hover:brightness-105"
+        className="px-10 py-4 text-xl font-semibold rounded-full bg-[color:var(--surface-3)] text-[color:var(--text-primary)] border border-[color:var(--border)] transition active:scale-95 hover:bg-[color:var(--surface-2)]"
       >
         Start
       </button>

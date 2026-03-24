@@ -170,8 +170,8 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
                   className={[
                     'w-10 h-10 rounded-xl border-2 transition-all active:scale-90',
                     !isErase && selectedColor === color
-                      ? 'border-[color:var(--accent-blue)] scale-105 shadow-[0_0_16px_rgba(59,130,246,0.25)]'
-                      : 'border-transparent hover:border-[color:var(--border)]',
+                      ? 'border-white/20 scale-105'
+                      : 'border-transparent hover:border-[color:var(--border-subtle)]',
                   ].join(' ')}
                   style={{ backgroundColor: color }}
                 />
@@ -202,7 +202,7 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
               </button>
               <button
                 onClick={handleClearBoard}
-                className="h-10 px-4 rounded-xl flex items-center justify-center text-sm font-medium bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] transition-all border border-[rgba(255,107,107,0.25)]"
+                className="h-10 px-4 rounded-xl flex items-center justify-center text-sm font-medium bg-[rgba(217,106,106,0.12)] text-[color:var(--error)] transition-all border border-[rgba(217,106,106,0.25)]"
               >
                 Clear
               </button>

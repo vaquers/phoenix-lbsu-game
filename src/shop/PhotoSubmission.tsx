@@ -121,8 +121,8 @@ export function PhotoSubmission() {
             className={[
               'px-4 py-2.5 rounded-xl text-sm font-medium text-center border',
               message.type === 'success'
-                ? 'bg-[rgba(255,138,61,0.12)] text-[color:var(--accent-orange)] border-[rgba(255,138,61,0.25)]'
-                : 'bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] border-[rgba(255,107,107,0.25)]',
+                ? 'bg-[rgba(79,175,124,0.12)] text-[color:var(--success)] border-[rgba(79,175,124,0.25)]'
+                : 'bg-[rgba(217,106,106,0.12)] text-[color:var(--error)] border-[rgba(217,106,106,0.25)]',
             ].join(' ')}
           >
             {message.text}
@@ -166,7 +166,7 @@ export function PhotoSubmission() {
         <button 
           onClick={handleSubmit}
           disabled={submitting || !canAfford}
-          className="bg-[color:var(--accent-yellow)] text-black px-[18px] py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition shadow-[0_0_16px_rgba(244,221,74,0.35)]"
+          className="bg-[color:var(--surface-3)] text-[color:var(--text-primary)] px-[18px] py-[7px] rounded-full text-[14px] font-bold active:scale-95 transition border border-[color:var(--border)]"
         >
           {submitting ? '...' : 'Done'}
         </button>
@@ -202,7 +202,7 @@ export function PhotoSubmission() {
             )}
             {text !== undefined && (
               <div className="absolute inset-0 flex items-center justify-center p-6">
-                <div className="max-w-[85%] w-full bg-white/90 rounded-[20px] px-5 py-3 shadow-sm">
+                <div className="max-w-[85%] w-full bg-[#F5F5F7] rounded-[20px] px-5 py-3 shadow-sm">
                   <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -229,7 +229,7 @@ export function PhotoSubmission() {
 
       {/* Error Message */}
       {message && message.type === 'error' && (
-        <div className="mx-4 mb-2 bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] px-4 py-2 rounded-xl text-center text-sm font-medium border border-[rgba(255,107,107,0.25)]">
+        <div className="mx-4 mb-2 bg-[rgba(217,106,106,0.12)] text-[color:var(--error)] px-4 py-2 rounded-xl text-center text-sm font-medium border border-[rgba(217,106,106,0.25)]">
           {message.text}
         </div>
       )}
@@ -257,7 +257,7 @@ export function PhotoSubmission() {
                 className={[
                   'flex items-center justify-center py-[10px] rounded-[14px] transition-all border-[2.5px]',
                   isSelected 
-                    ? 'border-[color:var(--accent-blue)] bg-[rgba(59,130,246,0.12)] opacity-100 shadow-[0_0_16px_rgba(59,130,246,0.25)]'
+                    ? 'border-[color:var(--border)] bg-[color:var(--surface-3)] opacity-100'
                     : 'border-transparent opacity-60 hover:opacity-100 hover:bg-[color:var(--surface-3)]'
                 ].join(' ')}
               >
@@ -274,20 +274,20 @@ export function PhotoSubmission() {
             className="flex items-center gap-1 text-[15px] font-medium"
           >
             Uppercase
-            <svg className="w-[14px] h-[14px] text-[color:var(--accent-blue)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+            <svg className="w-[14px] h-[14px] text-[color:var(--text-secondary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
           </button>
           
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setColor('#FFFFFF')}
-              className={`w-[28px] h-[28px] rounded-full bg-white border border-white/20 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-white border border-white/20 shadow-sm ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-white/30' : ''}`} 
             />
             <button 
               onClick={() => setColor('#000000')}
-              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`} 
+              className={`w-[28px] h-[28px] rounded-full bg-black shadow-sm ${color === '#000000' ? 'ring-2 ring-offset-2 ring-white/30' : ''}`} 
             />
             {/* Real color picker overlapping the rainbow wheel */}
-            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-[color:var(--accent-blue)]' : ''}`}>
+            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-white/30' : ''}`}>
               <div className="w-full h-full rounded-full overflow-hidden absolute inset-0">
                 <input
                   type="color"

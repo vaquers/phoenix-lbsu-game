@@ -7,8 +7,8 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #120b08 0%, #050706 55%);
-  color: #f3f5f4;
+  background: radial-gradient(circle at top, #1a1a1c 0%, #121212 55%);
+  color: #f5f5f7;
   color-scheme: dark;
 }
 
@@ -23,10 +23,10 @@ body {
 .viewer-card {
   width: 100%;
   max-width: 960px;
-  background: rgba(11, 15, 13, 0.92);
+  background: rgba(35, 35, 37, 0.92);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px rgba(2, 6, 6, 0.7), 0 0 24px rgba(255, 138, 61, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@ body {
 .viewer-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f3f5f4;
+  color: #f5f5f7;
   letter-spacing: 0.02em;
 }
 
@@ -53,32 +53,32 @@ body {
   gap: 6px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(18, 24, 22, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(43, 43, 46, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .viewer-status-dot {
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: #6f7a74;
+  background: #7c7c82;
 }
 
 .viewer-status-dot--ok {
-  background: #ff8a3d;
+  background: #4faf7c;
 }
 
 .viewer-status-dot--warn {
-  background: #f4dd4a;
+  background: #d6a34a;
 }
 
 .viewer-status-dot--err {
-  background: #ff6b6b;
+  background: #d96a6a;
 }
 
 .viewer-status-text {
   font-size: 0.75rem;
-  color: #f3f5f4;
+  color: #f5f5f7;
 }
 
 .viewer-main {
@@ -106,8 +106,8 @@ body {
   width: min(100%, 512px);
   aspect-ratio: 1 / 1;
   border-radius: 12px;
-  background: #050706;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   image-rendering: pixelated;
 }
 
@@ -116,16 +116,16 @@ body {
   max-width: 240px;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(18, 24, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(43, 43, 46, 0.9);
 }
 
 .viewer-text-muted {
   font-size: 0.85rem;
-  color: #a7b0ab;
+  color: #b3b3b8;
 }
 
 .viewer-text-error {
   font-size: 0.85rem;
-  color: #ff6b6b;
+  color: #d96a6a;
 }

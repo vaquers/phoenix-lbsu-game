@@ -53,7 +53,7 @@ export default function App() {
 
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
         <div
-          className="h-full bg-[rgba(255,138,61,0.35)] transition-all duration-1000"
+          className="h-full bg-white/10 transition-all duration-1000"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -64,7 +64,7 @@ export default function App() {
             key={s.id}
             className={[
               'w-2 h-2 rounded-full transition-all duration-300',
-              i === screenIndex ? 'bg-[rgba(255,138,61,0.6)] scale-125' : 'bg-white/15',
+              i === screenIndex ? 'bg-white/40 scale-125' : 'bg-white/15',
             ].join(' ')}
           />
         ))}

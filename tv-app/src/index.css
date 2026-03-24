@@ -12,24 +12,24 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(circle at top, #120b08 0%, #050706 55%);
-  color: #f3f5f4;
+  background: radial-gradient(circle at top, #1a1a1c 0%, #121212 55%);
+  color: #f5f5f7;
   color-scheme: dark;
 }
 
 :root {
-  --bg: #050706;
-  --surface-1: #0b0f0d;
-  --surface-2: #121816;
-  --surface-3: #151c19;
-  --border: rgba(255, 255, 255, 0.08);
-  --text-primary: #f3f5f4;
-  --text-secondary: #a7b0ab;
-  --text-muted: #6f7a74;
-  --accent-orange: #ff8a3d;
-  --accent-blue: #3b82f6;
-  --accent-yellow: #f4dd4a;
-  --accent-red: #ff6b6b;
+  --bg: #121212;
+  --surface-1: #232325;
+  --surface-2: #2b2b2e;
+  --surface-3: #333336;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --text-primary: #f5f5f7;
+  --text-secondary: #b3b3b8;
+  --text-muted: #7c7c82;
+  --success: #4faf7c;
+  --warning: #d6a34a;
+  --error: #d96a6a;
 }
 
 @font-face {

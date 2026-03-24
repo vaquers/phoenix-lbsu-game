@@ -127,8 +127,8 @@ export function PixelBoardPage() {
 
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="bg-[rgba(255,107,107,0.12)] rounded-xl px-6 py-4 border border-[rgba(255,107,107,0.25)]">
-              <p className="text-[color:var(--accent-red)] text-sm">{error}</p>
+            <div className="bg-[rgba(217,106,106,0.12)] rounded-xl px-6 py-4 border border-[rgba(217,106,106,0.25)]">
+              <p className="text-[color:var(--error)] text-sm">{error}</p>
             </div>
           </div>
         )}
@@ -138,10 +138,10 @@ export function PixelBoardPage() {
           className={[
             'absolute bottom-3 right-3 w-2 h-2 rounded-full z-20 pointer-events-none transition-colors',
             connectionStatus === 'connected'
-              ? 'bg-[color:var(--accent-orange)]'
+              ? 'bg-[color:var(--success)]'
               : connectionStatus === 'connecting'
-                ? 'bg-[color:var(--accent-yellow)]'
-                : 'bg-[color:var(--accent-red)]',
+                ? 'bg-[color:var(--warning)]'
+                : 'bg-[color:var(--error)]',
           ].join(' ')}
         />
       </div>

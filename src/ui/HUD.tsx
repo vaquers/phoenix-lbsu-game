@@ -23,7 +23,7 @@ export function HUD() {
         <span className="text-[color:var(--text-primary)] font-bold text-2xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           {Math.floor(score)}
         </span>
-        <span className="text-[color:var(--accent-yellow)] text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--warning)] text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           🪙 {coinsCollected}
         </span>
         <span className="text-[color:var(--text-secondary)] text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
@@ -34,7 +34,7 @@ export function HUD() {
         <span className="text-[color:var(--text-secondary)] text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           Скорость: {Math.round(speed)}
         </span>
-        <span className="text-[color:var(--accent-yellow)] text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        <span className="text-[color:var(--warning)] text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
           Баланс: {Math.floor(userCoins)} 🪙
         </span>
       </div>

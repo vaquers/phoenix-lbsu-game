@@ -51,8 +51,8 @@ export function MerchCatalog() {
           className={[
             'mb-4 px-4 py-2.5 rounded-xl text-sm font-medium text-center',
             message.type === 'success'
-              ? 'bg-[rgba(255,138,61,0.12)] text-[color:var(--accent-orange)] border border-[rgba(255,138,61,0.25)]'
-              : 'bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] border border-[rgba(255,107,107,0.25)]',
+              ? 'bg-[rgba(79,175,124,0.12)] text-[color:var(--success)] border border-[rgba(79,175,124,0.25)]'
+              : 'bg-[rgba(217,106,106,0.12)] text-[color:var(--error)] border border-[rgba(217,106,106,0.25)]',
           ].join(' ')}
         >
           {message.text}
@@ -100,8 +100,8 @@ export function MerchCatalog() {
                   className={[
                     'px-[14px] py-1.5 rounded-full text-[13px] font-semibold transition',
                     canAfford && item.available
-                      ? 'bg-[color:var(--accent-blue)] text-white hover:brightness-110 active:scale-95 shadow-[0_0_16px_rgba(59,130,246,0.35)]'
-                      : 'bg-[color:var(--surface-3)] text-[color:var(--text-muted)] cursor-not-allowed border border-[color:var(--border)]',
+                      ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] hover:bg-[color:var(--surface-2)] active:scale-95 border border-[color:var(--border)]'
+                      : 'bg-[color:var(--surface-2)] text-[color:var(--text-muted)] cursor-not-allowed border border-[color:var(--border-subtle)]',
                   ].join(' ')}
                 >
                   {isBuying ? '...' : 'Купить'}

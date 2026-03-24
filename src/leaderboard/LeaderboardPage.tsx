@@ -77,7 +77,7 @@ export function LeaderboardPage() {
                       @{handle}
                     </span>
                     {isMe && (
-                      <span className="text-[color:var(--accent-orange)] text-[16px] ml-0.5">(ты)</span>
+                      <span className="text-[color:var(--text-secondary)] text-[16px] ml-0.5">(ты)</span>
                     )}
                   </div>
                   
