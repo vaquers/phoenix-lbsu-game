@@ -121,7 +121,7 @@ export function PhotoSubmission() {
             className={[
               'px-4 py-2.5 rounded-xl text-sm font-medium text-center border',
               message.type === 'success'
-                ? 'bg-[rgba(124,255,101,0.12)] text-[color:var(--accent-green)] border-[rgba(124,255,101,0.25)]'
+                ? 'bg-[rgba(255,138,61,0.12)] text-[color:var(--accent-orange)] border-[rgba(255,138,61,0.25)]'
                 : 'bg-[rgba(255,107,107,0.12)] text-[color:var(--accent-red)] border-[rgba(255,107,107,0.25)]',
             ].join(' ')}
           >

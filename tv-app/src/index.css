@@ -12,7 +12,7 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(circle at top, #0b120f 0%, #050706 55%);
+  background: radial-gradient(circle at top, #120b08 0%, #050706 55%);
   color: #f3f5f4;
   color-scheme: dark;
 }
@@ -26,7 +26,7 @@ html, body, #root {
   --text-primary: #f3f5f4;
   --text-secondary: #a7b0ab;
   --text-muted: #6f7a74;
-  --accent-green: #7cff65;
+  --accent-orange: #ff8a3d;
   --accent-blue: #3b82f6;
   --accent-yellow: #f4dd4a;
   --accent-red: #ff6b6b;

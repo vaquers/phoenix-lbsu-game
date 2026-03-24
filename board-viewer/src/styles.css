@@ -7,7 +7,7 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #0b120f 0%, #050706 55%);
+  background: radial-gradient(circle at top, #120b08 0%, #050706 55%);
   color: #f3f5f4;
   color-scheme: dark;
 }
@@ -26,7 +26,7 @@ body {
   background: rgba(11, 15, 13, 0.92);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px rgba(2, 6, 6, 0.7), 0 0 24px rgba(124, 255, 101, 0.12);
+  box-shadow: 0 24px 60px rgba(2, 6, 6, 0.7), 0 0 24px rgba(255, 138, 61, 0.12);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -65,7 +65,7 @@ body {
 }
 
 .viewer-status-dot--ok {
-  background: #7cff65;
+  background: #ff8a3d;
 }
 
 .viewer-status-dot--warn {

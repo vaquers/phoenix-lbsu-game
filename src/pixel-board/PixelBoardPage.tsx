@@ -138,7 +138,7 @@ export function PixelBoardPage() {
           className={[
             'absolute bottom-3 right-3 w-2 h-2 rounded-full z-20 pointer-events-none transition-colors',
             connectionStatus === 'connected'
-              ? 'bg-[color:var(--accent-green)]'
+              ? 'bg-[color:var(--accent-orange)]'
               : connectionStatus === 'connecting'
                 ? 'bg-[color:var(--accent-yellow)]'
                 : 'bg-[color:var(--accent-red)]',

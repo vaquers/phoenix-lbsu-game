@@ -22,7 +22,7 @@ export function LeaderboardScreen() {
   }
 
   const getRankBg = (rank: number) => {
-    if (rank === 1) return 'bg-[rgba(124,255,101,0.12)] border-[rgba(124,255,101,0.35)]'
+    if (rank === 1) return 'bg-[rgba(255,138,61,0.12)] border-[rgba(255,138,61,0.35)]'
     if (rank === 2) return 'bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.3)]'
     if (rank === 3) return 'bg-[rgba(244,221,74,0.12)] border-[rgba(244,221,74,0.3)]'
     return 'bg-white/5 border-white/10'

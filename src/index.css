@@ -4,7 +4,7 @@
 
 :root {
   --bg: #050706;
-  --bg-glow: radial-gradient(circle at top, #0b120f 0%, #050706 55%);
+  --bg-glow: radial-gradient(circle at top, #120b08 0%, #050706 55%);
   --surface-1: #0b0f0d;
   --surface-2: #121816;
   --surface-3: #151c19;
@@ -12,7 +12,7 @@
   --text-primary: #f3f5f4;
   --text-secondary: #a7b0ab;
   --text-muted: #6f7a74;
-  --accent-green: #7cff65;
+  --accent-orange: #ff8a3d;
   --accent-blue: #3b82f6;
   --accent-yellow: #f4dd4a;
   --accent-red: #ff6b6b;
@@ -103,7 +103,7 @@ canvas {
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.6), 0 0 24px rgba(59, 130, 246, 0.3);
   }
 
-  .glow-green {
-    box-shadow: 0 0 24px rgba(124, 255, 101, 0.28);
+  .glow-orange {
+    box-shadow: 0 0 24px rgba(255, 138, 61, 0.28);
   }
 }

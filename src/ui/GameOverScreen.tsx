@@ -150,11 +150,11 @@ export function GameOverScreen() {
             fontSize: '17px',
             fontWeight: 700,
             color: '#0b0f0d',
-            background: 'linear-gradient(135deg, #7cff65, #55e64d)',
+            background: 'linear-gradient(135deg, #ff8a3d, #ff6b2c)',
             border: 'none',
             borderRadius: '14px',
             cursor: 'pointer',
-            boxShadow: '0 4px 20px rgba(124, 255, 101, 0.35)',
+            boxShadow: '0 4px 20px rgba(255, 138, 61, 0.35)',
             letterSpacing: '0.5px',
           }}
         >
