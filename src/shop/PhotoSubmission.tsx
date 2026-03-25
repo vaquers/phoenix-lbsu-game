@@ -152,8 +152,8 @@ export function PhotoSubmission() {
   // CUSTOMIZE STEP
   return (
     <div
-      className="fixed inset-0 z-[1001] flex flex-col font-sans overflow-hidden"
-      style={{ paddingTop: 'max(var(--safe-top), 16px)', background: 'var(--app-bg)' }}
+      className="fixed inset-0 z-[1001] flex flex-col overflow-hidden"
+      style={{ paddingTop: 'max(var(--safe-top), 16px)', background: 'var(--app-bg)', fontFamily: 'Unbounded, system-ui, -apple-system, sans-serif' }}
     >
       {/* Action Row */}
       <div className="flex items-center justify-between px-5 pt-3 pb-2">

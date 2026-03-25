@@ -9,8 +9,8 @@ export function ShopPage() {
 
   return (
     <div 
-      className="w-full h-full flex flex-col overflow-hidden font-sans"
-      style={{ paddingTop: 'max(var(--safe-top), 16px)' }}
+      className="w-full h-full flex flex-col overflow-hidden"
+      style={{ fontFamily: 'Unbounded, system-ui, -apple-system, sans-serif', paddingTop: 'max(var(--safe-top), 16px)' }}
     >
       {/* Segmented Control */}
       <div className="px-5 pb-3 pt-4">
