@@ -4,6 +4,7 @@ import { useUserStore } from '../shared/userStore'
 import { DISPLAY_SUBMISSION_COST } from '../shared/config'
 
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function PhotoSubmission() {
   const [step, setStep] = useState<'upload' | 'customize'>('upload')
