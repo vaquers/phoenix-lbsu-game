@@ -221,19 +221,16 @@ export function PhotoSubmission() {
       )}
 
       {/* Bottom Sheet - Style Text */}
-      <div className="glass-panel-strong rounded-t-[var(--radius-sheet)] px-6 pt-5 pb-[max(var(--safe-bottom,20px),20px)] mt-auto">
+      <div className="px-4 pb-[max(var(--safe-bottom,16px),16px)]">
+        <div className="glass-panel-strong rounded-[34px] px-6 pt-5 pb-5" style={{ background: 'linear-gradient(180deg, rgba(255,214,214,0.85) 0%, rgba(215,200,216,0.75) 60%, rgba(182,196,220,0.7) 100%)' }}>
         
         {/* Sheet Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="w-8 h-8"></div>
-          <span className="font-bold text-[18px] text-black">Стилизуй текст</span>
-          <button onClick={handleReset} className="w-9 h-9 rounded-full bg-white/30 flex items-center justify-center text-black/70 hover:brightness-110 transition cursor-pointer border border-white/40">
-            <img src={xmarkIcon} alt="close" className="w-[14px] h-[14px] opacity-70" />
-          </button>
-        </div>
+          <div className="flex items-center justify-center mb-6">
+            <span className="font-extrabold text-[20px] text-black text-center">Стилизуй текст</span>
+          </div>
 
         {/* Font Grid */}
-        <div className="grid grid-cols-4 gap-x-2 gap-y-3 mb-7">
+        <div className="grid grid-cols-4 gap-x-3 gap-y-3 mb-7">
           {fonts.map((fClass, idx) => {
             const isSelected = fontIndex === idx
             return (
@@ -241,77 +238,62 @@ export function PhotoSubmission() {
                 key={idx}
                 onClick={() => setFontIndex(idx)}
                 className={[
-                  'flex items-center justify-center py-[10px] rounded-[18px] transition-all border',
+                  'flex items-center justify-center h-[48px] rounded-[999px] transition-all border',
                   isSelected 
-                    ? 'border-transparent bg-[rgba(236,67,45,0.67)] opacity-100'
-                    : 'border-white/30 bg-white/20 opacity-80'
+                    ? 'border-transparent bg-[#EC432D] opacity-100'
+                    : 'border-white/40 bg-white/30 opacity-80'
                 ].join(' ')}
               >
-                <span className={`text-[26px] text-black ${fClass}`}>Aa</span>
+                <span className={`text-[22px] ${isSelected ? 'text-white' : 'text-black'} ${fClass}`}>Aa</span>
               </button>
             )
           })}
         </div>
 
-        {/* Text Options Row */}
-        <div className="flex justify-between items-center mb-7 text-black">
-          <button 
-            onClick={() => setIsUppercase(!isUppercase)}
-            className="flex items-center gap-1 text-[15px] font-medium"
-          >
-            Uppercase
-            <svg className="w-[14px] h-[14px] text-black/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
-          </button>
-          
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setColor('#FFFFFF')}
-              className={`w-[30px] h-[30px] rounded-full bg-white border border-white/30 ${color === '#FFFFFF' ? 'ring-2 ring-offset-2 ring-white/70' : ''}`} 
-            />
-            <button 
-              onClick={() => setColor('#000000')}
-              className={`w-[30px] h-[30px] rounded-full bg-black ${color === '#000000' ? 'ring-2 ring-offset-2 ring-white/70' : ''}`} 
-            />
-            {/* Real color picker overlapping the rainbow wheel */}
-            <div className={`relative w-[28px] h-[28px] rounded-full shadow-sm bg-[conic-gradient(from_90deg,red,orange,yellow,green,blue,indigo,violet,red)] ${color !== '#FFFFFF' && color !== '#000000' ? 'ring-2 ring-offset-2 ring-white/30' : ''}`}>
-              <div className="w-full h-full rounded-full overflow-hidden absolute inset-0">
-                <input
-                  type="color"
-                  value={color !== '#FFFFFF' && color !== '#000000' ? color : '#3B82F6'}
-                  onChange={(e) => setColor(e.target.value)}
-                  className="absolute -top-4 -left-4 w-[200%] h-[200%] opacity-0 cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
+        {/* Color Grid */}
+        <div className="grid grid-cols-6 gap-x-4 gap-y-4 mb-7">
+          {[
+            '#000000', '#FFFFFF', '#0A74FF', '#32C857', '#FFD400', '#FF3B30',
+            '#6EC7FF', '#9B4DFF', '#3D3D8F', '#FF2D55', '#B07A4B', '#00C2B2'
+          ].map((c) => {
+            const isSelected = color.toLowerCase() === c.toLowerCase()
+            return (
+              <button
+                key={c}
+                onClick={() => setColor(c)}
+                className={[
+                  'w-[34px] h-[34px] rounded-full transition-transform',
+                  isSelected ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-[rgba(255,255,255,0.35)]' : '',
+                ].join(' ')}
+                style={{ backgroundColor: c }}
+              />
+            )
+          })}
         </div>
 
         {/* Font Size Row */}
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-2 text-black">
-            <div className="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center text-black/60 border border-white/40">
-              <span className="text-[12px] font-bold">Ai</span>
-            </div>
-            <span className="text-[18px] font-bold">Размер текста</span>
+            <span className="text-[20px] font-extrabold">Размер текста</span>
           </div>
           
-          <div className="flex items-center bg-white/25 rounded-full overflow-hidden border border-white/40">
+          <div className="flex items-center gap-3">
             <button 
               onClick={() => setFontSize(Math.max(16, fontSize - 4))}
-              className="px-4 py-1.5 hover:bg-white/30 transition"
+              className="w-[46px] h-[46px] rounded-full bg-white/35 border border-white/50 flex items-center justify-center"
             >
-              <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4"></path></svg>
+              <span className="text-[20px] font-extrabold text-black">–</span>
             </button>
-            <div className="w-[1px] h-4 bg-white/40"></div>
             <button 
               onClick={() => setFontSize(Math.min(72, fontSize + 4))}
-              className="px-4 py-1.5 hover:bg-white/30 transition"
+              className="w-[46px] h-[46px] rounded-full bg-white/35 border border-white/50 flex items-center justify-center"
             >
-              <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path></svg>
+              <span className="text-[20px] font-extrabold text-black">+</span>
             </button>
           </div>
         </div>
 
+        </div>
       </div>
     </div>
   )
