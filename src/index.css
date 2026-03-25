@@ -64,7 +64,7 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
   touch-action: none;
-  background: var(--app-bg);
+  background: var(--app-bg) !important;
   color: var(--text-dark);
   color-scheme: dark;
 }

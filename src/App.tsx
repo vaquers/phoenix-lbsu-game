@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="w-full h-full flex flex-col bg-brand text-cream">
+      <div className="w-full h-full flex flex-col" style={{ background: 'var(--app-bg)' }}>
         <div className="flex-1 min-h-0">
           <Routes>
             <Route path="/game" element={<GameApp />} />

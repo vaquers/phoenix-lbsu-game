@@ -18,7 +18,7 @@ export function GameApp() {
   }, [])
 
   return (
-    <div className="w-full h-full relative bg-brand">
+    <div className="w-full h-full relative" style={{ background: 'var(--app-bg)' }}>
       <GameScene />
       <MainMenu />
       <HUD />
@@ -27,4 +27,3 @@ export function GameApp() {
     </div>
   )
 }
-
