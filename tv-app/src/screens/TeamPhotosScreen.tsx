@@ -1,15 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { tvApi } from '../api'
 import type { TeamPhoto } from '../types'
+import photoA from '../../../assets/28420_galery/2026-03-25 16.42.31.jpg'
+import photoB from '../../../assets/28420_galery/first.jpg'
+import photoC from '../../../assets/28420_galery/second.jpg'
+import photoD from '../../../assets/28420_galery/third.jpg'
+import photoE from '../../../assets/28420_galery/fourth.jpg'
+import photoF from '../../../assets/28420_galery/five.jpg'
 
 const SLIDE_INTERVAL = 8000
 
 const PLACEHOLDER_PHOTOS: TeamPhoto[] = [
-  { id: 'tp-1', image: '', caption: 'Phoenix Team — Together we rise!', order: 1 },
-  { id: 'tp-2', image: '', caption: 'Рабочий процесс', order: 2 },
-  { id: 'tp-3', image: '', caption: 'Наша команда на мероприятии', order: 3 },
-  { id: 'tp-4', image: '', caption: 'Мозговой штурм', order: 4 },
-  { id: 'tp-5', image: '', caption: 'Победа!', order: 5 },
+  { id: 'tp-1', image: photoA, caption: 'Phoenix Team', order: 1 },
+  { id: 'tp-2', image: photoB, caption: 'Рабочий процесс', order: 2 },
+  { id: 'tp-3', image: photoC, caption: 'Наша команда', order: 3 },
+  { id: 'tp-4', image: photoD, caption: 'Мозговой штурм', order: 4 },
+  { id: 'tp-5', image: photoE, caption: 'Событие', order: 5 },
+  { id: 'tp-6', image: photoF, caption: 'Победа!', order: 6 },
 ]
 
 const GRADIENT_COLORS = [

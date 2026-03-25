@@ -39,7 +39,7 @@ export default function App() {
     ((screenIndex + 1) / SCREEN_ROTATION.length) * 100
 
   return (
-    <div className="w-full h-screen bg-[color:var(--bg)] relative overflow-hidden">
+    <div className="w-full h-screen relative overflow-hidden" style={{ background: 'var(--app-bg)' }}>
       <div
         className="w-full h-full transition-opacity"
         style={{
