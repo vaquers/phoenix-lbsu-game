@@ -39,9 +39,42 @@ export interface DisplaySubmission {
   userName: string
   image: string
   text: string
+  composition?: TVComposition
   cost: number
   createdAt: string
   status: 'pending' | 'approved' | 'rejected'
+}
+
+export type PhotoSlot = {
+  id: string
+  imageUri: string
+  croppedImageUri?: string
+  crop: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  displayMode: 'square'
+}
+
+export type TextOverlay = {
+  text: string
+  fontStyle?: 'normal' | 'italic'
+  fontWeight?: number
+  fontSize: number
+  fontSizePercent?: number
+  color: string
+  xPercent: number
+  yPercent: number
+  align?: 'center' | 'left' | 'right'
+  rotation?: number
+  opacity?: number
+}
+
+export type TVComposition = {
+  photos: PhotoSlot[]
+  textOverlay: TextOverlay
 }
 
 export interface TeamPhoto {

@@ -1,14 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { tvApi } from '../api'
 import type { DisplaySubmission } from '../types'
 
 const SLIDE_INTERVAL = 6000
+type PhotoSlot = NonNullable<DisplaySubmission['composition']>['photos'][number]
 
 export function UserPhotosScreen() {
   const [submissions, setSubmissions] = useState<DisplaySubmission[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [fade, setFade] = useState(true)
   const intervalRef = useRef<ReturnType<typeof setInterval>>()
+  const squareRef = useRef<HTMLDivElement>(null)
+  const [squareSize, setSquareSize] = useState(0)
 
   useEffect(() => {
     const load = () => {
@@ -31,6 +34,19 @@ export function UserPhotosScreen() {
     return () => clearInterval(intervalRef.current)
   }, [submissions])
 
+  useLayoutEffect(() => {
+    const el = squareRef.current
+    if (!el) return
+    const update = () => {
+      const rect = el.getBoundingClientRect()
+      if (rect.width > 0) setSquareSize(rect.width)
+    }
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [submissions, currentIndex])
+
   if (submissions.length === 0) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center text-[color:var(--text-primary)]">
@@ -44,7 +60,100 @@ export function UserPhotosScreen() {
     )
   }
 
-  const current = submissions[currentIndex % submissions.length]
+  const primary = submissions[currentIndex % submissions.length]
+  const secondary =
+    submissions.length > 1
+      ? submissions[(currentIndex + 1) % submissions.length]
+      : null
+
+  const resolveImage = (submission: DisplaySubmission, photoOverride?: PhotoSlot) => {
+    const photo = photoOverride ?? submission.composition?.photos?.[0]
+    return photo?.croppedImageUri || photo?.imageUri || submission.image
+  }
+
+  const resolveOverlay = (submission: DisplaySubmission) => {
+    return submission.composition?.textOverlay
+  }
+
+  const renderTile = (
+    submission: DisplaySubmission,
+    isPrimary: boolean,
+    photoOverride?: PhotoSlot,
+    keyId?: string,
+  ) => {
+    const overlay = resolveOverlay(submission)
+    const imageSrc = resolveImage(submission, photoOverride)
+    const align = overlay?.align ?? 'center'
+    const translateX = align === 'left' ? '0%' : align === 'right' ? '-100%' : '-50%'
+    const fontSize =
+      overlay?.fontSizePercent && squareSize
+        ? Math.max(14, overlay.fontSizePercent * squareSize)
+        : overlay?.fontSize ?? 48
+
+    return (
+      <div
+        key={keyId}
+        ref={isPrimary ? squareRef : undefined}
+        className={[
+          'relative aspect-square rounded-[40px] overflow-hidden shadow-2xl bg-black/15 border border-white/10',
+          submissions.length > 1 ? 'w-[38vw] max-w-[520px]' : 'w-[56vw] max-w-[640px]',
+        ].join(' ')}
+      >
+        <img
+          src={imageSrc}
+          alt={submission.text}
+          className="w-full h-full object-contain"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none'
+          }}
+        />
+
+        {(overlay?.text || submission.text) && (
+          <div className="absolute inset-0 pointer-events-none">
+            <div
+              style={{
+                position: 'absolute',
+                left: `${(overlay?.xPercent ?? 0.5) * 100}%`,
+                top: `${(overlay?.yPercent ?? 0.5) * 100}%`,
+                transform: `translate(${translateX}, -50%)`,
+                color: overlay?.color || '#ffffff',
+                fontWeight: overlay?.fontWeight ?? 800,
+                fontStyle: overlay?.fontStyle ?? 'normal',
+                fontSize: `${fontSize}px`,
+                lineHeight: 1.15,
+                textAlign: align,
+                whiteSpace: 'pre-wrap',
+                opacity: overlay?.opacity ?? 1,
+                textShadow: '0 2px 10px rgba(0,0,0,0.35)',
+              }}
+            >
+              {overlay?.text ?? submission.text}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const primaryPhotos = primary.composition?.photos ?? []
+  const hasTwoFromPrimary = primaryPhotos.length >= 2
+  const tiles = hasTwoFromPrimary
+    ? [
+        { submission: primary, photo: primaryPhotos[0], key: 'p1' },
+        { submission: primary, photo: primaryPhotos[1], key: 'p2' },
+      ]
+    : [
+        { submission: primary, photo: primaryPhotos[0], key: 'p1' },
+        ...(secondary
+          ? [
+              {
+                submission: secondary,
+                photo: secondary.composition?.photos?.[0],
+                key: 'p2',
+              },
+            ]
+          : []),
+      ]
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative text-[color:var(--text-primary)]">
@@ -53,27 +162,11 @@ export function UserPhotosScreen() {
       </div>
 
       <div
-        className="relative max-w-[80vw] max-h-[75vh] transition-opacity duration-500"
+        className="relative w-full flex items-center justify-center transition-opacity duration-500 gap-[6vw]"
         style={{ opacity: fade ? 1 : 0 }}
       >
-        <img
-          src={current.image}
-          alt={current.text}
-          className="max-w-[80vw] max-h-[70vh] rounded-3xl shadow-2xl object-contain"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }}
-        />
-
-        {current.text && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-3xl px-10 py-8">
-            <p className="text-4xl font-bold text-[color:var(--text-primary)] text-center drop-shadow-lg">
-              {current.text}
-            </p>
-            <p className="text-lg text-[color:var(--text-muted)] text-center mt-2">
-              — {current.userName}
-            </p>
-          </div>
+        {tiles.map((tile, idx) =>
+          renderTile(tile.submission, idx === 0, tile.photo, tile.key),
         )}
       </div>
 
@@ -84,7 +177,7 @@ export function UserPhotosScreen() {
             className={[
               'w-2.5 h-2.5 rounded-full transition-all duration-300',
               i === currentIndex % submissions.length
-                ? 'bg-[rgba(124,255,101,0.7)] scale-125'
+                ? 'bg-white/70 scale-125'
                 : 'bg-white/15',
             ].join(' ')}
           />

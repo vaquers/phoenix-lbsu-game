@@ -70,10 +70,10 @@ export const api = {
     })
   },
 
-  submitDisplayPhoto(userId: string, image: string, text: string) {
+  submitDisplayPhoto(userId: string, image: string, text: string, composition?: DisplaySubmission['composition']) {
     return request<DisplaySubmission>('/api/display-submissions', {
       method: 'POST',
-      body: JSON.stringify({ userId, image, text }),
+      body: JSON.stringify({ userId, image, text, composition }),
     })
   },
 

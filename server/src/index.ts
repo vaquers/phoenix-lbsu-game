@@ -137,10 +137,11 @@ app.get('/api/display-submissions', (_req, res) => {
 })
 
 app.post('/api/display-submissions', (req, res) => {
-  const { userId, image, text } = req.body as {
+  const { userId, image, text, composition } = req.body as {
     userId?: string
     image?: string
     text?: string
+    composition?: any
   }
   if (!userId || !image || typeof text !== 'string') {
     res.status(400).json({ error: 'userId, image, and text are required' })
@@ -150,7 +151,7 @@ app.post('/api/display-submissions', (req, res) => {
     res.status(400).json({ error: 'Image too large (max 5MB)' })
     return
   }
-  const result = dataStore.createDisplaySubmission(userId, image, text)
+  const result = dataStore.createDisplaySubmission(userId, image, text, composition)
   if ('error' in result) {
     res.status(400).json(result)
     return

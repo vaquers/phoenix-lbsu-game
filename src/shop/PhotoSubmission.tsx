@@ -4,7 +4,6 @@ import { useUserStore } from '../shared/userStore'
 import { DISPLAY_SUBMISSION_COST } from '../shared/config'
 
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
-import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function PhotoSubmission() {
   const [step, setStep] = useState<'upload' | 'customize'>('upload')
@@ -16,26 +15,27 @@ export function PhotoSubmission() {
   const [isUppercase, setIsUppercase] = useState(true)
   const [color, setColor] = useState('#FFFFFF')
   const [fontSize, setFontSize] = useState(36)
+  const [textPos, setTextPos] = useState({ x: 0.5, y: 0.5 })
   
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
 
   const fileRef = useRef<HTMLInputElement>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
   const user = useUserStore((s) => s.user)
   const spendCoins = useUserStore((s) => s.spendCoins)
 
   const canAfford = (user?.coins ?? 0) >= DISPLAY_SUBMISSION_COST
 
-  // Dummy fonts for the demo
-  const fonts = [
-    'font-sans font-black',
-    'font-sans font-normal',
-    'font-serif font-bold',
-    'font-serif font-normal',
-    'font-mono font-bold',
-    'font-mono font-normal',
-    'italic font-bold',
-    'italic font-normal'
+  const fontVariants = [
+    { weight: 900, style: 'normal' as const },
+    { weight: 800, style: 'normal' as const },
+    { weight: 700, style: 'normal' as const },
+    { weight: 600, style: 'normal' as const },
+    { weight: 500, style: 'normal' as const },
+    { weight: 400, style: 'normal' as const },
+    { weight: 700, style: 'italic' as const },
+    { weight: 500, style: 'italic' as const },
   ]
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +74,36 @@ export function PhotoSubmission() {
 
     setSubmitting(true)
     try {
-      await api.submitDisplayPhoto(user.id, image, text)
+      const square = await createSquareCrop(image)
+      const previewSize = previewRef.current?.getBoundingClientRect().width || 0
+      const fontSizePercent = previewSize > 0 ? fontSize / previewSize : undefined
+      const fontVariant = fontVariants[fontIndex] ?? fontVariants[0]
+      const overlayText = isUppercase ? text.toUpperCase() : text
+      const composition = {
+        photos: [
+          {
+            id: `photo-${Date.now()}`,
+            imageUri: image,
+            croppedImageUri: square.dataUrl,
+            crop: square.crop,
+            displayMode: 'square' as const,
+          },
+        ],
+        textOverlay: {
+          text: overlayText,
+          fontStyle: fontVariant.style,
+          fontWeight: fontVariant.weight,
+          fontSize,
+          fontSizePercent,
+          color,
+          xPercent: textPos.x,
+          yPercent: textPos.y,
+          align: 'center' as const,
+          rotation: 0,
+          opacity: 1,
+        },
+      }
+      await api.submitDisplayPhoto(user.id, square.dataUrl, overlayText, composition)
       spendCoins(DISPLAY_SUBMISSION_COST)
       setImage(null)
       setStep('upload')
@@ -93,6 +122,64 @@ export function PhotoSubmission() {
     setText('YOUR TEXT')
     setStep('upload')
     if (fileRef.current) fileRef.current.value = ''
+  }
+
+  const textBoxRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+
+  const onTextPointerDown = (e: React.PointerEvent) => {
+    const box = textBoxRef.current
+    if (!box) return
+    box.setPointerCapture(e.pointerId)
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: textPos.x,
+      origY: textPos.y,
+    }
+  }
+
+  const onTextPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current || !textBoxRef.current) return
+    const rect = textBoxRef.current.parentElement?.getBoundingClientRect()
+    if (!rect) return
+    const dx = (e.clientX - dragRef.current.startX) / rect.width
+    const dy = (e.clientY - dragRef.current.startY) / rect.height
+    const nx = Math.min(0.95, Math.max(0.05, dragRef.current.origX + dx))
+    const ny = Math.min(0.95, Math.max(0.05, dragRef.current.origY + dy))
+    setTextPos({ x: nx, y: ny })
+  }
+
+  const onTextPointerUp = (e: React.PointerEvent) => {
+    if (!textBoxRef.current) return
+    try {
+      textBoxRef.current.releasePointerCapture(e.pointerId)
+    } catch {}
+    dragRef.current = null
+  }
+
+  const createSquareCrop = (src: string): Promise<{ dataUrl: string; crop: { x: number; y: number; width: number; height: number } }> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => {
+        const size = Math.min(img.width, img.height)
+        const cropX = Math.floor((img.width - size) / 2)
+        const cropY = Math.floor((img.height - size) / 2)
+        const canvas = document.createElement('canvas')
+        const out = 1024
+        canvas.width = out
+        canvas.height = out
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return reject(new Error('No canvas context'))
+        ctx.drawImage(img, cropX, cropY, size, size, 0, 0, out, out)
+        resolve({
+          dataUrl: canvas.toDataURL('image/jpeg', 0.92),
+          crop: { x: cropX, y: cropY, width: size, height: size },
+        })
+      }
+      img.onerror = () => reject(new Error('Image load failed'))
+      img.src = src
+    })
   }
 
   if (step === 'upload') {
@@ -176,7 +263,10 @@ export function PhotoSubmission() {
       {/* Preview Area */}
       <div className="flex-1 min-h-0 w-full relative flex items-center justify-center p-4">
         {/* Force max dimensions and exact square to prevent overflow */}
-        <div className="relative w-full h-full max-w-[340px] max-h-[340px] flex items-center justify-center">
+        <div
+          ref={previewRef}
+          className="relative w-full h-full max-w-[340px] max-h-[340px] flex items-center justify-center"
+        >
           <div className="w-full h-full aspect-square rounded-[var(--radius-photo)] overflow-hidden bg-black shadow-lg relative"
                style={{ maxHeight: '100%', maxWidth: '100%' }}>
             {image && (
@@ -187,25 +277,39 @@ export function PhotoSubmission() {
               />
             )}
             {text !== undefined && (
-              <div className="absolute inset-0 flex items-center justify-center p-6">
-                <div className="max-w-[85%] w-full rounded-[12px] px-4 py-2 border-2 border-dashed border-[rgba(236,67,45,0.7)]">
-                  <textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    maxLength={40}
-                    className={[
-                      'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible placeholder-white/60 text-white',
-                      fonts[fontIndex],
-                      isUppercase ? 'uppercase' : 'normal-case'
-                    ].join(' ')}
-                    style={{
-                      color: '#ffffff',
-                      fontSize: `${fontSize}px`,
-                      lineHeight: '1.2'
-                    }}
-                    rows={text.split('\n').length || 1}
-                    placeholder="Текст"
-                  />
+              <div className="absolute inset-0">
+                <div
+                  ref={textBoxRef}
+                  onPointerDown={onTextPointerDown}
+                  onPointerMove={onTextPointerMove}
+                  onPointerUp={onTextPointerUp}
+                  className="absolute p-2"
+                  style={{
+                    left: `${textPos.x * 100}%`,
+                    top: `${textPos.y * 100}%`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <div className="max-w-[85%] w-full rounded-[12px] px-4 py-2 border-2 border-dashed border-[rgba(236,67,45,0.7)]">
+                    <textarea
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      maxLength={40}
+                      className={[
+                        'w-full bg-transparent border-none outline-none text-center resize-none overflow-visible placeholder-white/60',
+                        isUppercase ? 'uppercase' : 'normal-case'
+                      ].join(' ')}
+                      style={{
+                        color: color,
+                        fontSize: `${fontSize}px`,
+                        lineHeight: '1.2',
+                        fontWeight: fontVariants[fontIndex]?.weight ?? 700,
+                        fontStyle: fontVariants[fontIndex]?.style ?? 'normal'
+                      }}
+                      rows={text.split('\n').length || 1}
+                      placeholder="Текст"
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -231,7 +335,7 @@ export function PhotoSubmission() {
 
         {/* Font Grid */}
         <div className="grid grid-cols-4 gap-x-3 gap-y-3 mb-7">
-          {fonts.map((fClass, idx) => {
+          {fontVariants.map((variant, idx) => {
             const isSelected = fontIndex === idx
             return (
               <button
@@ -244,7 +348,12 @@ export function PhotoSubmission() {
                     : 'border-white/40 bg-white/30 opacity-80'
                 ].join(' ')}
               >
-                <span className={`text-[22px] ${isSelected ? 'text-white' : 'text-black'} ${fClass}`}>Aa</span>
+                <span
+                  className={`text-[22px] ${isSelected ? 'text-white' : 'text-black'}`}
+                  style={{ fontWeight: variant.weight, fontStyle: variant.style }}
+                >
+                  Aa
+                </span>
               </button>
             )
           })}
