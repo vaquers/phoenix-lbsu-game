@@ -7,7 +7,7 @@
 body {
   margin: 0;
   font-family: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, #1a1a1c 0%, #121212 55%);
+  background: linear-gradient(180deg, #FDB153 0%, #FA432B 48%, #003C69 100%);
   color: #f5f5f7;
   color-scheme: dark;
 }
