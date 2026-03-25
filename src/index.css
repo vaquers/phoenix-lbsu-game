@@ -14,7 +14,7 @@
   --grad-1: #FDB153;
   --grad-2: #FA432B;
   --grad-3: #003C69;
-  --app-bg: linear-gradient(180deg, var(--grad-1) 0%, var(--grad-2) 45%, var(--grad-3) 100%);
+  --app-bg: linear-gradient(180deg, var(--grad-1) 0%, var(--grad-2) 48%, var(--grad-3) 100%);
   --accent: #EC432D;
   --secondary-btn: rgba(120, 120, 120, 0.2);
 

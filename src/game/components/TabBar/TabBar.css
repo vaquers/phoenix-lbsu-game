@@ -88,7 +88,7 @@
 
 .tabbar-item.active .tabbar-icon {
   opacity: 1;
-  filter: brightness(0) saturate(100%) sepia(100%) hue-rotate(345deg) saturate(700%) brightness(0.9);
+  filter: brightness(0) saturate(100%) invert(36%) sepia(81%) saturate(1928%) hue-rotate(345deg) brightness(91%) contrast(95%);
 }
 
 .tabbar-label {

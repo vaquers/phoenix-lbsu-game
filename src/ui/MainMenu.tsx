@@ -24,7 +24,7 @@ export function MainMenu() {
     >
 
       <div className="flex-1 flex flex-col items-center justify-start pt-10 px-6">
-        <h1 className="text-[44px] leading-[1.05] font-extrabold text-[#EC432D] tracking-tight">
+        <h1 className="text-[32px] leading-[1.05] font-extrabold text-[#EC432D] tracking-tight whitespace-nowrap">
           Бегущий Феникс
         </h1>
         <img src={happyBird} alt="bird" className="w-[260px] h-auto mt-6 drop-shadow-[0_16px_30px_rgba(0,0,0,0.2)]" />

@@ -50,7 +50,7 @@ export function GameOverScreen() {
       }}
     >
       <div className="flex-1 flex flex-col items-center justify-start pt-4 px-6">
-        <h2 className="text-[40px] font-extrabold text-[#EC432D] tracking-tight">Игра окончена</h2>
+        <h2 className="text-[32px] font-extrabold text-[#EC432D] tracking-tight whitespace-nowrap">Игра окончена</h2>
         <img src={sadBird} alt="sad bird" className="w-[260px] mt-6 drop-shadow-[0_16px_30px_rgba(0,0,0,0.2)]" />
       </div>
 

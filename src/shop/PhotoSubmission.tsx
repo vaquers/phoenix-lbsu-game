@@ -126,7 +126,7 @@ export function PhotoSubmission() {
           </div>
         )}
 
-        <div className="flex-1 min-h-0 glass-panel-strong rounded-[var(--radius-card)] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="h-[42vh] max-h-[420px] glass-panel-strong rounded-[var(--radius-card)] flex items-center justify-center p-6 relative overflow-hidden mb-4">
           <input
             ref={fileRef}
             type="file"

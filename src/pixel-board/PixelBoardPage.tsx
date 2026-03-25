@@ -94,6 +94,7 @@ export function PixelBoardPage() {
       className="w-full h-full flex flex-col relative overflow-hidden"
       style={{
         background: 'transparent',
+        paddingTop: 'var(--safe-top)',
         paddingBottom: 'var(--tabbar-height)',
       }}
     >
