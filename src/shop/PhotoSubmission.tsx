@@ -3,7 +3,6 @@ import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import { DISPLAY_SUBMISSION_COST } from '../shared/config'
 
-import xmarkIcon from '../../assets/symbols/xmark.svg'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
 
 export function PhotoSubmission() {
@@ -152,20 +151,6 @@ export function PhotoSubmission() {
   // CUSTOMIZE STEP
   return (
     <div className="fixed inset-0 z-[1001] flex flex-col font-sans overflow-hidden" style={{ paddingTop: 'max(var(--safe-top), 16px)' }}>
-      {/* Top Capsules */}
-      <div className="flex items-center justify-between px-5 pt-2">
-        <button onClick={handleReset} className="top-capsule flex items-center gap-2 px-4 py-2 rounded-full text-[15px] font-semibold">
-          <img src={xmarkIcon} alt="" className="w-4 h-4" />
-          Close
-        </button>
-        <div className="top-capsule flex items-center gap-3 px-4 py-2 rounded-full">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 12l4 4 8-8" />
-          </svg>
-          <span className="text-white/80 text-lg">• • •</span>
-        </div>
-      </div>
-
       {/* Action Row */}
       <div className="flex items-center justify-between px-5 pt-3 pb-2">
         <button 

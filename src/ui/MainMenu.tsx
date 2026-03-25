@@ -1,7 +1,6 @@
 import { useGameStore } from '../game/store/gameStore'
 import { playSound } from '../game/utils/sounds'
 import happyBird from '../../assets/happy_bird.png'
-import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function MainMenu() {
   const setPhase = useGameStore((s) => s.setPhase)
@@ -23,19 +22,6 @@ export function MainMenu() {
           'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
       }}
     >
-      {/* Top capsules */}
-      <div className="flex items-center justify-between px-5 pt-4">
-        <button className="top-capsule flex items-center gap-2 px-4 py-2 rounded-full text-white">
-          <img src={xmarkIcon} alt="" className="w-4 h-4" />
-          <span className="text-[15px] font-semibold">Close</span>
-        </button>
-        <div className="top-capsule flex items-center gap-3 px-4 py-2 rounded-full">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 12l4 4 8-8" />
-          </svg>
-          <span className="text-white/80 text-lg">• • •</span>
-        </div>
-      </div>
 
       <div className="flex-1 flex flex-col items-center justify-start pt-10 px-6">
         <h1 className="text-[44px] leading-[1.05] font-extrabold text-[#EC432D] tracking-tight">

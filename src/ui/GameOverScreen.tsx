@@ -8,7 +8,6 @@ import { resetPlatformIds } from '../game/systems/platformManager'
 import { COINS_PER_GAME_BASE, COINS_PER_SCORE_DIVISOR } from '../shared/config'
 import sadBird from '../../assets/sad_bird.png'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
-import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function GameOverScreen() {
   const phase = useGameStore((s) => s.phase)
@@ -50,13 +49,6 @@ export function GameOverScreen() {
         padding: 'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
       }}
     >
-      <div className="px-5 pt-4">
-        <div className="top-capsule inline-flex items-center gap-2 px-4 py-2 rounded-full text-white">
-          <img src={xmarkIcon} alt="" className="w-4 h-4" />
-          <span className="text-[15px] font-semibold">Close</span>
-        </div>
-      </div>
-
       <div className="flex-1 flex flex-col items-center justify-start pt-4 px-6">
         <h2 className="text-[40px] font-extrabold text-[#EC432D] tracking-tight">Игра окончена</h2>
         <img src={sadBird} alt="sad bird" className="w-[260px] mt-6 drop-shadow-[0_16px_30px_rgba(0,0,0,0.2)]" />

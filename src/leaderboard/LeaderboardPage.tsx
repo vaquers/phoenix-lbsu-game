@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import type { LeaderboardEntry } from '../shared/types'
-import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function LeaderboardPage() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
@@ -37,18 +36,6 @@ export function LeaderboardPage() {
           'calc(var(--safe-top) + 24px) calc(var(--safe-right) + 20px) calc(var(--tabbar-height) + 24px) calc(var(--safe-left) + 20px)',
       }}
     >
-      <div className="w-full flex items-center justify-between pb-4">
-        <button className="top-capsule flex items-center gap-2 px-4 py-2 rounded-full text-[15px] font-semibold">
-          <img src={xmarkIcon} alt="" className="w-4 h-4" />
-          Close
-        </button>
-        <div className="top-capsule flex items-center gap-3 px-4 py-2 rounded-full">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 12l4 4 8-8" />
-          </svg>
-          <span className="text-white/80 text-lg">• • •</span>
-        </div>
-      </div>
       {loading && <p className="text-white/80 text-sm mt-10">Загрузка...</p>}
 
       {!loading && entries.length === 0 && (
