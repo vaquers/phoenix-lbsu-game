@@ -6,6 +6,9 @@ import { resetObstacleIds } from '../game/systems/obstacleManager'
 import { resetCoinIds } from '../game/systems/coinManager'
 import { resetPlatformIds } from '../game/systems/platformManager'
 import { COINS_PER_GAME_BASE, COINS_PER_SCORE_DIVISOR } from '../shared/config'
+import sadBird from '../../assets/sad_bird.png'
+import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function GameOverScreen() {
   const phase = useGameStore((s) => s.phase)
@@ -42,128 +45,52 @@ export function GameOverScreen() {
 
   return (
     <div
-      className="absolute inset-0 z-20 flex items-center justify-center"
+      className="absolute inset-0 z-20 flex flex-col"
       style={{
         padding: 'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-        backgroundColor: 'rgba(5, 7, 6, 0.72)',
       }}
     >
-      <div
-        style={{
-          background: 'linear-gradient(135deg, rgba(18, 24, 22, 0.95), rgba(11, 15, 13, 0.98))',
-          borderRadius: '22px',
-          padding: '32px 28px',
-          width: '85%',
-          maxWidth: '340px',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08)',
-          display: 'flex',
-          flexDirection: 'column' as const,
-          alignItems: 'center',
-          gap: '20px',
-        }}
-      >
-        {/* ── Title ─────────────────────────────────────────────── */}
-        <div style={{ textAlign: 'center' }}>
-          <h2
-            style={{
-              fontSize: '28px',
-              fontWeight: 800,
-              color: '#d96a6a',
-              margin: 0,
-              letterSpacing: '-0.5px',
-              textShadow: '0 2px 12px rgba(255, 107, 107, 0.3)',
-            }}
-          >
-            Game Over
-          </h2>
+      <div className="px-5 pt-4">
+        <div className="top-capsule inline-flex items-center gap-2 px-4 py-2 rounded-full text-white">
+          <img src={xmarkIcon} alt="" className="w-4 h-4" />
+          <span className="text-[15px] font-semibold">Close</span>
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-start pt-4 px-6">
+        <h2 className="text-[40px] font-extrabold text-[#EC432D] tracking-tight">Игра окончена</h2>
+        <img src={sadBird} alt="sad bird" className="w-[260px] mt-6 drop-shadow-[0_16px_30px_rgba(0,0,0,0.2)]" />
+      </div>
+
+      <div className="px-6 pb-[calc(var(--tabbar-height)+18px)]">
+        <div className="glass-panel-strong rounded-[var(--radius-card)] p-4">
+          <div className="glass-panel rounded-[22px] px-5 py-4 space-y-4 text-[color:var(--text-dark)]">
+            <div className="flex items-center justify-between text-[18px] font-semibold">
+              <span>Счёт</span>
+              <span>{roundedScore}</span>
+            </div>
+            <div className="h-px bg-white/30" />
+            <div className="flex items-center justify-between text-[18px] font-semibold">
+              <span>Рекорд</span>
+              <span>{roundedHigh}</span>
+            </div>
+            <div className="h-px bg-white/30" />
+            <div className="flex items-center justify-between text-[18px] font-semibold">
+              <span>Заработано</span>
+              <span className="flex items-center gap-1">
+                +{coinsEarned}
+                <img src={bitcoinSign} alt="btc" className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+
+          <button onClick={onRestart} className="btn-primary w-full mt-4 py-3 text-[18px] font-semibold">
+            Играть снова
+          </button>
           {isNewRecord && (
-            <p
-              style={{
-                fontSize: '13px',
-                color: '#d6a34a',
-                marginTop: '6px',
-                fontWeight: 600,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-              }}
-            >
-              ★ Новый рекорд! ★
-            </p>
+            <p className="text-center text-white/80 text-[12px] mt-2">★ Новый рекорд! ★</p>
           )}
         </div>
-
-        {/* ── Scores ────────────────────────────────────────────── */}
-        <div
-          style={{
-            width: '100%',
-            background: 'rgba(255, 255, 255, 0.04)',
-            borderRadius: '14px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column' as const,
-            gap: '10px',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <span style={{ fontSize: '14px', color: 'rgba(243,245,244,0.6)', fontWeight: 500 }}>
-              Счёт
-            </span>
-            <span style={{ fontSize: '26px', color: '#f3f5f4', fontWeight: 700 }}>{roundedScore}</span>
-          </div>
-          <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)' }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <span style={{ fontSize: '14px', color: 'rgba(243,245,244,0.6)', fontWeight: 500 }}>
-              Лучший
-            </span>
-            <span style={{ fontSize: '18px', color: '#d6a34a', fontWeight: 600 }}>{roundedHigh}</span>
-          </div>
-        </div>
-
-        {/* ── Coins ─────────────────────────────────────────────── */}
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'linear-gradient(135deg, rgba(214, 163, 74, 0.16), rgba(214, 163, 74, 0.08))',
-            border: '1px solid rgba(214, 163, 74, 0.3)',
-            borderRadius: '12px',
-            padding: '10px 20px',
-          }}
-        >
-          <span style={{ fontSize: '20px' }}>🪙</span>
-          <span style={{ fontSize: '18px', fontWeight: 700, color: '#d6a34a' }}>+{coinsEarned}</span>
-          <span style={{ fontSize: '12px', color: 'rgba(214, 163, 74, 0.6)', fontWeight: 500 }}>
-            за игру
-          </span>
-        </div>
-
-        {/* ── Restart button ────────────────────────────────────── */}
-        <button
-          onClick={onRestart}
-          className="active:scale-95 transition-transform"
-          style={{
-            width: '100%',
-            padding: '14px 0',
-            fontSize: '17px',
-            fontWeight: 700,
-            color: '#f5f5f7',
-            background: '#2b2b2e',
-            border: 'none',
-            borderRadius: '14px',
-            cursor: 'pointer',
-            boxShadow: 'none',
-            letterSpacing: '0.5px',
-          }}
-        >
-          Restart
-        </button>
-
-        <p style={{ fontSize: '12px', color: 'rgba(243, 245, 244, 0.35)', margin: 0 }}>
-          или нажми Enter
-        </p>
       </div>
     </div>
   )

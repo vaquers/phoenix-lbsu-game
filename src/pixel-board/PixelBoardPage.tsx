@@ -11,6 +11,7 @@ import {
 } from './socketClient'
 import { centerViewport } from './utils/viewportMath'
 import { DEFAULT_SCALE } from './constants/pixelBoard.config'
+import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 export function PixelBoardPage() {
   const loading = usePixelBoardStore((s) => s.loading)
@@ -93,10 +94,23 @@ export function PixelBoardPage() {
     <div
       className="w-full h-full flex flex-col relative overflow-hidden"
       style={{
-        background: 'var(--bg)',
+        background: 'transparent',
         paddingBottom: 'var(--tabbar-height)',
       }}
     >
+      <div className="flex items-center justify-between px-5 pt-4">
+        <button className="top-capsule flex items-center gap-2 px-4 py-2 rounded-full text-[15px] font-semibold">
+          <img src={xmarkIcon} alt="" className="w-4 h-4" />
+          Close
+        </button>
+        <div className="top-capsule flex items-center gap-3 px-4 py-2 rounded-full">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 12l4 4 8-8" />
+          </svg>
+          <span className="text-white/80 text-lg">• • •</span>
+        </div>
+      </div>
+
       <PixelBoardToolbar />
 
       {/* Canvas area — rounded white container */}
@@ -104,11 +118,12 @@ export function PixelBoardPage() {
         ref={containerRef}
         className="flex-1 min-h-0 relative overflow-hidden"
         style={{
-          background: 'var(--surface-1)',
-          borderRadius: 24,
+          background: '#ffffff',
+          borderRadius: 'var(--radius-card)',
           marginLeft: 'calc(var(--safe-left) + 12px)',
           marginRight: 'calc(var(--safe-right) + 12px)',
           marginBottom: 8,
+          boxShadow: '0 8px 18px rgba(0,0,0,0.18)',
           touchAction: 'none',
           cursor: 'crosshair',
           WebkitUserSelect: 'none',
@@ -119,16 +134,16 @@ export function PixelBoardPage() {
 
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="glass-panel rounded-xl px-6 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
-              <p className="text-[color:var(--text-muted)] text-sm">Loading board...</p>
+            <div className="glass-panel-strong rounded-xl px-6 py-4">
+              <p className="text-black/70 text-sm">Loading board...</p>
             </div>
           </div>
         )}
 
         {error && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-            <div className="bg-[rgba(217,106,106,0.12)] rounded-xl px-6 py-4 border border-[rgba(217,106,106,0.25)]">
-              <p className="text-[color:var(--error)] text-sm">{error}</p>
+            <div className="glass-panel-strong rounded-xl px-6 py-4">
+              <p className="text-black/70 text-sm">{error}</p>
             </div>
           </div>
         )}
@@ -138,10 +153,10 @@ export function PixelBoardPage() {
           className={[
             'absolute bottom-3 right-3 w-2 h-2 rounded-full z-20 pointer-events-none transition-colors',
             connectionStatus === 'connected'
-              ? 'bg-[color:var(--success)]'
+              ? 'bg-[#38E26C]'
               : connectionStatus === 'connecting'
-                ? 'bg-[color:var(--warning)]'
-                : 'bg-[color:var(--error)]',
+                ? 'bg-[#FFD36B]'
+                : 'bg-[#EC432D]',
           ].join(' ')}
         />
       </div>

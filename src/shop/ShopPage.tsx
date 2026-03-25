@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { MerchCatalog } from './MerchCatalog'
 import { PhotoSubmission } from './PhotoSubmission'
+import xmarkIcon from '../../assets/symbols/xmark.svg'
 
 type ShopTab = 'merch' | 'photo'
 
@@ -9,19 +10,33 @@ export function ShopPage() {
 
   return (
     <div 
-      className="w-full h-full flex flex-col bg-[color:var(--bg)] text-[color:var(--text-primary)] overflow-hidden font-sans"
+      className="w-full h-full flex flex-col overflow-hidden font-sans"
       style={{ paddingTop: 'max(var(--safe-top), 16px)' }}
     >
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-5 pt-2">
+        <button className="top-capsule flex items-center gap-2 px-4 py-2 rounded-full text-[15px] font-semibold">
+          <img src={xmarkIcon} alt="" className="w-4 h-4" />
+          Close
+        </button>
+        <div className="top-capsule flex items-center gap-3 px-4 py-2 rounded-full">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 12l4 4 8-8" />
+          </svg>
+          <span className="text-white/80 text-lg">• • •</span>
+        </div>
+      </div>
+
       {/* Segmented Control */}
-      <div className="px-4 pb-3 pt-2">
-        <div className="flex bg-[color:var(--surface-2)] rounded-[24px] p-1 gap-1 border border-[color:var(--border)]">
+      <div className="px-5 pb-3 pt-4">
+        <div className="glass-panel rounded-full p-1 gap-1 flex">
           <button
             onClick={() => setTab('merch')}
             className={[
-              'flex-1 py-2 rounded-[20px] text-[15px] font-semibold transition',
+              'flex-1 py-2 rounded-full text-[16px] font-semibold transition',
               tab === 'merch'
-                ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] shadow-[0_2px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/10'
-                : 'text-[color:var(--text-muted)] hover:text-[color:var(--text-secondary)]'
+                ? 'bg-white text-black shadow-[0_6px_16px_rgba(0,0,0,0.15)]'
+                : 'text-white/80'
             ].join(' ')}
           >
             Мерч
@@ -29,10 +44,10 @@ export function ShopPage() {
           <button
             onClick={() => setTab('photo')}
             className={[
-              'flex-1 py-2 rounded-[20px] text-[15px] font-semibold transition',
+              'flex-1 py-2 rounded-full text-[16px] font-semibold transition',
               tab === 'photo'
-                ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] shadow-[0_2px_10px_rgba(0,0,0,0.35)] ring-1 ring-white/10'
-                : 'text-[color:var(--text-muted)] hover:text-[color:var(--text-secondary)]'
+                ? 'bg-white text-black shadow-[0_6px_16px_rgba(0,0,0,0.15)]'
+                : 'text-white/80'
             ].join(' ')}
           >
             Фото на ТВ
@@ -41,7 +56,7 @@ export function ShopPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-10">
+      <div className="flex-1 min-h-0 overflow-y-auto px-5 pb-10">
         {tab === 'merch' ? <MerchCatalog /> : <PhotoSubmission />}
       </div>
     </div>

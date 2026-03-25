@@ -14,28 +14,28 @@ import cartIconFill from '../../../../assets/symbols/cart.fill copy.svg';
 const TABS = [
   {
     id: 'game',
-    label: 'Game',
+    label: 'Игра',
     icon: gameIcon,
     iconActive: gameIconFill,
     path: '/game',
   },
   {
     id: 'pixel-board',
-    label: 'Pixel',
+    label: 'Доска',
     icon: pixelIcon,
     iconActive: pixelIconFill,
     path: '/pixel-board',
   },
   {
     id: 'leaderboard',
-    label: 'Rating',
+    label: 'Рейтинг',
     icon: trophyIcon,
     iconActive: trophyIconFill,
     path: '/leaderboard',
   },
   {
     id: 'shop',
-    label: 'Shop',
+    label: 'Магазин',
     icon: cartIcon,
     iconActive: cartIconFill,
     path: '/shop',

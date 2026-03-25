@@ -8,7 +8,7 @@ export function PauseOverlay() {
 
   return (
     <div
-      className="absolute inset-0 flex flex-col items-center justify-center bg-[rgba(5,7,6,0.7)] text-[color:var(--text-primary)] z-20"
+      className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 text-white z-20"
       style={{
         padding:
           'var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left)',
@@ -16,7 +16,7 @@ export function PauseOverlay() {
       onClick={() => setPhase('playing')}
     >
       <p className="text-2xl font-bold">Пауза</p>
-      <p className="text-[color:var(--text-muted)] mt-2">Нажми Esc или экран для продолжения</p>
+      <p className="text-white/80 mt-2">Нажми Esc или экран для продолжения</p>
     </div>
   )
 }

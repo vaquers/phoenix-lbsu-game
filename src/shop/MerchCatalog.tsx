@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import type { MerchItem } from '../shared/types'
+import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
 
 export function MerchCatalog() {
   const [items, setItems] = useState<MerchItem[]>([])
@@ -41,7 +42,7 @@ export function MerchCatalog() {
   }
 
   if (loading) {
-    return <p className="text-[color:var(--text-muted)] text-sm mt-4 text-center">Загрузка каталога...</p>
+    return <p className="text-white/80 text-sm mt-4 text-center">Загрузка каталога...</p>
   }
 
   return (
@@ -49,10 +50,10 @@ export function MerchCatalog() {
       {message && (
         <div
           className={[
-            'mb-4 px-4 py-2.5 rounded-xl text-sm font-medium text-center',
+            'mb-4 px-4 py-2.5 rounded-[22px] text-sm font-medium text-center border',
             message.type === 'success'
-              ? 'bg-[rgba(79,175,124,0.12)] text-[color:var(--success)] border border-[rgba(79,175,124,0.25)]'
-              : 'bg-[rgba(217,106,106,0.12)] text-[color:var(--error)] border border-[rgba(217,106,106,0.25)]',
+              ? 'bg-white/40 text-black border border-white/40'
+              : 'bg-white/35 text-black border border-white/30',
           ].join(' ')}
         >
           {message.text}
@@ -67,9 +68,9 @@ export function MerchCatalog() {
           return (
             <div
               key={item.id}
-              className="bg-[color:var(--surface-2)] rounded-[28px] p-3.5 flex flex-col border border-[color:var(--border)] shadow-[0_8px_24px_rgba(0,0,0,0.35)] h-full"
+              className="glass-panel-strong rounded-[var(--radius-card)] p-3.5 flex flex-col h-full"
             >
-              <div className="w-full aspect-square rounded-[20px] mb-3 flex items-center justify-center overflow-hidden bg-[color:var(--surface-3)] border border-[color:var(--border)]">
+              <div className="w-full aspect-square rounded-[24px] mb-3 flex items-center justify-center overflow-hidden bg-white/80">
                 {/* Dynamically fallback to procedural initials if image is missing */}
                 <img 
                   src="/merch/stickers.png" 
@@ -81,17 +82,18 @@ export function MerchCatalog() {
                 />
               </div>
               
-              <h3 className="font-bold text-[15px] leading-tight text-[color:var(--text-primary)] line-clamp-2">
+              <h3 className="font-bold text-[15px] leading-tight text-black line-clamp-2">
                 {item.title}
               </h3>
               
-              <p className="text-[color:var(--text-muted)] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
+              <p className="text-[rgba(0,0,0,0.7)] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
                 {item.description}
               </p>
               
               <div className="flex items-center justify-between mt-auto">
-                <span className="text-[color:var(--text-primary)] font-semibold text-[16px] flex items-center gap-0.5">
-                  {item.price} <span className="text-[13px] opacity-90">💰</span>
+                <span className="text-black font-semibold text-[16px] flex items-center gap-1">
+                  {item.price}
+                  <img src={bitcoinSign} alt="btc" className="w-4 h-4" />
                 </span>
                 
                 <button
@@ -100,8 +102,8 @@ export function MerchCatalog() {
                   className={[
                     'px-[14px] py-1.5 rounded-full text-[13px] font-semibold transition',
                     canAfford && item.available
-                      ? 'bg-[color:var(--surface-3)] text-[color:var(--text-primary)] hover:bg-[color:var(--surface-2)] active:scale-95 border border-[color:var(--border)]'
-                      : 'bg-[color:var(--surface-2)] text-[color:var(--text-muted)] cursor-not-allowed border border-[color:var(--border-subtle)]',
+                      ? 'bg-[color:var(--accent)] text-white active:scale-95'
+                      : 'bg-[color:var(--secondary-btn)] text-white/70 cursor-not-allowed',
                   ].join(' ')}
                 >
                   {isBuying ? '...' : 'Купить'}
