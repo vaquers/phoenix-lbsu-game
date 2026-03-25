@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Unbounded';
+  src: url('../../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -15,6 +23,7 @@ html, body, #root {
   background: radial-gradient(circle at top, #1a1a1c 0%, #121212 55%);
   color: #f5f5f7;
   color-scheme: dark;
+  font-family: 'Unbounded', system-ui, -apple-system, sans-serif;
 }
 
 :root {

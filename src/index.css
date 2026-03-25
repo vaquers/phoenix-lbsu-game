@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800&display=swap');
+@font-face {
+  font-family: 'Unbounded';
+  src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --grad-1: #FDB153;
