@@ -38,8 +38,6 @@ export function CameraFollow() {
     // Force upright orientation
     camera.up.set(0, 1, 0)
     camera.lookAt(look.current.x, look.current.y, look.current.z)
-    camera.rotation.z = 0
-    camera.rotation.y = 0
   })
 
   return null

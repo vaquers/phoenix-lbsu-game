@@ -73,6 +73,7 @@ export function GameScene() {
           shadows
           onCreated={({ camera, scene, gl }) => {
             camera.lookAt(CAMERA_LOOK_AHEAD[0], CAMERA_LOOK_AHEAD[1], CAMERA_LOOK_AHEAD[2])
+            camera.up.set(0, 1, 0)
             scene.background = new Color(DEFAULT_BACKGROUND_COLOR)
             const canvas = gl.domElement
             const onLost = (e: Event) => {
