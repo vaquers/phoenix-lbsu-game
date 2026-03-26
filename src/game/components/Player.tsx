@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { AnimationMixer, type Group, type AnimationAction, type AnimationClip } from 'three'
+import { AnimationMixer, Box3, Vector3, type Group, type AnimationAction, type AnimationClip } from 'three'
 import { useGameStore } from '../store/gameStore'
 import { SLIDE_HEIGHT, PLAYER_ROTATION_Y } from '../utils/constants'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -38,6 +38,7 @@ export function Player() {
   const meshRef = useRef<Group>(null)
   const runPhase = useRef(0)
   const [model, setModel] = useState<Group | null>(null)
+  const [modelYOffset, setModelYOffset] = useState(MODEL_Y_OFFSET)
   const mixerRef = useRef<AnimationMixer | null>(null)
   const actionsRef = useRef<Record<ActionName, AnimationAction | null>>({
     run: null,
@@ -61,6 +62,10 @@ export function Player() {
             obj.receiveShadow = true
           }
         })
+        const box = new Box3().setFromObject(gltf.scene)
+        const min = new Vector3()
+        box.getMin(min)
+        setModelYOffset(-min.y)
         clipsRef.current = gltf.animations ?? []
         setModel(gltf.scene as Group)
       },
@@ -154,8 +159,8 @@ export function Player() {
         <primitive
           object={model}
           scale={MODEL_SCALE}
-          position={[0, MODEL_Y_OFFSET, 0]}
-          rotation={[0, PLAYER_ROTATION_Y, 0]}
+          position={[0, modelYOffset, 0]}
+          rotation={[0, PLAYER_ROTATION_Y + Math.PI, 0]}
         />
       ) : (
         <PlayerFallback />
