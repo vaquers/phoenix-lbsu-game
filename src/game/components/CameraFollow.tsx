@@ -15,10 +15,10 @@ export function CameraFollow() {
   const look = useRef({ x: CAMERA_LOOK_AHEAD[0], y: CAMERA_LOOK_AHEAD[1], z: CAMERA_LOOK_AHEAD[2] })
 
   useFrame(() => {
-    const { playerX, playerY, speed } = useGameStore.getState()
+    const { playerX, playerY } = useGameStore.getState()
 
-    const tgtX = playerX * 0.5 + CAMERA_OFFSET[0]
-    const tgtY = playerY + CAMERA_OFFSET[1]
+    const tgtX = playerX * 0.55 + CAMERA_OFFSET[0]
+    const tgtY = playerY * 0.85 + CAMERA_OFFSET[1]
     const tgtZ = CAMERA_OFFSET[2]
 
     pos.current.x += (tgtX - pos.current.x) * CAMERA_LERP_X
@@ -27,18 +27,16 @@ export function CameraFollow() {
 
     camera.position.set(pos.current.x, pos.current.y, pos.current.z)
 
-    const lx = playerX * 0.3 + CAMERA_LOOK_AHEAD[0]
-    const ly = playerY * 0.5 + CAMERA_LOOK_AHEAD[1]
+    const lx = playerX * 0.35 + CAMERA_LOOK_AHEAD[0]
+    const ly = playerY * 0.55 + CAMERA_LOOK_AHEAD[1]
     const lz = CAMERA_LOOK_AHEAD[2]
 
     look.current.x += (lx - look.current.x) * CAMERA_LERP_X
     look.current.y += (ly - look.current.y) * CAMERA_LERP_Y * 0.5
     look.current.z += (lz - look.current.z) * CAMERA_LERP_Z
 
+    camera.up.set(0, 1, 0)
     camera.lookAt(look.current.x, look.current.y, look.current.z)
-
-    const pitch = Math.max(-0.08, Math.min(0.05, (speed - 10) * 0.002))
-    camera.rotation.x += (pitch - camera.rotation.x) * 0.05
     camera.rotation.z = 0
   })
 
