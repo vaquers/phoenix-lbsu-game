@@ -4,7 +4,7 @@ import type { Group } from 'three'
 import { useGameStore } from '../store/gameStore'
 import { SLIDE_HEIGHT, PLAYER_ROTATION_Y } from '../utils/constants'
 import { ASSETS } from '../config/assets'
-import { useGLTF } from '@react-three/drei'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 function PlayerFallback() {
   return (
@@ -29,31 +29,31 @@ function PlayerFallback() {
   )
 }
 
-function PlayerModel() {
-  const gltf = useGLTF(ASSETS.models.player)
-  return (
-    <primitive
-      object={gltf.scene}
-      scale={0.9}
-      position={[0, -0.2, 0]}
-      rotation={[0, PLAYER_ROTATION_Y, 0]}
-      castShadow
-    />
-  )
-}
-
 export function Player() {
   const meshRef = useRef<Group>(null)
   const runPhase = useRef(0)
-  const [hasModel, setHasModel] = useState(false)
+  const [model, setModel] = useState<Group | null>(null)
 
   useEffect(() => {
     let mounted = true
-    fetch(ASSETS.models.player, { method: 'HEAD' })
-      .then((res) => {
-        if (mounted && res.ok) setHasModel(true)
-      })
-      .catch(() => {})
+    const loader = new GLTFLoader()
+    loader.load(
+      ASSETS.models.player,
+      (gltf) => {
+        if (!mounted) return
+        gltf.scene.traverse((obj: any) => {
+          if (obj && obj.isMesh) {
+            obj.castShadow = true
+            obj.receiveShadow = true
+          }
+        })
+        setModel(gltf.scene as Group)
+      },
+      undefined,
+      () => {
+        if (mounted) setModel(null)
+      },
+    )
     return () => {
       mounted = false
     }
@@ -83,7 +83,16 @@ export function Player() {
 
   return (
     <group ref={meshRef}>
-      {hasModel ? <PlayerModel /> : <PlayerFallback />}
+      {model ? (
+        <primitive
+          object={model}
+          scale={0.9}
+          position={[0, -0.2, 0]}
+          rotation={[0, PLAYER_ROTATION_Y, 0]}
+        />
+      ) : (
+        <PlayerFallback />
+      )}
     </group>
   )
 }

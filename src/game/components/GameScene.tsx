@@ -8,12 +8,13 @@ import { CityBackground } from './CityBackground'
 import { CameraFollow } from './CameraFollow'
 import { useGameLoop } from '../hooks/useGameLoop'
 import { useGameStore } from '../store/gameStore'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { CAMERA_OFFSET, CAMERA_LOOK_AHEAD, CAMERA_FOV } from '../utils/constants'
 import { DEFAULT_BACKGROUND_COLOR } from '../utils/loadAssets'
 import { Color } from 'three'
 import { Skybox } from './Skybox'
 import { AssetProvider } from '../contexts/AssetContext'
+import { GameErrorBoundary } from './GameErrorBoundary'
 
 function SceneContent() {
   useGameLoop()
@@ -43,25 +44,65 @@ function SceneContent() {
 }
 
 export function GameScene() {
+  const [contextLost, setContextLost] = useState(false)
+  const cleanupRef = useRef<(() => void) | null>(null)
+
+  useEffect(() => {
+    return () => cleanupRef.current?.()
+  }, [])
+
   return (
     <div className="absolute inset-0 w-full h-full">
-      <Canvas
-        camera={{
-          position: [CAMERA_OFFSET[0], CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
-          fov: CAMERA_FOV,
-        }}
-        gl={{ antialias: true, alpha: false }}
-        dpr={[1, 2]}
-        shadows
-        onCreated={({ camera, scene }) => {
-          camera.lookAt(CAMERA_LOOK_AHEAD[0], CAMERA_LOOK_AHEAD[1], CAMERA_LOOK_AHEAD[2])
-          scene.background = new Color(DEFAULT_BACKGROUND_COLOR)
-        }}
+      <GameErrorBoundary
+        fallback={
+          <div className="absolute inset-0 flex items-center justify-center text-white bg-black/30">
+            <div className="glass-panel-strong rounded-[22px] px-6 py-4 text-center">
+              <p className="text-lg font-semibold">Ошибка рендера сцены</p>
+              <p className="text-white/80 text-sm mt-1">Перезагрузите мини‑апп</p>
+            </div>
+          </div>
+        }
       >
-        <Suspense fallback={null}>
-          <SceneContent />
-        </Suspense>
-      </Canvas>
+        <Canvas
+          camera={{
+            position: [CAMERA_OFFSET[0], CAMERA_OFFSET[1], CAMERA_OFFSET[2]],
+            fov: CAMERA_FOV,
+          }}
+          gl={{ antialias: true, alpha: false }}
+          dpr={[1, 2]}
+          shadows
+          onCreated={({ camera, scene, gl }) => {
+            camera.lookAt(CAMERA_LOOK_AHEAD[0], CAMERA_LOOK_AHEAD[1], CAMERA_LOOK_AHEAD[2])
+            scene.background = new Color(DEFAULT_BACKGROUND_COLOR)
+            const canvas = gl.domElement
+            const onLost = (e: Event) => {
+              e.preventDefault()
+              setContextLost(true)
+            }
+            const onRestored = () => {
+              setContextLost(false)
+            }
+            canvas.addEventListener('webglcontextlost', onLost, false)
+            canvas.addEventListener('webglcontextrestored', onRestored, false)
+            cleanupRef.current = () => {
+              canvas.removeEventListener('webglcontextlost', onLost)
+              canvas.removeEventListener('webglcontextrestored', onRestored)
+            }
+          }}
+        >
+          <Suspense fallback={null}>
+            <SceneContent />
+          </Suspense>
+        </Canvas>
+        {contextLost && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+            <div className="glass-panel-strong rounded-[22px] px-6 py-4 text-center">
+              <p className="text-lg font-semibold">WebGL отключён</p>
+              <p className="text-white/80 text-sm mt-1">Попробуйте перезагрузить</p>
+            </div>
+          </div>
+        )}
+      </GameErrorBoundary>
     </div>
   )
 }
