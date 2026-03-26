@@ -4,8 +4,10 @@ import { AnimationMixer, Box3, Vector3, type Group, type AnimationAction, type A
 import { useGameStore } from '../store/gameStore'
 import { SLIDE_HEIGHT, PLAYER_ROTATION_Y } from '../utils/constants'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import grannyUrl from '../../../assets/models/granny.glb?url'
 
-const MODEL_URL = new URL('../../../assets/models/granny.glb', import.meta.url).href
+const MODEL_URL = grannyUrl
 const MODEL_SCALE = 0.85
 const MODEL_Y_PADDING = 0.02
 
@@ -29,6 +31,9 @@ export function Player() {
   useEffect(() => {
     let mounted = true
     const loader = new GLTFLoader()
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/')
+    loader.setDRACOLoader(dracoLoader)
     loader.load(
       MODEL_URL,
       (gltf) => {
@@ -47,7 +52,8 @@ export function Player() {
         setModel(gltf.scene as Group)
       },
       undefined,
-      () => {
+      (err) => {
+        console.error('Failed to load GLB model:', MODEL_URL, err)
         if (mounted) setModel(null)
       },
     )
