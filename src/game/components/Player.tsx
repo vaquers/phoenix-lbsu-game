@@ -1,10 +1,15 @@
 import { useRef, useEffect, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group } from 'three'
+import { AnimationMixer, type Group, type AnimationAction, type AnimationClip } from 'three'
 import { useGameStore } from '../store/gameStore'
 import { SLIDE_HEIGHT, PLAYER_ROTATION_Y } from '../utils/constants'
-import { ASSETS } from '../config/assets'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+
+const MODEL_URL = new URL('../../../assets/models/granny.glb', import.meta.url).href
+const MODEL_SCALE = 0.85
+const MODEL_Y_OFFSET = -0.25
+
+type ActionName = 'run' | 'jump' | 'idle' | 'slide'
 
 function PlayerFallback() {
   return (
@@ -33,12 +38,21 @@ export function Player() {
   const meshRef = useRef<Group>(null)
   const runPhase = useRef(0)
   const [model, setModel] = useState<Group | null>(null)
+  const mixerRef = useRef<AnimationMixer | null>(null)
+  const actionsRef = useRef<Record<ActionName, AnimationAction | null>>({
+    run: null,
+    jump: null,
+    idle: null,
+    slide: null,
+  })
+  const currentAction = useRef<ActionName>('run')
+  const clipsRef = useRef<AnimationClip[]>([])
 
   useEffect(() => {
     let mounted = true
     const loader = new GLTFLoader()
     loader.load(
-      ASSETS.models.player,
+      MODEL_URL,
       (gltf) => {
         if (!mounted) return
         gltf.scene.traverse((obj: any) => {
@@ -47,6 +61,7 @@ export function Player() {
             obj.receiveShadow = true
           }
         })
+        clipsRef.current = gltf.animations ?? []
         setModel(gltf.scene as Group)
       },
       undefined,
@@ -58,6 +73,37 @@ export function Player() {
       mounted = false
     }
   }, [])
+
+  useEffect(() => {
+    if (!model) return
+    const mixer = new AnimationMixer(model)
+    mixerRef.current = mixer
+
+    const clips = clipsRef.current
+    const findClip = (name: string) =>
+      clips.find((c) => c.name.toLowerCase().includes(name))
+
+    const runClip = findClip('run') ?? findClip('walk') ?? clips[0]
+    const jumpClip = findClip('jump')
+    const idleClip = findClip('idle')
+    const slideClip = findClip('slide')
+
+    actionsRef.current.run = runClip ? mixer.clipAction(runClip) : null
+    actionsRef.current.jump = jumpClip ? mixer.clipAction(jumpClip) : null
+    actionsRef.current.idle = idleClip ? mixer.clipAction(idleClip) : null
+    actionsRef.current.slide = slideClip ? mixer.clipAction(slideClip) : null
+
+    const start = actionsRef.current.run
+    if (start) {
+      start.reset().fadeIn(0.1).play()
+      currentAction.current = 'run'
+    }
+
+    return () => {
+      mixer.stopAllAction()
+      mixerRef.current = null
+    }
+  }, [model])
 
   useFrame((_, delta) => {
     const { playerX, playerY, playerState } = useGameStore.getState()
@@ -79,6 +125,27 @@ export function Player() {
         meshRef.current.position.y = playerY
       }
     }
+
+    if (mixerRef.current) {
+      mixerRef.current.update(delta)
+    }
+
+    const nextAction: ActionName =
+      playerState === 'jump'
+        ? 'jump'
+        : playerState === 'slide'
+          ? 'slide'
+          : 'run'
+
+    if (nextAction !== currentAction.current) {
+      const prev = actionsRef.current[currentAction.current]
+      const next = actionsRef.current[nextAction] ?? actionsRef.current.run
+      if (next && next !== prev) {
+        prev?.fadeOut(0.12)
+        next.reset().fadeIn(0.12).play()
+      }
+      currentAction.current = nextAction
+    }
   })
 
   return (
@@ -86,8 +153,8 @@ export function Player() {
       {model ? (
         <primitive
           object={model}
-          scale={0.9}
-          position={[0, -0.2, 0]}
+          scale={MODEL_SCALE}
+          position={[0, MODEL_Y_OFFSET, 0]}
           rotation={[0, PLAYER_ROTATION_Y, 0]}
         />
       ) : (
