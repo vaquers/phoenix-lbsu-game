@@ -7,38 +7,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 const MODEL_URL = new URL('../../../assets/models/granny.glb', import.meta.url).href
 const MODEL_SCALE = 0.85
-const MODEL_Y_OFFSET = -0.25
+const MODEL_Y_PADDING = 0.02
 
 type ActionName = 'run' | 'jump' | 'idle' | 'slide'
-
-function PlayerFallback() {
-  return (
-    <group rotation={[0, PLAYER_ROTATION_Y, 0]}>
-      <mesh position={[0, 0.5, 0]} castShadow>
-        <boxGeometry args={[0.35, 0.5, 0.2]} />
-        <meshStandardMaterial color="#4a90d9" />
-      </mesh>
-      <mesh position={[0, 1.0, 0.05]} castShadow>
-        <sphereGeometry args={[0.2, 12, 8]} />
-        <meshStandardMaterial color="#e8c4a0" />
-      </mesh>
-      <mesh position={[-0.15, 0.2, 0.15]} castShadow>
-        <boxGeometry args={[0.12, 0.35, 0.12]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
-      <mesh position={[0.15, 0.2, 0.15]} castShadow>
-        <boxGeometry args={[0.12, 0.35, 0.12]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
-    </group>
-  )
-}
 
 export function Player() {
   const meshRef = useRef<Group>(null)
   const runPhase = useRef(0)
   const [model, setModel] = useState<Group | null>(null)
-  const [modelYOffset, setModelYOffset] = useState(MODEL_Y_OFFSET)
+  const [modelYOffset, setModelYOffset] = useState(0)
   const mixerRef = useRef<AnimationMixer | null>(null)
   const actionsRef = useRef<Record<ActionName, AnimationAction | null>>({
     run: null,
@@ -65,7 +42,7 @@ export function Player() {
         const box = new Box3().setFromObject(gltf.scene)
         const min = new Vector3()
         box.getMin(min)
-        setModelYOffset(-min.y)
+        setModelYOffset(-min.y + MODEL_Y_PADDING)
         clipsRef.current = gltf.animations ?? []
         setModel(gltf.scene as Group)
       },
@@ -155,15 +132,13 @@ export function Player() {
 
   return (
     <group ref={meshRef}>
-      {model ? (
+      {model && (
         <primitive
           object={model}
           scale={MODEL_SCALE}
           position={[0, modelYOffset, 0]}
           rotation={[0, PLAYER_ROTATION_Y + Math.PI, 0]}
         />
-      ) : (
-        <PlayerFallback />
       )}
     </group>
   )
