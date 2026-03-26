@@ -18,7 +18,4 @@ export const ASSETS = {
     obstacle: '/assets/textures/obstacle.jpg',
     coin: '/assets/textures/coin.jpg',
   },
-  models: {
-    player: '/assets/models/player.glb',
-  },
 } as const

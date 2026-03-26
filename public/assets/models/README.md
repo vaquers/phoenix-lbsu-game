@@ -1,7 +1,12 @@
-Place your exported player model here.
+Place your exported character models here.
 
-Expected path for the game:
+Expected paths (can be edited in `src/game/characters/catalog.ts`):
 
-- `public/assets/models/player.glb`
+- `public/assets/models/phoenix.glb` (default)
+- `public/assets/models/granny.glb`
+- `public/assets/models/runner-bot.glb`
+- `public/assets/models/street-kid.glb`
+- `public/assets/models/running-mad-cock.glb` (Sketchfab reference, requires local file)
+- `public/assets/models/skater.glb`
 
-If the file is missing, the game will fall back to a simple procedural player model.
+If a file is missing, the game will use a placeholder mesh and the shop will mark it as unavailable.
