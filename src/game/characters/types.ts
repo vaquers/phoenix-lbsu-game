@@ -1,5 +1,3 @@
-export type AssetSourceType = 'local_glb' | 'external_reference' | 'primitive'
-
 export type CharacterAnimations = {
   run?: string[]
   jump?: string[]
@@ -12,17 +10,11 @@ export type CharacterSpec = {
   name: string
   price: number
   isDefault?: boolean
-  assetSourceType: AssetSourceType
-  assetPath?: string
-  externalSource?: {
-    name: string
-    url: string
-    notes?: string
-  }
+  modelPath: string
   scale: number
   rotationY: number
   groundOffset: number
   animations?: CharacterAnimations
-  requiresLocalAsset?: boolean
+  isUnlockedByDefault?: boolean
   thumbnail?: string
 }

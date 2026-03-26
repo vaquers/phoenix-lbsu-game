@@ -18,12 +18,12 @@ export function CharacterShop() {
       const result: Record<string, boolean> = {}
       await Promise.all(
         CHARACTER_CATALOG.map(async (c) => {
-          if (!c.assetPath) {
+          if (!c.modelPath) {
             result[c.id] = false
             return
           }
           try {
-            const res = await fetch(c.assetPath, { method: 'HEAD' })
+            const res = await fetch(c.modelPath, { method: 'HEAD' })
             result[c.id] = res.ok
           } catch {
             result[c.id] = false
@@ -71,9 +71,9 @@ export function CharacterShop() {
 
       <div className="grid grid-cols-1 gap-4">
         {CHARACTER_CATALOG.map((c) => {
-          const isUnlocked = unlockedIds.includes(c.id) || c.isDefault
+          const isUnlocked = unlockedIds.includes(c.id) || c.isDefault || c.isUnlockedByDefault
           const isSelected = activeId === c.id
-          const available = availability[c.id] ?? !c.requiresLocalAsset
+          const available = availability[c.id] ?? true
           const disabled = !available
 
           return (
@@ -85,18 +85,10 @@ export function CharacterShop() {
                 <div className="flex items-center gap-2">
                   <h4 className="text-black font-bold text-[16px]">{c.name}</h4>
                   {c.isDefault && <span className="text-[12px] text-black/60">Default</span>}
-                  {c.assetSourceType === 'external_reference' && (
-                    <span className="text-[12px] text-black/60">Requires asset</span>
-                  )}
                 </div>
                 <div className="text-black/70 text-sm mt-1">
                   Цена: {c.price} <img src={bitcoinSign} className="inline w-3.5 h-3.5 ml-1" />
                 </div>
-                {c.externalSource && (
-                  <div className="text-[12px] text-black/50 mt-1">
-                    Референс: {c.externalSource.name}
-                  </div>
-                )}
               </div>
               <div className="flex flex-col gap-2">
                 {isSelected ? (

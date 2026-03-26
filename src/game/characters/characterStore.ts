@@ -46,7 +46,10 @@ export type CharacterStore = {
 export const useCharacterStore = create<CharacterStore>((set, get) => ({
   unlockedIds: (() => {
     const ids = loadUnlocked()
-    return ids.includes(DEFAULT_CHARACTER_ID) ? ids : [DEFAULT_CHARACTER_ID, ...ids]
+    const defaults = CHARACTER_CATALOG.filter((c) => c.isUnlockedByDefault).map((c) => c.id)
+    const merged = Array.from(new Set([...defaults, ...ids, DEFAULT_CHARACTER_ID]))
+    persistUnlocked(merged)
+    return merged
   })(),
   activeId: (() => {
     const active = loadActive()

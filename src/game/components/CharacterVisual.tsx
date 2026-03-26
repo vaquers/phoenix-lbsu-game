@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { AnimationMixer, Box3, Vector3, type Group, type AnimationAction } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import type { CharacterSpec, CharacterAnimations } from '../characters/types'
+import { DEFAULT_CHARACTER_ID, getCharacterById } from '../characters/catalog'
 
 type LoadState = 'idle' | 'loading' | 'loaded' | 'error'
 
@@ -25,6 +26,7 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
   const mixerRef = useRef<AnimationMixer | null>(null)
   const actionRef = useRef<AnimationAction | null>(null)
   const [loadState, setLoadState] = useState<LoadState>('idle')
+  const fallback = getCharacterById(DEFAULT_CHARACTER_ID)
 
   const animMap = useMemo(
     () => ({ ...DEFAULT_ANIM_MAP, ...(character.animations ?? {}) }),
@@ -33,20 +35,16 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
 
   useEffect(() => {
     let mounted = true
-    if (character.assetSourceType === 'primitive') {
-      setLoadState('error')
-      return
-    }
-    if (!character.assetPath) {
+    if (!character.modelPath) {
       setLoadState('error')
       return
     }
 
     const loader = new GLTFLoader()
     setLoadState('loading')
-    console.info('[CharacterVisual] Loading', character.id, character.assetPath)
+    console.info('[CharacterVisual] Loading', character.id, character.modelPath)
     loader.load(
-      character.assetPath,
+      character.modelPath,
       (gltf) => {
         if (!mounted) return
         const scene = gltf.scene as Group
@@ -94,7 +92,31 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
       (err) => {
         if (!mounted) return
         setLoadState('error')
-        console.error('[CharacterVisual] Failed', character.id, character.assetPath, err)
+        console.error('[CharacterVisual] Failed', character.id, character.modelPath, err)
+        if (character.id !== fallback.id && fallback.modelPath) {
+          console.warn('[CharacterVisual] Fallback to default:', fallback.id)
+          loader.load(
+            fallback.modelPath,
+            (gltf) => {
+              if (!mounted) return
+              const scene = gltf.scene as Group
+              const box = new Box3().setFromObject(scene)
+              const min = new Vector3()
+              box.getMin(min)
+              const yOffset = -min.y + (fallback.groundOffset ?? 0)
+              scene.position.set(0, yOffset, 0)
+              scene.rotation.y = fallback.rotationY
+              scene.scale.setScalar(fallback.scale)
+              rootRef.current?.add(scene)
+              modelRef.current = scene
+              setLoadState('loaded')
+            },
+            undefined,
+            (fallbackErr) => {
+              console.error('[CharacterVisual] Default fallback failed', fallbackErr)
+            },
+          )
+        }
       },
     )
 
@@ -117,7 +139,7 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
     if (mixerRef.current) mixerRef.current.update(delta)
   })
 
-  if (character.assetSourceType === 'primitive' || loadState !== 'loaded') {
+  if (loadState === 'error') {
     return (
       <group ref={rootRef}>
         <mesh castShadow>
