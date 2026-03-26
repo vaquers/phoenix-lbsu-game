@@ -35,7 +35,8 @@ export function CameraFollow() {
     look.current.y += (ly - look.current.y) * CAMERA_LERP_Y * 0.5
     look.current.z += (lz - look.current.z) * CAMERA_LERP_Z
 
-    camera.up.set(0, 1, 0)
+    // Force upright orientation (flip 180° if the view is upside down)
+    camera.up.set(0, -1, 0)
     camera.lookAt(look.current.x, look.current.y, look.current.z)
     camera.rotation.z = 0
   })
