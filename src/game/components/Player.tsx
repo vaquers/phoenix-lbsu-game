@@ -155,7 +155,7 @@ export function Player() {
           object={model}
           scale={MODEL_SCALE}
           position={[0, MODEL_Y_OFFSET, 0]}
-          rotation={[0, PLAYER_ROTATION_Y, 0]}
+          rotation={[0, PLAYER_ROTATION_Y + Math.PI, 0]}
         />
       ) : (
         <PlayerFallback />
