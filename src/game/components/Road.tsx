@@ -12,7 +12,8 @@ import {
 } from '../utils/constants'
 import { useAssets, DEFAULT_MATERIAL_COLORS } from '../contexts/AssetContext'
 
-const TOTAL_WIDTH = LANE_WIDTH * (LANE_COUNT + 0.5)
+const TOTAL_WIDTH = LANE_WIDTH * (LANE_COUNT + 0.8)
+const SIDEWALK_WIDTH = 1.6
 const SEG_LEN = ROAD_SEGMENT_LENGTH
 const SEG_COUNT = ROAD_SEGMENTS_COUNT
 const RING_LEN = SEG_COUNT * SEG_LEN
@@ -50,6 +51,24 @@ export function Road() {
             <boxGeometry args={[TOTAL_WIDTH, 0.3, SEG_LEN]} />
             <meshStandardMaterial {...roadProps} />
           </mesh>
+          {/* Sidewalks */}
+          <mesh position={[-TOTAL_WIDTH / 2 - SIDEWALK_WIDTH / 2, 0.18, 0]} receiveShadow>
+            <boxGeometry args={[SIDEWALK_WIDTH, 0.25, SEG_LEN]} />
+            <meshStandardMaterial color="#b9c1c9" />
+          </mesh>
+          <mesh position={[TOTAL_WIDTH / 2 + SIDEWALK_WIDTH / 2, 0.18, 0]} receiveShadow>
+            <boxGeometry args={[SIDEWALK_WIDTH, 0.25, SEG_LEN]} />
+            <meshStandardMaterial color="#b9c1c9" />
+          </mesh>
+          {/* Curbs */}
+          <mesh position={[-TOTAL_WIDTH / 2, 0.26, 0]} receiveShadow>
+            <boxGeometry args={[0.15, 0.18, SEG_LEN]} />
+            <meshStandardMaterial color="#9aa3aa" />
+          </mesh>
+          <mesh position={[TOTAL_WIDTH / 2, 0.26, 0]} receiveShadow>
+            <boxGeometry args={[0.15, 0.18, SEG_LEN]} />
+            <meshStandardMaterial color="#9aa3aa" />
+          </mesh>
           {[0, 1, 2].map((lane) => (
             <mesh
               key={lane}
@@ -58,6 +77,17 @@ export function Road() {
             >
               <planeGeometry args={[LANE_WIDTH * 0.9, SEG_LEN]} />
               <meshStandardMaterial {...roadProps} />
+            </mesh>
+          ))}
+          {/* Center dashed lines */}
+          {[0, 1].map((line) => (
+            <mesh
+              key={`dash-${line}`}
+              position={[(line - 0.5) * LANE_WIDTH, 0.17, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+            >
+              <planeGeometry args={[0.08, SEG_LEN - 3]} />
+              <meshStandardMaterial color="#e9e9e9" />
             </mesh>
           ))}
           {[0, 1].map((j) => (

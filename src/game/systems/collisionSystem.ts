@@ -53,8 +53,8 @@ function getObstacleBox(o: ObstacleEntity) {
     z: o.z,
     w: o.width ?? 1,
     d: o.depth ?? 1,
-    yBottom: OBSTACLE_BASE_Y,
-    yTop: OBSTACLE_BASE_Y + (o.height ?? 1.2),
+    yBottom: o.y ?? OBSTACLE_BASE_Y,
+    yTop: (o.y ?? OBSTACLE_BASE_Y) + (o.height ?? 1.2),
   }
 }
 

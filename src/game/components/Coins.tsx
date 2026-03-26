@@ -18,7 +18,7 @@ export function Coins() {
           const sceneZ = c.z - worldZ
           return (
             <group key={c.id} position={[LANE_OFFSETS[c.lane], c.y ?? COIN_Y, sceneZ]}>
-              <mesh>
+              <mesh rotation={[0, sceneZ * 0.2, 0]}>
                 <cylinderGeometry args={[0.25, 0.25, 0.08, 16]} />
                 <meshStandardMaterial {...coinProps} metalness={0.8} roughness={0.2} />
               </mesh>

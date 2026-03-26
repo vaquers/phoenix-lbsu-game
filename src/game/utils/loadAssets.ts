@@ -56,7 +56,7 @@ export function loadTexture(key: keyof typeof ASSETS.textures): Promise<THREE.Te
 }
 
 /** Цвет фона по умолчанию, если skybox не загружен */
-export const DEFAULT_BACKGROUND_COLOR = 0x87ceeb
+export const DEFAULT_BACKGROUND_COLOR = 0x9cb2c8
 
 /** Цвета по умолчанию для материалов при отсутствии текстур */
 export const DEFAULT_MATERIAL_COLORS = {

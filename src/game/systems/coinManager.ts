@@ -41,12 +41,28 @@ export function spawnCoins(
     COIN_GROUP_SIZE_MIN +
     Math.floor(Math.random() * (COIN_GROUP_SIZE_MAX - COIN_GROUP_SIZE_MIN + 1))
   const lane = Math.floor(Math.random() * LANE_COUNT) as LaneIndex
+  const pattern = Math.random()
   const result: CoinEntity[] = []
+
   for (let i = 0; i < count; i++) {
+    const offsetZ = spawnZ + i * COIN_GROUP_SPACING
+    let coinLane = lane
+    let y: number | undefined
+    if (pattern < 0.35) {
+      coinLane = lane
+    } else if (pattern < 0.65) {
+      const shift = i % 3
+      coinLane = shift === 0 ? 0 : shift === 1 ? 1 : 2
+    } else {
+      coinLane = lane
+      const phase = i / Math.max(1, count - 1)
+      y = 1.2 + Math.sin(phase * Math.PI) * 0.8
+    }
     result.push({
       id: genId(),
-      lane,
-      z: spawnZ + i * COIN_GROUP_SPACING,
+      lane: coinLane as LaneIndex,
+      z: offsetZ,
+      y,
       collected: false,
     })
   }

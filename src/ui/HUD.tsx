@@ -20,24 +20,20 @@ export function HUD() {
           'calc(var(--safe-top) + 16px) calc(var(--safe-right) + 16px) 16px calc(var(--safe-left) + 16px)',
       }}
     >
-      <div className="flex flex-col gap-1">
-        <span className="text-white font-bold text-2xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+      <div className="glass-panel-strong rounded-[22px] px-4 py-3">
+        <div className="text-white font-extrabold text-2xl leading-none">
           {Math.floor(score)}
-        </span>
-        <span className="text-white text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex items-center gap-1">
+        </div>
+        <div className="flex items-center gap-1 text-white/95 text-sm mt-1">
           {coinsCollected}
           <img src={bitcoinSign} alt="btc" className="w-4 h-4" />
-        </span>
-        <span className="text-white/90 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-          Рекорд: {Math.floor(highScore)}
-        </span>
+          <span className="text-white/70 ml-2">Рекорд {Math.floor(highScore)}</span>
+        </div>
       </div>
-      <div className="flex flex-col items-end gap-1">
-        <span className="text-white/90 text-sm drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-          Скорость: {Math.round(speed)}
-        </span>
-        <span className="text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] flex items-center gap-1">
-          Баланс: {Math.floor(userCoins)}
+      <div className="glass-panel rounded-[18px] px-4 py-2 flex flex-col items-end">
+        <span className="text-white/95 text-sm">Скорость {Math.round(speed)}</span>
+        <span className="text-white/80 text-xs flex items-center gap-1">
+          Баланс {Math.floor(userCoins)}
           <img src={bitcoinSign} alt="btc" className="w-3.5 h-3.5" />
         </span>
       </div>

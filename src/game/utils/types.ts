@@ -2,13 +2,22 @@ export type LaneIndex = 0 | 1 | 2
 
 export type PlayerState = 'run' | 'jump' | 'slide' | 'hit' | 'gameOver'
 
-export type ObstacleType = 'barrier' | 'cone' | 'train'
+export type ObstacleType =
+  | 'barrier'
+  | 'cone'
+  | 'train'
+  | 'bus'
+  | 'wall'
+  | 'gate'
+  | 'dumpster'
+  | 'crate'
 
 export interface ObstacleEntity {
   id: string
   type: ObstacleType
   lane: LaneIndex
   z: number
+  y?: number
   width?: number
   depth?: number
   height?: number
@@ -29,6 +38,7 @@ export interface PlatformEntity {
   length: number
   height: number
   width: number
+  kind?: 'roof' | 'train' | 'bus' | 'container'
 }
 
 export type GamePhase = 'menu' | 'playing' | 'paused' | 'gameOver'

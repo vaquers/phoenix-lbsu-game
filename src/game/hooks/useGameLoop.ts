@@ -71,9 +71,13 @@ export function useGameLoop() {
       } else if (action === 'jump' && s.isGrounded) {
         s.setPlayerState('jump')
         useGameStore.setState({ velocityY: JUMP_VELOCITY, isGrounded: false })
-      } else if (action === 'slide' && s.playerState === 'run' && s.isGrounded) {
-        s.setPlayerState('slide')
-        slideStartTime.current = performance.now() / 1000
+      } else if (action === 'slide') {
+        if (s.isGrounded && s.playerState === 'run') {
+          s.setPlayerState('slide')
+          slideStartTime.current = performance.now() / 1000
+        } else if (!s.isGrounded) {
+          useGameStore.setState({ velocityY: Math.min(s.velocityY, -12) })
+        }
       }
     })
     return unsub
@@ -289,10 +293,11 @@ export function useGameLoop() {
     // ── 14. Speed progression ─────────────────────────────────────────────
 
     const dist = useGameStore.getState().distance
-    const newSpeed = Math.min(
+    const targetSpeed = Math.min(
       MAX_SPEED,
-      BASE_SPEED + Math.floor(dist / SPEED_INCREASE_DISTANCE) * SPEED_INCREASE_PER_SECOND * 0.5,
+      BASE_SPEED + Math.floor(dist / SPEED_INCREASE_DISTANCE) * SPEED_INCREASE_PER_SECOND,
     )
-    useGameStore.getState().setSpeed(newSpeed)
+    const smoothed = speed + (targetSpeed - speed) * 0.04
+    useGameStore.getState().setSpeed(smoothed)
   })
 }

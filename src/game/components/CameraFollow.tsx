@@ -15,7 +15,7 @@ export function CameraFollow() {
   const look = useRef({ x: CAMERA_LOOK_AHEAD[0], y: CAMERA_LOOK_AHEAD[1], z: CAMERA_LOOK_AHEAD[2] })
 
   useFrame(() => {
-    const { playerX, playerY } = useGameStore.getState()
+    const { playerX, playerY, speed } = useGameStore.getState()
 
     const tgtX = playerX * 0.5 + CAMERA_OFFSET[0]
     const tgtY = playerY + CAMERA_OFFSET[1]
@@ -36,6 +36,11 @@ export function CameraFollow() {
     look.current.z += (lz - look.current.z) * CAMERA_LERP_Z
 
     camera.lookAt(look.current.x, look.current.y, look.current.z)
+
+    const roll = Math.max(-0.12, Math.min(0.12, -playerX * 0.05))
+    const pitch = Math.max(-0.08, Math.min(0.05, (speed - 10) * 0.002))
+    camera.rotation.z += (roll - camera.rotation.z) * 0.08
+    camera.rotation.x += (pitch - camera.rotation.x) * 0.05
   })
 
   return null

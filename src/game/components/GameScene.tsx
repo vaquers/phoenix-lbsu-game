@@ -23,11 +23,13 @@ function SceneContent() {
   return (
     <>
       <Skybox />
+      <fog attach="fog" args={['#8aa0b8', 18, 65]} />
       <CameraFollow />
       {isActive && (
         <AssetProvider>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[10, 15, 10]} intensity={1.2} castShadow shadow-mapSize={[1024, 1024]} />
+          <ambientLight intensity={0.55} />
+          <hemisphereLight color="#e8f2ff" groundColor="#495d6d" intensity={0.5} />
+          <directionalLight position={[8, 14, 6]} intensity={1.25} castShadow shadow-mapSize={[1024, 1024]} />
           <Road />
           <CityBackground />
           <Player />

@@ -27,6 +27,8 @@ export function MainMenu() {
         <h1 className="text-[32px] leading-[1.05] font-extrabold text-[#EC432D] tracking-tight whitespace-nowrap">
           Бегущий Феникс
         </h1>
+        <p className="text-white/85 text-sm mt-2">Свайп влево/вправо — смена полосы</p>
+        <p className="text-white/75 text-xs mt-1">Свайп вверх — прыжок, вниз — подкат</p>
         <img src={happyBird} alt="bird" className="w-[260px] h-auto mt-6 drop-shadow-[0_16px_30px_rgba(0,0,0,0.2)]" />
       </div>
 
