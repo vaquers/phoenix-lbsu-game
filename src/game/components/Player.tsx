@@ -5,9 +5,7 @@ import { useGameStore } from '../store/gameStore'
 import { SLIDE_HEIGHT, PLAYER_ROTATION_Y } from '../utils/constants'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
-import grannyUrl from '../../../assets/models/granny.glb?url'
-
-const MODEL_URL = grannyUrl
+const MODEL_URL = '/assets/models/granny.glb'
 const MODEL_SCALE = 0.85
 const MODEL_Y_PADDING = 0.02
 
@@ -34,10 +32,12 @@ export function Player() {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/')
     loader.setDRACOLoader(dracoLoader)
+    console.info('Loading GLB model:', MODEL_URL)
     loader.load(
       MODEL_URL,
       (gltf) => {
         if (!mounted) return
+        console.info('GLB model loaded:', MODEL_URL, gltf)
         gltf.scene.traverse((obj: any) => {
           if (obj && obj.isMesh) {
             obj.castShadow = true
