@@ -37,10 +37,9 @@ export function CameraFollow() {
 
     camera.lookAt(look.current.x, look.current.y, look.current.z)
 
-    const roll = Math.max(-0.12, Math.min(0.12, -playerX * 0.05))
     const pitch = Math.max(-0.08, Math.min(0.05, (speed - 10) * 0.002))
-    camera.rotation.z += (roll - camera.rotation.z) * 0.08
     camera.rotation.x += (pitch - camera.rotation.x) * 0.05
+    camera.rotation.z = 0
   })
 
   return null
