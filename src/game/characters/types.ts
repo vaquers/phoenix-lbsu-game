@@ -10,11 +10,16 @@ export type CharacterSpec = {
   name: string
   price: number
   isDefault?: boolean
-  modelPath: string
-  scale: number
-  rotationY: number
-  groundOffset: number
-  animations?: CharacterAnimations
+  gameModelPath: string
+  shopModelPath: string
+  gameScale: number
+  gameRotationY: number
+  gameGroundOffset: number
+  shopScale: number
+  shopRotationY: number
+  shopGroundOffset: number
+  gameAnimations?: CharacterAnimations
+  shopAnimations?: CharacterAnimations
   isUnlockedByDefault?: boolean
   thumbnail?: string
 }

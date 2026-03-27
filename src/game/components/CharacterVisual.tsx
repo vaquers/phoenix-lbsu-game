@@ -20,7 +20,9 @@ function findClipName(names: string[] | undefined, clips: any[]) {
   return clips.find((c) => lower.some((n) => c.name.toLowerCase().includes(n))) ?? null
 }
 
-export function CharacterVisual({ character }: { character: CharacterSpec }) {
+type Variant = 'game' | 'shop'
+
+export function CharacterVisual({ character, variant = 'game' }: { character: CharacterSpec; variant?: Variant }) {
   const rootRef = useRef<Group>(null)
   const modelRef = useRef<Group | null>(null)
   const mixerRef = useRef<AnimationMixer | null>(null)
@@ -28,23 +30,24 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
   const [loadState, setLoadState] = useState<LoadState>('idle')
   const fallback = getCharacterById(DEFAULT_CHARACTER_ID)
 
-  const animMap = useMemo(
-    () => ({ ...DEFAULT_ANIM_MAP, ...(character.animations ?? {}) }),
-    [character.animations],
-  )
+  const animMap = useMemo(() => {
+    const overrides = variant === 'shop' ? character.shopAnimations : character.gameAnimations
+    return { ...DEFAULT_ANIM_MAP, ...(overrides ?? {}) }
+  }, [character.gameAnimations, character.shopAnimations, variant])
 
   useEffect(() => {
     let mounted = true
-    if (!character.modelPath) {
+    const modelPath = variant === 'shop' ? character.shopModelPath : character.gameModelPath
+    if (!modelPath) {
       setLoadState('error')
       return
     }
 
     const loader = new GLTFLoader()
     setLoadState('loading')
-    console.info('[CharacterVisual] Loading', character.id, character.modelPath)
+    console.info('[CharacterVisual] Loading', character.id, modelPath)
     loader.load(
-      character.modelPath,
+      modelPath,
       (gltf) => {
         if (!mounted) return
         const scene = gltf.scene as Group
@@ -59,11 +62,13 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
         const box = new Box3().setFromObject(scene)
         const min = new Vector3()
         box.getMin(min)
-        const yOffset = -min.y + (character.groundOffset ?? 0)
+        const yOffset =
+          -min.y +
+          (variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset)
 
         scene.position.set(0, yOffset, 0)
-        scene.rotation.y = character.rotationY
-        scene.scale.setScalar(character.scale)
+        scene.rotation.y = variant === 'shop' ? character.shopRotationY : character.gameRotationY
+        scene.scale.setScalar(variant === 'shop' ? character.shopScale : character.gameScale)
 
         if (rootRef.current) {
           rootRef.current.add(scene)
@@ -92,21 +97,24 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
       (err) => {
         if (!mounted) return
         setLoadState('error')
-        console.error('[CharacterVisual] Failed', character.id, character.modelPath, err)
+        console.error('[CharacterVisual] Failed', character.id, modelPath, err)
         if (character.id !== fallback.id && fallback.modelPath) {
           console.warn('[CharacterVisual] Fallback to default:', fallback.id)
+          const fallbackPath = variant === 'shop' ? fallback.shopModelPath : fallback.gameModelPath
           loader.load(
-            fallback.modelPath,
+            fallbackPath,
             (gltf) => {
               if (!mounted) return
               const scene = gltf.scene as Group
               const box = new Box3().setFromObject(scene)
               const min = new Vector3()
               box.getMin(min)
-              const yOffset = -min.y + (fallback.groundOffset ?? 0)
+              const yOffset =
+                -min.y +
+                (variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset)
               scene.position.set(0, yOffset, 0)
-              scene.rotation.y = fallback.rotationY
-              scene.scale.setScalar(fallback.scale)
+              scene.rotation.y = variant === 'shop' ? fallback.shopRotationY : fallback.gameRotationY
+              scene.scale.setScalar(variant === 'shop' ? fallback.shopScale : fallback.gameScale)
               rootRef.current?.add(scene)
               modelRef.current = scene
               setLoadState('loaded')
@@ -138,17 +146,6 @@ export function CharacterVisual({ character }: { character: CharacterSpec }) {
   useFrame((_, delta) => {
     if (mixerRef.current) mixerRef.current.update(delta)
   })
-
-  if (loadState === 'error') {
-    return (
-      <group ref={rootRef}>
-        <mesh castShadow>
-          <boxGeometry args={[0.5, 1.1, 0.4]} />
-          <meshStandardMaterial color="#ff7b54" />
-        </mesh>
-      </group>
-    )
-  }
 
   return <group ref={rootRef} />
 }
