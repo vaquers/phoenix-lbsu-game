@@ -8,6 +8,8 @@
     "dev:mobile": "vite",
     "dev:tv": "cd tv-app && vite --port 5175",
     "dev:server": "cd server && npm run dev",
+    "build:server": "cd server && npm install && npm run build",
+    "start": "cd server && npm run start",
     "build": "vite build",
     "build:tv": "cd tv-app && vite build",
     "typecheck": "tsc --noEmit",
