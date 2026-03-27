@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CHARACTER_CATALOG } from '../game/characters/catalog'
 import { useCharacterStore } from '../game/characters/characterStore'
 import { useUserStore } from '../shared/userStore'
@@ -81,6 +81,17 @@ export function CharacterShop() {
     setTimeout(() => setMessage(null), 2000)
   }
 
+  const cards = useMemo(() => {
+    return CHARACTER_CATALOG.map((c) => {
+      const isUnlocked = unlockedIds.includes(c.id) || c.isDefault || c.isUnlockedByDefault
+      const isSelected = activeId === c.id
+      const available = availability[c.id] ?? true
+      const displayName = c.name || TitleCase(c.id)
+      const preview = SHOP_PREVIEWS[c.id] ?? previewDefault
+      return { ...c, isUnlocked, isSelected, available, displayName, preview }
+    })
+  }, [activeId, availability, unlockedIds])
+
   return (
     <div className="space-y-4">
       <div className="glass-panel-strong rounded-[24px] px-5 py-4 flex items-center justify-between">
@@ -97,75 +108,60 @@ export function CharacterShop() {
         </div>
       )}
 
-      <div className="glass-panel-strong rounded-[28px] p-4">
-        <div className="h-[240px] w-full rounded-[22px] bg-white/20 border border-white/30 overflow-hidden">
-          <img
-            src={SHOP_PREVIEWS[activeId] ?? previewDefault}
-            alt="Character preview"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-
       <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
-        {CHARACTER_CATALOG.map((c) => {
-          const isUnlocked = unlockedIds.includes(c.id) || c.isDefault || c.isUnlockedByDefault
-          const isSelected = activeId === c.id
-          const available = availability[c.id] ?? true
-          const displayName = c.name || TitleCase(c.id)
-          const preview = SHOP_PREVIEWS[c.id] ?? previewDefault
-
-          return (
-            <div
-              key={c.id}
-              className={[
-                'snap-center min-w-[260px] max-w-[280px] rounded-[24px] glass-panel-strong p-4',
-                isSelected ? 'ring-2 ring-[#EC432D]/60' : 'ring-1 ring-white/30',
-              ].join(' ')}
-            >
-              <div className="h-[180px] w-full rounded-[20px] bg-white/20 border border-white/30 overflow-hidden">
-                <img src={preview} alt={displayName} className="w-full h-full object-cover" />
-              </div>
-              <div className="mt-1 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-black font-bold text-[16px]">{displayName}</h4>
-                  <span className="text-black/70 text-sm flex items-center gap-1">
-                    {c.price}
-                    <img src={bitcoinSign} className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  {isSelected ? (
-                    <button className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold w-full">
-                      Выбран
-                    </button>
-                  ) : isUnlocked ? (
-                    <button
-                      className="px-4 py-2 rounded-full bg-white/80 text-black text-sm font-semibold w-full"
-                      onClick={() => setActive(c.id)}
-                      disabled={!available}
-                    >
-                      Выбрать
-                    </button>
-                  ) : (
-                    <button
-                      className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold w-full"
-                      onClick={() => onBuy(c.id, c.price, available)}
-                      disabled={!available}
-                    >
-                      Купить
-                    </button>
-                  )}
-                </div>
-                {!available && (
-                  <div className="text-[12px] text-black/60 text-center">
-                    Нет локального ассета
-                  </div>
-                )}
-              </div>
+        {cards.map((c) => (
+          <div
+            key={c.id}
+            className={[
+              'snap-center min-w-[260px] max-w-[280px] rounded-[26px] p-4',
+              'bg-white/20 backdrop-blur-md border border-white/30',
+              c.isSelected ? 'ring-2 ring-[#EC432D]/70' : 'ring-1 ring-white/20',
+            ].join(' ')}
+          >
+            <div className="h-[180px] rounded-[20px] overflow-hidden bg-white/10 border border-white/20">
+              <img src={c.preview} alt={c.displayName} className="w-full h-full object-cover" />
             </div>
-          )
-        })}
+
+            <div className="mt-3 flex items-center justify-between">
+              <h4 className="text-black font-bold text-[16px]">{c.displayName}</h4>
+              <span className="text-black/70 text-sm flex items-center gap-1">
+                {c.price}
+                <img src={bitcoinSign} className="w-3.5 h-3.5" />
+              </span>
+            </div>
+
+            {c.isSelected ? (
+              <button
+                className="mt-3 w-full rounded-full bg-[#D9D9D9] text-black/70 text-sm font-semibold py-2 cursor-default"
+                disabled
+              >
+                Выбран
+              </button>
+            ) : c.isUnlocked ? (
+              <button
+                className="mt-3 w-full rounded-full bg-white/80 text-black text-sm font-semibold py-2 hover:bg-white"
+                onClick={() => setActive(c.id)}
+                disabled={!c.available}
+              >
+                Выбрать
+              </button>
+            ) : (
+              <button
+                className="mt-3 w-full rounded-full bg-[#EC432D] text-white text-sm font-semibold py-2 hover:bg-[#d63b27]"
+                onClick={() => onBuy(c.id, c.price, c.available)}
+                disabled={!c.available}
+              >
+                Купить
+              </button>
+            )}
+
+            {!c.available && (
+              <div className="mt-2 text-[12px] text-black/60 text-center">
+                Нет локального ассета
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   )
