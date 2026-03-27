@@ -1,10 +1,14 @@
-import { Suspense, useEffect, useMemo, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { CHARACTER_CATALOG, getCharacterById } from '../game/characters/catalog'
+import { useEffect, useState } from 'react'
+import { CHARACTER_CATALOG } from '../game/characters/catalog'
 import { useCharacterStore } from '../game/characters/characterStore'
 import { useUserStore } from '../shared/userStore'
-import { CharacterVisual } from '../game/components/CharacterVisual'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+import previewDefault from '../../assets/models_shop/robotechnic.png'
+import previewGranny from '../../assets/models_shop/granny.png'
+import previewBigman from '../../assets/models_shop/bigman.png'
+import previewGreenwoman from '../../assets/models_shop/greenwoman.png'
+import previewMouse from '../../assets/models_shop/mouse.png'
+import previewMusculman from '../../assets/models_shop/musculman.png'
 
 type AvailabilityMap = Record<string, boolean>
 
@@ -12,29 +16,13 @@ function TitleCase(input: string) {
   return input.replace(/[-_]/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase())
 }
 
-function ShopModelStage({ characterId }: { characterId: string }) {
-  const character = useMemo(() => getCharacterById(characterId), [characterId])
-  return (
-    <Canvas
-      className="w-full h-full"
-      dpr={[1, 2]}
-      frameloop="demand"
-      gl={{ antialias: false, powerPreference: 'high-performance' }}
-      camera={{ position: [0, 1.35, 3.4], fov: 35 }}
-    >
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[2, 4, 3]} intensity={1.1} />
-      <Suspense fallback={null}>
-        <group position={[0, -0.2, 0]}>
-          <CharacterVisual character={character} variant="shop" />
-        </group>
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-          <circleGeometry args={[1.4, 32]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.25} />
-        </mesh>
-      </Suspense>
-    </Canvas>
-  )
+const SHOP_PREVIEWS: Record<string, string> = {
+  robototechnic: previewDefault,
+  granny: previewGranny,
+  bigman: previewBigman,
+  greenwoman: previewGreenwoman,
+  mouse: previewMouse,
+  musculman: previewMusculman,
 }
 
 export function CharacterShop() {
@@ -42,12 +30,7 @@ export function CharacterShop() {
   const userCoins = useUserStore((s) => s.user?.coins ?? 0)
   const spendCoins = useUserStore((s) => s.spendCoins)
   const [message, setMessage] = useState<string | null>(null)
-  const [previewId, setPreviewId] = useState<string>(activeId)
   const [availability, setAvailability] = useState<AvailabilityMap>({})
-
-  useEffect(() => {
-    setPreviewId(activeId)
-  }, [activeId])
 
   useEffect(() => {
     let cancelled = false
@@ -55,7 +38,7 @@ export function CharacterShop() {
       const result: AvailabilityMap = {}
       await Promise.all(
         CHARACTER_CATALOG.map(async (c) => {
-          const urls = [c.gameModelPath, c.shopModelPath].filter(Boolean)
+          const urls = [c.gameModelPath].filter(Boolean)
           if (!urls.length) {
             result[c.id] = false
             return
@@ -116,7 +99,11 @@ export function CharacterShop() {
 
       <div className="glass-panel-strong rounded-[28px] p-4">
         <div className="h-[240px] w-full rounded-[22px] bg-white/20 border border-white/30 overflow-hidden">
-          <ShopModelStage characterId={previewId} />
+          <img
+            src={SHOP_PREVIEWS[activeId] ?? previewDefault}
+            alt="Character preview"
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 
@@ -126,6 +113,7 @@ export function CharacterShop() {
           const isSelected = activeId === c.id
           const available = availability[c.id] ?? true
           const displayName = c.name || TitleCase(c.id)
+          const preview = SHOP_PREVIEWS[c.id] ?? previewDefault
 
           return (
             <div
@@ -135,6 +123,9 @@ export function CharacterShop() {
                 isSelected ? 'ring-2 ring-[#EC432D]/60' : 'ring-1 ring-white/30',
               ].join(' ')}
             >
+              <div className="h-[180px] w-full rounded-[20px] bg-white/20 border border-white/30 overflow-hidden">
+                <img src={preview} alt={displayName} className="w-full h-full object-cover" />
+              </div>
               <div className="mt-1 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-black font-bold text-[16px]">{displayName}</h4>
@@ -166,12 +157,6 @@ export function CharacterShop() {
                     </button>
                   )}
                 </div>
-                <button
-                  className="px-4 py-2 rounded-full bg-white/50 text-black text-xs font-semibold w-full"
-                  onClick={() => setPreviewId(c.id)}
-                >
-                  Показать
-                </button>
                 {!available && (
                   <div className="text-[12px] text-black/60 text-center">
                     Нет локального ассета
