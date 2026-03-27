@@ -92,6 +92,12 @@ export function CharacterShop() {
     })
   }, [activeId, availability, unlockedIds])
 
+  const [currentIndex, setCurrentIndex] = useState(0)
+  useEffect(() => {
+    const idx = cards.findIndex((c) => c.id === activeId)
+    if (idx >= 0) setCurrentIndex(idx)
+  }, [activeId, cards])
+
   return (
     <div className="space-y-4">
       <div className="glass-panel-strong rounded-[24px] px-5 py-4 flex items-center justify-between">
@@ -108,17 +114,25 @@ export function CharacterShop() {
         </div>
       )}
 
-      <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
+      <div
+        className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory"
+        onScroll={(e) => {
+          const el = e.currentTarget
+          const cardWidth = el.clientWidth
+          const idx = Math.round(el.scrollLeft / cardWidth)
+          if (!Number.isNaN(idx)) setCurrentIndex(Math.min(cards.length - 1, Math.max(0, idx)))
+        }}
+      >
         {cards.map((c) => (
           <div
             key={c.id}
             className={[
-              'snap-center min-w-[260px] max-w-[280px] rounded-[26px] p-4',
+              'snap-center min-w-[88%] max-w-[88%] rounded-[28px] p-5',
               'bg-white/20 backdrop-blur-md border border-white/30',
               c.isSelected ? 'ring-2 ring-[#EC432D]/70' : 'ring-1 ring-white/20',
             ].join(' ')}
           >
-            <div className="h-[180px] rounded-[20px] overflow-hidden bg-white/10 border border-white/20">
+            <div className="h-[260px] rounded-[22px] overflow-hidden bg-white/10 border border-white/20">
               <img src={c.preview} alt={c.displayName} className="w-full h-full object-cover" />
             </div>
 
@@ -161,6 +175,17 @@ export function CharacterShop() {
               </div>
             )}
           </div>
+        ))}
+      </div>
+      <div className="flex items-center justify-center gap-2">
+        {cards.map((c, idx) => (
+          <span
+            key={c.id}
+            className={[
+              'w-2 h-2 rounded-full transition',
+              idx === currentIndex ? 'bg-[#EC432D]' : 'bg-white/40',
+            ].join(' ')}
+          />
         ))}
       </div>
     </div>
