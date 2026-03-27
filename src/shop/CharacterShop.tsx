@@ -3,6 +3,7 @@ import { CHARACTER_CATALOG } from '../game/characters/catalog'
 import { useCharacterStore } from '../game/characters/characterStore'
 import { useUserStore } from '../shared/userStore'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+import { BalanceCard } from './BalanceCard'
 import previewDefault from '../../assets/models_shop/robotechnic.png'
 import previewGranny from '../../assets/models_shop/granny.png'
 import previewBigman from '../../assets/models_shop/bigman.png'
@@ -100,13 +101,7 @@ export function CharacterShop() {
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel-strong rounded-[24px] px-5 py-4 flex items-center justify-between">
-        <span className="text-black font-semibold">Баланс</span>
-        <span className="flex items-center gap-1 font-bold text-black">
-          {Math.floor(userCoins)}
-          <img src={bitcoinSign} className="w-4 h-4" />
-        </span>
-      </div>
+      <BalanceCard />
 
       {message && (
         <div className="glass-panel rounded-[20px] px-4 py-2 text-center text-black text-sm">

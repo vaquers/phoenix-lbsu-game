@@ -3,6 +3,7 @@ import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import type { MerchItem } from '../shared/types'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+import { BalanceCard } from './BalanceCard'
 
 export function MerchCatalog() {
   const [items, setItems] = useState<MerchItem[]>([])
@@ -47,6 +48,9 @@ export function MerchCatalog() {
 
   return (
     <div>
+      <div className="mb-4">
+        <BalanceCard />
+      </div>
       {message && (
         <div
           className={[

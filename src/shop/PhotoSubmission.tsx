@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react'
 import { api } from '../shared/api'
 import { useUserStore } from '../shared/userStore'
 import { DISPLAY_SUBMISSION_COST } from '../shared/config'
+import { BalanceCard } from './BalanceCard'
 
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
 
@@ -185,6 +186,7 @@ export function PhotoSubmission() {
   if (step === 'upload') {
     return (
       <div className="flex flex-col h-full space-y-4">
+        <BalanceCard />
         <div className="glass-panel-strong rounded-[var(--radius-card)] p-5 mt-2">
           <h3 className="font-bold text-[20px] text-black mb-2">Разместить фото на ТВ</h3>
           <p className="text-[rgba(0,0,0,0.6)] text-[16px] mb-4 leading-snug">
@@ -259,6 +261,9 @@ export function PhotoSubmission() {
         </button>
       </div>
 
+      <div className="px-5 pb-3">
+        <BalanceCard />
+      </div>
 
       {/* Preview Area */}
       <div className="flex-1 min-h-0 w-full relative flex items-center justify-center p-4">
