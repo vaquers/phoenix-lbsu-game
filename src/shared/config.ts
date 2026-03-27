@@ -1,5 +1,5 @@
 export const BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL ?? 'https://phoenix-lbsu-game.onrender.com'
+  import.meta.env.VITE_BACKEND_URL ?? 'https://phoenix-server-production.up.railway.app'
 
 export const DISPLAY_SUBMISSION_COST = 50
 
