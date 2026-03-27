@@ -18,7 +18,9 @@ function ShopModelStage({ characterId }: { characterId: string }) {
     <Canvas
       className="w-full h-full"
       dpr={[1, 2]}
-      camera={{ position: [0, 1.4, 3.6], fov: 35 }}
+      frameloop="demand"
+      gl={{ antialias: false, powerPreference: 'high-performance' }}
+      camera={{ position: [0, 1.35, 3.4], fov: 35 }}
     >
       <ambientLight intensity={0.8} />
       <directionalLight position={[2, 4, 3]} intensity={1.1} />
@@ -40,7 +42,12 @@ export function CharacterShop() {
   const userCoins = useUserStore((s) => s.user?.coins ?? 0)
   const spendCoins = useUserStore((s) => s.spendCoins)
   const [message, setMessage] = useState<string | null>(null)
+  const [previewId, setPreviewId] = useState<string>(activeId)
   const [availability, setAvailability] = useState<AvailabilityMap>({})
+
+  useEffect(() => {
+    setPreviewId(activeId)
+  }, [activeId])
 
   useEffect(() => {
     let cancelled = false
@@ -107,6 +114,12 @@ export function CharacterShop() {
         </div>
       )}
 
+      <div className="glass-panel-strong rounded-[28px] p-4">
+        <div className="h-[240px] w-full rounded-[22px] bg-white/20 border border-white/30 overflow-hidden">
+          <ShopModelStage characterId={previewId} />
+        </div>
+      </div>
+
       <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
         {CHARACTER_CATALOG.map((c) => {
           const isUnlocked = unlockedIds.includes(c.id) || c.isDefault || c.isUnlockedByDefault
@@ -118,14 +131,11 @@ export function CharacterShop() {
             <div
               key={c.id}
               className={[
-                'snap-center min-w-[280px] max-w-[300px] rounded-[28px] glass-panel-strong p-4',
+                'snap-center min-w-[260px] max-w-[280px] rounded-[24px] glass-panel-strong p-4',
                 isSelected ? 'ring-2 ring-[#EC432D]/60' : 'ring-1 ring-white/30',
               ].join(' ')}
             >
-              <div className="h-[220px] w-full rounded-[22px] bg-white/20 border border-white/30 overflow-hidden">
-                <ShopModelStage characterId={c.id} />
-              </div>
-              <div className="mt-3 space-y-2">
+              <div className="mt-1 space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-black font-bold text-[16px]">{displayName}</h4>
                   <span className="text-black/70 text-sm flex items-center gap-1">
@@ -156,6 +166,12 @@ export function CharacterShop() {
                     </button>
                   )}
                 </div>
+                <button
+                  className="px-4 py-2 rounded-full bg-white/50 text-black text-xs font-semibold w-full"
+                  onClick={() => setPreviewId(c.id)}
+                >
+                  Показать
+                </button>
                 {!available && (
                   <div className="text-[12px] text-black/60 text-center">
                     Нет локального ассета
