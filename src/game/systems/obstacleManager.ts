@@ -22,17 +22,7 @@ export function getNextObstacleSpawnTime(_speed: number): number {
   return OBSTACLE_SPAWN_INTERVAL_MIN + Math.random() * range
 }
 
-export function spawnObstacle(
-  worldZ: number,
-  existingObstacles: ObstacleEntity[]
-): ObstacleEntity | null {
-  const spawnZ = worldZ + OBSTACLE_SPAWN_Z_OFFSET
-  const minZ = existingObstacles.length
-    ? Math.max(...existingObstacles.map((o) => o.z)) + OBSTACLE_SPAWN_DISTANCE
-    : spawnZ
-  if (spawnZ < minZ) return null
-
-  const lane = Math.floor(Math.random() * LANE_COUNT) as LaneIndex
+function buildObstacle(lane: LaneIndex, z: number): ObstacleEntity {
   const roll = Math.random()
   const type =
     roll < 0.2 ? 'cone'
@@ -87,10 +77,31 @@ export function spawnObstacle(
     id: genId(),
     type,
     lane,
-    z: spawnZ,
+    z,
     y,
     width,
     depth,
     height,
   }
+}
+
+export function spawnObstacle(
+  worldZ: number,
+  existingObstacles: ObstacleEntity[]
+): ObstacleEntity | null {
+  const spawnZ = worldZ + OBSTACLE_SPAWN_Z_OFFSET
+  const minZ = existingObstacles.length
+    ? Math.max(...existingObstacles.map((o) => o.z)) + OBSTACLE_SPAWN_DISTANCE
+    : spawnZ
+  if (spawnZ < minZ) return null
+
+  const lane = Math.floor(Math.random() * LANE_COUNT) as LaneIndex
+  return buildObstacle(lane, spawnZ)
+}
+
+export function spawnObstacleAt(
+  lane: LaneIndex,
+  z: number,
+): ObstacleEntity {
+  return buildObstacle(lane, z)
 }

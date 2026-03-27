@@ -24,7 +24,7 @@ import {
   isOnPlatform,
   checkPlatformFrontCollision,
 } from '../systems/collisionSystem'
-import { spawnObstacle, getNextObstacleSpawnTime, resetObstacleIds } from '../systems/obstacleManager'
+import { spawnObstacle, spawnObstacleAt, getNextObstacleSpawnTime, resetObstacleIds } from '../systems/obstacleManager'
 import { spawnCoins, getNextCoinSpawnTime, resetCoinIds } from '../systems/coinManager'
 import { spawnPlatformPattern, getNextPlatformSpawnTime, resetPlatformIds } from '../systems/platformManager'
 import { subscribeInput } from '../systems/inputManager'
@@ -199,6 +199,20 @@ export function useGameLoop() {
         )
         if (!overlaps) {
           useGameStore.getState().addObstacle(obs)
+          // Дополнительные препятствия для плотного потока
+          if (Math.random() < 0.45) {
+            const extraLane = ([0, 1, 2] as LaneIndex[]).filter((l) => l !== obs.lane)[
+              Math.floor(Math.random() * 2)
+            ]
+            const extra = spawnObstacleAt(extraLane, obs.z + (Math.random() * 2 - 1))
+            const extraOverlaps = platforms.some(
+              (p) =>
+                extra.lane === p.lane && extra.z >= p.z - 3 && extra.z <= p.z + p.length + 3,
+            )
+            if (!extraOverlaps) {
+              useGameStore.getState().addObstacle(extra)
+            }
+          }
         }
       }
     }

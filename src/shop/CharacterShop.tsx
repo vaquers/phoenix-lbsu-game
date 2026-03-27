@@ -1,30 +1,68 @@
-import { useEffect, useMemo, useState } from 'react'
-import { CHARACTER_CATALOG } from '../game/characters/catalog'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { CHARACTER_CATALOG, getCharacterById } from '../game/characters/catalog'
 import { useCharacterStore } from '../game/characters/characterStore'
 import { useUserStore } from '../shared/userStore'
+import { CharacterVisual } from '../game/components/CharacterVisual'
 import bitcoinSign from '../../assets/symbols/bitcoinsign.svg'
+
+type AvailabilityMap = Record<string, boolean>
+
+function TitleCase(input: string) {
+  return input.replace(/[-_]/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase())
+}
+
+function ShopModelStage({ characterId }: { characterId: string }) {
+  const character = useMemo(() => getCharacterById(characterId), [characterId])
+  return (
+    <Canvas
+      className="w-full h-full"
+      dpr={[1, 2]}
+      camera={{ position: [0, 1.4, 3.6], fov: 35 }}
+    >
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[2, 4, 3]} intensity={1.1} />
+      <Suspense fallback={null}>
+        <group position={[0, -0.2, 0]}>
+          <CharacterVisual character={character} variant="shop" />
+        </group>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+          <circleGeometry args={[1.4, 32]} />
+          <meshStandardMaterial color="#ffffff" transparent opacity={0.25} />
+        </mesh>
+      </Suspense>
+    </Canvas>
+  )
+}
 
 export function CharacterShop() {
   const { activeId, unlockedIds, unlock, setActive } = useCharacterStore()
   const userCoins = useUserStore((s) => s.user?.coins ?? 0)
   const spendCoins = useUserStore((s) => s.spendCoins)
   const [message, setMessage] = useState<string | null>(null)
-
-  const [availability, setAvailability] = useState<Record<string, boolean>>({})
+  const [availability, setAvailability] = useState<AvailabilityMap>({})
 
   useEffect(() => {
     let cancelled = false
     const check = async () => {
-      const result: Record<string, boolean> = {}
+      const result: AvailabilityMap = {}
       await Promise.all(
         CHARACTER_CATALOG.map(async (c) => {
-          if (!c.modelPath) {
+          const urls = [c.gameModelPath, c.shopModelPath].filter(Boolean)
+          if (!urls.length) {
             result[c.id] = false
             return
           }
           try {
-            const res = await fetch(c.modelPath, { method: 'HEAD' })
-            result[c.id] = res.ok
+            const responses = await Promise.all(
+              urls.map(async (url) => {
+                const res = await fetch(url, { method: 'HEAD' })
+                if (res.ok) return true
+                const fallback = await fetch(url, { method: 'GET' })
+                return fallback.ok
+              }),
+            )
+            result[c.id] = responses.every(Boolean)
           } catch {
             result[c.id] = false
           }
@@ -40,7 +78,7 @@ export function CharacterShop() {
 
   const onBuy = (id: string, price: number, available: boolean) => {
     if (!available) {
-      setMessage('Нужен локальный файл модели')
+      setMessage('Модель недоступна. Проверь assets/models.')
       return
     }
     if (userCoins < price) {
@@ -50,7 +88,7 @@ export function CharacterShop() {
     unlock(id)
     spendCoins(price)
     setMessage('Персонаж куплен!')
-    setTimeout(() => setMessage(null), 2500)
+    setTimeout(() => setMessage(null), 2000)
   }
 
   return (
@@ -69,51 +107,59 @@ export function CharacterShop() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
         {CHARACTER_CATALOG.map((c) => {
           const isUnlocked = unlockedIds.includes(c.id) || c.isDefault || c.isUnlockedByDefault
           const isSelected = activeId === c.id
           const available = availability[c.id] ?? true
-          const disabled = !available
+          const displayName = c.name || TitleCase(c.id)
 
           return (
-            <div key={c.id} className="glass-panel-strong rounded-[24px] p-4 flex gap-4 items-center">
-              <div className="w-16 h-16 rounded-2xl bg-white/40 border border-white/40 flex items-center justify-center text-black font-bold">
-                {c.name.slice(0, 2).toUpperCase()}
+            <div
+              key={c.id}
+              className={[
+                'snap-center min-w-[280px] max-w-[300px] rounded-[28px] glass-panel-strong p-4',
+                isSelected ? 'ring-2 ring-[#EC432D]/60' : 'ring-1 ring-white/30',
+              ].join(' ')}
+            >
+              <div className="h-[220px] w-full rounded-[22px] bg-white/20 border border-white/30 overflow-hidden">
+                <ShopModelStage characterId={c.id} />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h4 className="text-black font-bold text-[16px]">{c.name}</h4>
-                  {c.isDefault && <span className="text-[12px] text-black/60">Default</span>}
+              <div className="mt-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-black font-bold text-[16px]">{displayName}</h4>
+                  <span className="text-black/70 text-sm flex items-center gap-1">
+                    {c.price}
+                    <img src={bitcoinSign} className="w-3.5 h-3.5" />
+                  </span>
                 </div>
-                <div className="text-black/70 text-sm mt-1">
-                  Цена: {c.price} <img src={bitcoinSign} className="inline w-3.5 h-3.5 ml-1" />
+                <div className="flex items-center justify-between">
+                  {isSelected ? (
+                    <button className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold w-full">
+                      Выбран
+                    </button>
+                  ) : isUnlocked ? (
+                    <button
+                      className="px-4 py-2 rounded-full bg-white/80 text-black text-sm font-semibold w-full"
+                      onClick={() => setActive(c.id)}
+                      disabled={!available}
+                    >
+                      Выбрать
+                    </button>
+                  ) : (
+                    <button
+                      className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold w-full"
+                      onClick={() => onBuy(c.id, c.price, available)}
+                      disabled={!available}
+                    >
+                      Купить
+                    </button>
+                  )}
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                {isSelected ? (
-                  <button className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold">
-                    Выбран
-                  </button>
-                ) : isUnlocked ? (
-                  <button
-                    className="px-4 py-2 rounded-full bg-white/70 text-black text-sm font-semibold"
-                    onClick={() => setActive(c.id)}
-                    disabled={disabled}
-                  >
-                    Выбрать
-                  </button>
-                ) : (
-                  <button
-                    className="px-4 py-2 rounded-full bg-[#EC432D] text-white text-sm font-semibold"
-                    onClick={() => onBuy(c.id, c.price, !disabled)}
-                    disabled={disabled}
-                  >
-                    Купить
-                  </button>
-                )}
-                {disabled && (
-                  <span className="text-[11px] text-black/50 text-center">Нет ассета</span>
+                {!available && (
+                  <div className="text-[12px] text-black/60 text-center">
+                    Нет локального ассета
+                  </div>
                 )}
               </div>
             </div>

@@ -3,6 +3,7 @@ import {
   LANE_COUNT,
   PLATFORM_HEIGHTS,
   PLATFORM_LENGTH_MIN,
+  PLATFORM_LENGTH_MAX,
   PLATFORM_WIDTH,
   PLATFORM_SPAWN_Z_OFFSET,
   PLATFORM_MIN_GAP,
@@ -40,10 +41,10 @@ type PatternType = 'single' | 'runway' | 'steps' | 'train' | 'rooftops'
 
 function pickPattern(): PatternType {
   const r = Math.random()
-  if (r < 0.35) return 'single'
-  if (r < 0.6) return 'runway'
-  if (r < 0.75) return 'steps'
-  if (r < 0.9) return 'train'
+  if (r < 0.25) return 'single'
+  if (r < 0.55) return 'runway'
+  if (r < 0.72) return 'steps'
+  if (r < 0.88) return 'train'
   return 'rooftops'
 }
 
@@ -100,7 +101,7 @@ export function spawnPlatformPattern(
   if (pattern === 'single') {
     const lane = randomLane()
     const height = randomHeight()
-    const length = PLATFORM_LENGTH_MIN + Math.random() * 5
+    const length = PLATFORM_LENGTH_MIN + Math.random() * 6
     platforms.push({ id: genId(), lane, z: spawnZ, length, height, width: PLATFORM_WIDTH, kind: 'roof' })
 
     if (Math.random() < PLATFORM_COIN_CHANCE) {
@@ -109,7 +110,7 @@ export function spawnPlatformPattern(
   } else if (pattern === 'runway') {
     const lane = randomLane()
     const height = randomHeight()
-    const totalLength = 10 + Math.random() * 10
+    const totalLength = 12 + Math.random() * (PLATFORM_LENGTH_MAX - 6)
     platforms.push({
       id: genId(),
       lane,
@@ -119,6 +120,18 @@ export function spawnPlatformPattern(
       width: PLATFORM_WIDTH,
       kind: 'roof',
     })
+    if (Math.random() < 0.35) {
+      const adjLane = (lane === 0 ? 1 : lane === 2 ? 1 : Math.random() < 0.5 ? 0 : 2) as LaneIndex
+      platforms.push({
+        id: genId(),
+        lane: adjLane,
+        z: spawnZ + 0.6,
+        length: totalLength - 1.2,
+        height,
+        width: PLATFORM_WIDTH,
+        kind: 'roof',
+      })
+    }
 
     if (Math.random() < PLATFORM_COIN_CHANCE) {
       addPlatformCoins(coins, lane, spawnZ, totalLength, height, 3 + Math.floor(Math.random() * 4))
@@ -127,8 +140,8 @@ export function spawnPlatformPattern(
     const lane = randomLane()
     const h1 = PLATFORM_HEIGHTS[0]
     const h2 = PLATFORM_HEIGHTS[Math.min(1, PLATFORM_HEIGHTS.length - 1)]
-    const len1 = 5 + Math.random() * 3
-    const len2 = 5 + Math.random() * 3
+    const len1 = 5 + Math.random() * 4
+    const len2 = 5 + Math.random() * 4
     const gap = 1.5
 
     platforms.push({
@@ -156,7 +169,7 @@ export function spawnPlatformPattern(
   } else if (pattern === 'train') {
     const lane = randomLane()
     const height = PLATFORM_HEIGHTS[1]
-    const totalLength = 14 + Math.random() * 10
+    const totalLength = 16 + Math.random() * 10
     platforms.push({
       id: genId(),
       lane,
@@ -172,9 +185,9 @@ export function spawnPlatformPattern(
   } else {
     const lane = randomLane()
     const height = PLATFORM_HEIGHTS[2]
-    const len1 = 6 + Math.random() * 4
+    const len1 = 7 + Math.random() * 5
     const gap = 2.2
-    const len2 = 6 + Math.random() * 4
+    const len2 = 7 + Math.random() * 5
     platforms.push({
       id: genId(),
       lane,
@@ -193,6 +206,18 @@ export function spawnPlatformPattern(
       width: PLATFORM_WIDTH + 0.2,
       kind: 'bus',
     })
+    if (Math.random() < 0.45) {
+      const adjLane = (lane === 0 ? 1 : lane === 2 ? 1 : Math.random() < 0.5 ? 0 : 2) as LaneIndex
+      platforms.push({
+        id: genId(),
+        lane: adjLane,
+        z: spawnZ + 0.4,
+        length: len1 + len2 + gap - 0.8,
+        height,
+        width: PLATFORM_WIDTH + 0.15,
+        kind: 'bus',
+      })
+    }
     if (Math.random() < PLATFORM_COIN_CHANCE) {
       addPlatformCoins(coins, lane, spawnZ, len1, height, 3)
       addPlatformCoins(coins, lane, spawnZ + len1 + gap, len2, height, 3)

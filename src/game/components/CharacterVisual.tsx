@@ -98,9 +98,10 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         if (!mounted) return
         setLoadState('error')
         console.error('[CharacterVisual] Failed', character.id, modelPath, err)
-        if (character.id !== fallback.id && fallback.modelPath) {
+        if (character.id !== fallback.id) {
           console.warn('[CharacterVisual] Fallback to default:', fallback.id)
           const fallbackPath = variant === 'shop' ? fallback.shopModelPath : fallback.gameModelPath
+          if (!fallbackPath) return
           loader.load(
             fallbackPath,
             (gltf) => {
