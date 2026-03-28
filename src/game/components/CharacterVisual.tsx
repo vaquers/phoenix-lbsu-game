@@ -24,11 +24,23 @@ function findClipName(names: string[] | undefined, clips: any[]) {
 
 type Variant = 'game' | 'shop'
 
+const ROTATION_FIX: Record<string, number> = {
+  granny: Math.PI,
+  robototechnic: Math.PI,
+  greenwoman: Math.PI,
+  musculman: Math.PI,
+  bigman: Math.PI,
+  mouse: Math.PI,
+}
+
 export function CharacterVisual({ character, variant = 'game' }: { character: CharacterSpec; variant?: Variant }) {
   const rootRef = useRef<Group>(null)
   const modelRef = useRef<Group | null>(null)
+  const visualRef = useRef<Group | null>(null)
   const mixerRef = useRef<AnimationMixer | null>(null)
   const actionRef = useRef<AnimationAction | null>(null)
+  const appliedRotationY = useRef<number | null>(null)
+  const lastRotationCheck = useRef(0)
   const [loadState, setLoadState] = useState<LoadState>('idle')
   const fallback = getCharacterById(DEFAULT_CHARACTER_ID)
   const { gl } = useThree()
@@ -68,12 +80,21 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
           }
         })
 
+        const rotationY = ROTATION_FIX[character.id] ?? Math.PI
+        const visualNode =
+          scene.children.length === 1 ? (scene.children[0] as Group) : scene
+        visualRef.current = visualNode
+        // Reset orientation, then apply facing direction only
+        visualNode.rotation.set(0, rotationY, 0)
+        appliedRotationY.current = rotationY
+
         const baseOffset = variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset
         let yOffset = baseOffset
+        let minY: number | undefined
         try {
-          scene.updateMatrixWorld(true)
-          const box = new Box3().setFromObject(scene)
-          const minY = box.min?.y
+          visualNode.updateMatrixWorld(true)
+          const box = new Box3().setFromObject(visualNode)
+          minY = box.min?.y
           if (Number.isFinite(minY)) {
             yOffset = -minY + baseOffset
           } else {
@@ -84,8 +105,10 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         }
 
         scene.position.set(0, yOffset, 0)
-        scene.rotation.y = variant === 'shop' ? character.shopRotationY : character.gameRotationY
         scene.scale.setScalar(variant === 'shop' ? character.shopScale : character.gameScale)
+        console.log('[CharacterVisual] root rotation:', scene.rotation.toArray(), character.id)
+        console.log('[CharacterVisual] visual rotation:', visualNode.rotation.toArray(), character.id)
+        console.log('[CharacterVisual] final minY:', minY, 'yOffset:', yOffset)
 
         if (rootRef.current) {
           rootRef.current.add(scene)
@@ -131,13 +154,21 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
             (gltf) => {
               if (!mounted) return
               const scene = gltf.scene as Group
+              const rotationY = ROTATION_FIX[fallback.id] ?? Math.PI
+              const visualNode =
+                scene.children.length === 1 ? (scene.children[0] as Group) : scene
+              visualRef.current = visualNode
+              visualNode.rotation.set(0, rotationY, 0)
+              appliedRotationY.current = rotationY
+
               const baseOffset =
                 variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset
               let yOffset = baseOffset
+              let minY: number | undefined
               try {
-                scene.updateMatrixWorld(true)
-                const box = new Box3().setFromObject(scene)
-                const minY = box.min?.y
+                visualNode.updateMatrixWorld(true)
+                const box = new Box3().setFromObject(visualNode)
+                minY = box.min?.y
                 if (Number.isFinite(minY)) {
                   yOffset = -minY + baseOffset
                 } else {
@@ -147,8 +178,10 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
                 console.warn('[CharacterVisual] Fallback BBox failed, using base offset', e)
               }
               scene.position.set(0, yOffset, 0)
-              scene.rotation.y = variant === 'shop' ? fallback.shopRotationY : fallback.gameRotationY
               scene.scale.setScalar(variant === 'shop' ? fallback.shopScale : fallback.gameScale)
+              console.log('[CharacterVisual] root rotation:', scene.rotation.toArray(), fallback.id)
+              console.log('[CharacterVisual] visual rotation:', visualNode.rotation.toArray(), fallback.id)
+              console.log('[CharacterVisual] final minY:', minY, 'yOffset:', yOffset)
               rootRef.current?.add(scene)
               modelRef.current = scene
               setLoadState('loaded')
@@ -175,6 +208,8 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         ktx2Loader.dispose()
       }
       modelRef.current = null
+      visualRef.current = null
+      appliedRotationY.current = null
       mixerRef.current = null
       actionRef.current = null
     }
@@ -182,6 +217,21 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
 
   useFrame((_, delta) => {
     if (mixerRef.current) mixerRef.current.update(delta)
+    if (visualRef.current && appliedRotationY.current !== null) {
+      const now = performance.now()
+      if (now - lastRotationCheck.current > 1000) {
+        lastRotationCheck.current = now
+        if (visualRef.current.rotation.y !== appliedRotationY.current) {
+          console.warn(
+            '[CharacterVisual] rotation overwritten:',
+            visualRef.current.rotation.y,
+            'expected',
+            appliedRotationY.current,
+            character.id,
+          )
+        }
+      }
+    }
   })
 
   return <group ref={rootRef} />
