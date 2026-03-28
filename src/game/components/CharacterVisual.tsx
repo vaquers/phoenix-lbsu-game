@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { AnimationMixer, Box3, Vector3, type Group, type AnimationAction } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import type { CharacterSpec, CharacterAnimations } from '../characters/types'
 import { DEFAULT_CHARACTER_ID, getCharacterById } from '../characters/catalog'
 
@@ -29,6 +31,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
   const actionRef = useRef<AnimationAction | null>(null)
   const [loadState, setLoadState] = useState<LoadState>('idle')
   const fallback = getCharacterById(DEFAULT_CHARACTER_ID)
+  const { gl } = useThree()
 
   const animMap = useMemo(() => {
     const overrides = variant === 'shop' ? character.shopAnimations : character.gameAnimations
@@ -37,6 +40,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
 
   useEffect(() => {
     let mounted = true
+    let ktx2Loader: KTX2Loader | null = null
     const modelPath = variant === 'shop' ? character.shopModelPath : character.gameModelPath
     if (!modelPath) {
       setLoadState('error')
@@ -44,6 +48,11 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
     }
 
     const loader = new GLTFLoader()
+    ktx2Loader = new KTX2Loader()
+      .setTranscoderPath('/basis/')
+      .detectSupport(gl)
+    loader.setKTX2Loader(ktx2Loader)
+    loader.setMeshoptDecoder(MeshoptDecoder)
     setLoadState('loading')
     console.info('[CharacterVisual] Loading', character.id, modelPath)
     loader.load(
@@ -138,11 +147,14 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         mixerRef.current.stopAllAction()
         mixerRef.current.uncacheRoot(modelRef.current || rootRef.current || undefined)
       }
+      if (ktx2Loader) {
+        ktx2Loader.dispose()
+      }
       modelRef.current = null
       mixerRef.current = null
       actionRef.current = null
     }
-  }, [character, animMap])
+  }, [character, animMap, gl, variant])
 
   useFrame((_, delta) => {
     if (mixerRef.current) mixerRef.current.update(delta)
