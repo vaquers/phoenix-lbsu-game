@@ -30,7 +30,7 @@ export function LeaderboardPage() {
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center overflow-y-auto"
+      className="w-full h-full flex flex-col items-center overflow-hidden"
       style={{
         padding:
           'calc(var(--safe-top) + 24px) calc(var(--safe-right) + 20px) calc(var(--tabbar-height) + 24px) calc(var(--safe-left) + 20px)',
@@ -48,7 +48,10 @@ export function LeaderboardPage() {
 
       {!loading && entries.length > 0 && (
         <div className="w-full max-w-md glass-panel-strong rounded-[var(--radius-card)] overflow-hidden">
-          <div className="flex flex-col w-full divide-y divide-white/25">
+          <div
+            className="flex flex-col w-full divide-y divide-white/25 overflow-y-auto"
+            style={{ maxHeight: 'calc(100dvh - var(--safe-top) - var(--tabbar-height) - 220px)' }}
+          >
             {entries.map((entry) => {
               const isMe = user?.id === entry.userId
               const avatar = entry.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${entry.userName}`
