@@ -63,7 +63,7 @@ export function usePixelBoardInteraction(
     const owners = s.zoneOwners || {}
     const owner = owners[zoneId]
     const myZoneId = Object.entries(owners).find(([, id]) => id === userId)?.[0]
-    const myZone = myZoneId ? Number(myZoneId) : null
+    const myZone = myZoneId !== undefined ? Number(myZoneId) : null
 
     if (!owner) {
       if (myZone !== null && myZone !== zoneId) return

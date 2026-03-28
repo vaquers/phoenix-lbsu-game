@@ -67,9 +67,10 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
     if (!window.confirm('Clear your zone?')) return
     const userId = useUserStore.getState().user?.id
     if (!userId) return
-    const myZoneId = userId
-      ? Number(Object.entries(usePixelBoardStore.getState().zoneOwners || {}).find(([, id]) => id === userId)?.[0])
-      : null
+    const myZoneIdRaw = userId
+      ? Object.entries(usePixelBoardStore.getState().zoneOwners || {}).find(([, id]) => id === userId)?.[0]
+      : undefined
+    const myZoneId = myZoneIdRaw !== undefined ? Number(myZoneIdRaw) : null
     if (!Number.isFinite(myZoneId) || myZoneId === null) return
     const bounds = getZoneBounds(Number(myZoneId), usePixelBoardStore.getState().boardWidth, usePixelBoardStore.getState().boardHeight)
     if (!bounds) return
@@ -169,9 +170,10 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
         }}
       >
         {(() => {
-          const myZoneId = userId
-            ? Number(Object.entries(zoneOwners || {}).find(([, id]) => id === userId)?.[0])
-            : null
+          const myZoneIdRaw = userId
+            ? Object.entries(zoneOwners || {}).find(([, id]) => id === userId)?.[0]
+            : undefined
+          const myZoneId = myZoneIdRaw !== undefined ? Number(myZoneIdRaw) : null
           if (Number.isFinite(myZoneId) && myZoneId !== null) {
             return `Ваша зона: ${Number(myZoneId) + 1}`
           }

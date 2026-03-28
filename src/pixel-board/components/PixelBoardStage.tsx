@@ -119,9 +119,10 @@ export const PixelBoardStage = memo(function PixelBoardStage() {
   )
 
   if (stageW === 0 || stageH === 0) return null
-  const myZoneId = userId
-    ? Number(Object.entries(zoneOwners || {}).find(([, id]) => id === userId)?.[0])
-    : null
+  const myZoneIdRaw = userId
+    ? Object.entries(zoneOwners || {}).find(([, id]) => id === userId)?.[0]
+    : undefined
+  const myZoneId = myZoneIdRaw !== undefined ? Number(myZoneIdRaw) : null
   const zoneBounds =
     Number.isFinite(myZoneId) && myZoneId !== null
       ? getZoneBounds(myZoneId, boardW, boardH)
