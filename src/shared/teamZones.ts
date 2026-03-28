@@ -63,6 +63,6 @@ export function getZoneBounds(zoneId: number, width: number, height: number): Zo
 export function getZoneByPixel(x: number, y: number, width: number, height: number): number | null {
   if (x < 0 || y < 0 || x >= width || y >= height) return null
   const zones = getZones(width, height)
-  const zone = zones.find((z) => x >= z.x0 && x < z.x1)
+  const zone = zones.find((z) => x >= z.x0 && x < z.x1 && y >= z.y0 && y < z.y1)
   return zone ? zone.id : null
 }
