@@ -327,6 +327,11 @@ export class DataStore {
     return this.state.displaySubmissions.filter((s) => s.status === 'approved')
   }
 
+  clearDisplaySubmissions() {
+    this.state.displaySubmissions = []
+    this.persist()
+  }
+
   getTeamPhotos(): TeamPhoto[] {
     return TEAM_PHOTOS
   }

@@ -81,6 +81,13 @@ export const api = {
     return request<DisplaySubmission[]>('/api/display-submissions')
   },
 
+  clearDisplaySubmissions(adminKey?: string) {
+    return request<{ ok: boolean }>('/api/display-submissions/clear', {
+      method: 'POST',
+      body: JSON.stringify({ adminKey }),
+    })
+  },
+
   getTeamPhotos() {
     return request<TeamPhoto[]>('/api/team-photos')
   },

@@ -201,6 +201,20 @@ app.post('/api/display-submissions', (req, res) => {
   res.json(result)
 })
 
+app.post('/api/display-submissions/clear', (req, res) => {
+  const { adminKey } = req.body as { adminKey?: string }
+  if (ADMIN_TOKEN && adminKey !== ADMIN_TOKEN) {
+    res.status(403).json({ error: 'forbidden' })
+    return
+  }
+  if (!ADMIN_TOKEN && !adminKey) {
+    console.warn('ADMIN_TOKEN is not set; clearing display submissions without auth.')
+  }
+  dataStore.clearDisplaySubmissions()
+  io.emit('display:update')
+  res.json({ ok: true })
+})
+
 // ── Team Photos ──
 
 app.get('/api/team-photos', (_req, res) => {

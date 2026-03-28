@@ -83,6 +83,7 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
     }
   }, [])
 
+
   const handleFitBoard = useCallback(() => {
     const s = usePixelBoardStore.getState()
     const fitScale = fitBoardScale(
