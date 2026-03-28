@@ -71,9 +71,14 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         const baseOffset = variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset
         let yOffset = baseOffset
         try {
+          scene.updateMatrixWorld(true)
           const box = new Box3().setFromObject(scene)
-          const minY = Number.isFinite(box.min?.y) ? box.min.y : 0
-          yOffset = -minY + baseOffset
+          const minY = box.min?.y
+          if (Number.isFinite(minY)) {
+            yOffset = -minY + baseOffset
+          } else {
+            console.warn('[CharacterVisual] BBox minY invalid, using base offset', box.min)
+          }
         } catch (e) {
           console.warn('[CharacterVisual] BBox failed, using base offset', e)
         }
@@ -130,9 +135,14 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
                 variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset
               let yOffset = baseOffset
               try {
+                scene.updateMatrixWorld(true)
                 const box = new Box3().setFromObject(scene)
-                const minY = Number.isFinite(box.min?.y) ? box.min.y : 0
-                yOffset = -minY + baseOffset
+                const minY = box.min?.y
+                if (Number.isFinite(minY)) {
+                  yOffset = -minY + baseOffset
+                } else {
+                  console.warn('[CharacterVisual] Fallback BBox minY invalid, using base offset', box.min)
+                }
               } catch (e) {
                 console.warn('[CharacterVisual] Fallback BBox failed, using base offset', e)
               }
