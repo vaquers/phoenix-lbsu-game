@@ -67,13 +67,7 @@ export function usePixelBoardInteraction(
 
     if (!owner) {
       if (myZone !== null && myZone !== zoneId) return
-      try {
-        await api.claimZone(userId, zoneId)
-        const next = { ...owners, [zoneId]: userId }
-        s.setZoneOwners(next)
-      } catch {
-        return
-      }
+      // Allow first draw; server will atomically claim the zone
     } else if (owner !== userId) {
       return
     }
