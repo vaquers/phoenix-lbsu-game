@@ -9,6 +9,7 @@ import { DataStore } from './dataStore.js'
 
 const PORT = Number(process.env.PORT ?? 4000)
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN ?? ''
 
 const app = express()
 const httpServer = createServer(app)
