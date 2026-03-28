@@ -67,7 +67,10 @@ export function usePixelBoardInteraction(
 
     if (!owner) {
       if (myZone !== null && myZone !== zoneId) return
-      // Allow first draw; server will atomically claim the zone
+      // Optimistically claim the zone locally to prevent drawing elsewhere
+      if (myZone === null) {
+        s.setZoneOwners({ ...owners, [zoneId]: userId })
+      }
     } else if (owner !== userId) {
       return
     }
@@ -89,7 +92,10 @@ export function usePixelBoardInteraction(
     }
 
     const update = { x: bx, y: by, color }
-    api.setPixel({ ...update, userId }).catch(() => {})
+    api.setPixel({ ...update, userId }).catch(() => {
+      // rollback optimistic local draw on failure
+      s.erasePixel(bx, by)
+    })
     emitPixelUpdate({ ...update, userId })
   }, [containerRef])
 
