@@ -84,9 +84,9 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         const visualNode =
           scene.children.length === 1 ? (scene.children[0] as Group) : scene
         visualRef.current = visualNode
-        // Reset orientation, then apply facing direction only
-        visualNode.rotation.set(0, rotationY, 0)
-        appliedRotationY.current = rotationY
+        // Reset orientation, then apply final upright + facing rotation
+        visualNode.rotation.set(Math.PI / 2, Math.PI, 0)
+        appliedRotationY.current = Math.PI
 
         const baseOffset = variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset
         let yOffset = baseOffset
@@ -106,8 +106,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
 
         scene.position.set(0, yOffset, 0)
         scene.scale.setScalar(variant === 'shop' ? character.shopScale : character.gameScale)
-        console.log('[CharacterVisual] root rotation:', scene.rotation.toArray(), character.id)
-        console.log('[CharacterVisual] visual rotation:', visualNode.rotation.toArray(), character.id)
+        console.log('[CharacterVisual] final rotation:', visualNode.rotation.x, visualNode.rotation.y, visualNode.rotation.z, character.id)
         console.log('[CharacterVisual] final minY:', minY, 'yOffset:', yOffset)
 
         if (rootRef.current) {
@@ -158,8 +157,8 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
               const visualNode =
                 scene.children.length === 1 ? (scene.children[0] as Group) : scene
               visualRef.current = visualNode
-              visualNode.rotation.set(0, rotationY, 0)
-              appliedRotationY.current = rotationY
+              visualNode.rotation.set(Math.PI / 2, Math.PI, 0)
+              appliedRotationY.current = Math.PI
 
               const baseOffset =
                 variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset
@@ -179,8 +178,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
               }
               scene.position.set(0, yOffset, 0)
               scene.scale.setScalar(variant === 'shop' ? fallback.shopScale : fallback.gameScale)
-              console.log('[CharacterVisual] root rotation:', scene.rotation.toArray(), fallback.id)
-              console.log('[CharacterVisual] visual rotation:', visualNode.rotation.toArray(), fallback.id)
+              console.log('[CharacterVisual] final rotation:', visualNode.rotation.x, visualNode.rotation.y, visualNode.rotation.z, fallback.id)
               console.log('[CharacterVisual] final minY:', minY, 'yOffset:', yOffset)
               rootRef.current?.add(scene)
               modelRef.current = scene
