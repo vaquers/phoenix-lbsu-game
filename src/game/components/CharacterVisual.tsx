@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { AnimationMixer, Box3, Vector3, type Group, type AnimationAction } from 'three'
+import { AnimationMixer, Box3, type Group, type AnimationAction } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
@@ -68,12 +68,15 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
           }
         })
 
-        const box = new Box3().setFromObject(scene)
-        const min = new Vector3()
-        box.getMin(min)
-        const yOffset =
-          -min.y +
-          (variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset)
+        const baseOffset = variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset
+        let yOffset = baseOffset
+        try {
+          const box = new Box3().setFromObject(scene)
+          const minY = Number.isFinite(box.min?.y) ? box.min.y : 0
+          yOffset = -minY + baseOffset
+        } catch (e) {
+          console.warn('[CharacterVisual] BBox failed, using base offset', e)
+        }
 
         scene.position.set(0, yOffset, 0)
         scene.rotation.y = variant === 'shop' ? character.shopRotationY : character.gameRotationY
@@ -102,7 +105,14 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
         setLoadState('loaded')
         console.info('[CharacterVisual] Loaded', character.id)
       },
-      undefined,
+      (evt) => {
+        if (evt.total) {
+          const pct = ((evt.loaded / evt.total) * 100).toFixed(1)
+          console.info('[CharacterVisual] Progress', character.id, `${pct}%`)
+        } else if (evt.loaded) {
+          console.info('[CharacterVisual] Progress', character.id, `${evt.loaded} bytes`)
+        }
+      },
       (err) => {
         if (!mounted) return
         setLoadState('error')
@@ -116,12 +126,16 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
             (gltf) => {
               if (!mounted) return
               const scene = gltf.scene as Group
-              const box = new Box3().setFromObject(scene)
-              const min = new Vector3()
-              box.getMin(min)
-              const yOffset =
-                -min.y +
-                (variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset)
+              const baseOffset =
+                variant === 'shop' ? fallback.shopGroundOffset : fallback.gameGroundOffset
+              let yOffset = baseOffset
+              try {
+                const box = new Box3().setFromObject(scene)
+                const minY = Number.isFinite(box.min?.y) ? box.min.y : 0
+                yOffset = -minY + baseOffset
+              } catch (e) {
+                console.warn('[CharacterVisual] Fallback BBox failed, using base offset', e)
+              }
               scene.position.set(0, yOffset, 0)
               scene.rotation.y = variant === 'shop' ? fallback.shopRotationY : fallback.gameRotationY
               scene.scale.setScalar(variant === 'shop' ? fallback.shopScale : fallback.gameScale)
