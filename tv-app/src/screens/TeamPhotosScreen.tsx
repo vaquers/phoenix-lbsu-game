@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 import { tvApi } from '../api'
+import { BACKEND_URL } from '../config'
 import type { TeamPhoto } from '../types'
 const SLIDE_INTERVAL = 8000
 
 const PLACEHOLDER_PHOTOS: TeamPhoto[] = [
-  { id: 'tp-1', image: '/team/hacaton.jpg', caption: 'Хакатон: заряжаем идеи', order: 1 },
-  { id: 'tp-2', image: '/team/indev.jpg', caption: 'В разработке: кипит работа', order: 2 },
-  { id: 'tp-3', image: '/team/minsk.jpg', caption: 'Минск: команда в деле', order: 3 },
-  { id: 'tp-4', image: '/team/moscow.jpg', caption: 'Москва: большой город — большие планы', order: 4 },
-  { id: 'tp-5', image: '/team/win1.jpg', caption: 'Победа №1: наш момент', order: 5 },
-  { id: 'tp-6', image: '/team/win2.jpg', caption: 'Победа №2: закрепляем успех', order: 6 },
+  { id: 'tp-1', image: `${BACKEND_URL}/team/hacaton.jpg`, caption: 'Хакатон: заряжаем идеи', order: 1 },
+  { id: 'tp-2', image: `${BACKEND_URL}/team/indev.jpg`, caption: 'В разработке: кипит работа', order: 2 },
+  { id: 'tp-3', image: `${BACKEND_URL}/team/minsk.jpg`, caption: 'Минск: команда в деле', order: 3 },
+  { id: 'tp-4', image: `${BACKEND_URL}/team/moscow.jpg`, caption: 'Москва: большой город — большие планы', order: 4 },
+  { id: 'tp-5', image: `${BACKEND_URL}/team/win1.jpg`, caption: 'Победа №1: наш момент', order: 5 },
+  { id: 'tp-6', image: `${BACKEND_URL}/team/win2.jpg`, caption: 'Победа №2: закрепляем успех', order: 6 },
 ]
 
 const GRADIENT_COLORS = [
@@ -30,7 +31,13 @@ export function TeamPhotosScreen() {
     tvApi
       .getTeamPhotos()
       .then((data) => {
-        if (data.length > 0) setPhotos(data)
+        if (data.length > 0) {
+          const normalized = data.map((p) => ({
+            ...p,
+            image: p.image?.startsWith('/') ? `${BACKEND_URL}${p.image}` : p.image,
+          }))
+          setPhotos(normalized)
+        }
       })
       .catch(console.error)
   }, [])
