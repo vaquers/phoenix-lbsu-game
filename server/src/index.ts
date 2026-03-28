@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { createServer } from 'node:http'
 import path from 'node:path'
+import fs from 'node:fs'
 import { Server } from 'socket.io'
 import { BoardStore } from './boardStore.js'
 import { DataStore } from './dataStore.js'
@@ -21,7 +22,12 @@ const dataStore = new DataStore()
 
 app.use(cors({ origin: '*' }))
 app.use(express.json({ limit: '10mb' }))
-app.use(express.static(path.resolve(process.cwd(), 'public')))
+const publicDirCandidates = [
+  path.resolve(process.cwd(), 'public'),
+  path.resolve(process.cwd(), 'server/public'),
+]
+const publicDir = publicDirCandidates.find((dir) => fs.existsSync(dir)) ?? publicDirCandidates[0]
+app.use(express.static(publicDir))
 
 // ── Pixel Board ──
 
