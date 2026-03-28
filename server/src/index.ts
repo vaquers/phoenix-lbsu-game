@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { createServer } from 'node:http'
+import path from 'node:path'
 import { Server } from 'socket.io'
 import { BoardStore } from './boardStore.js'
 import { DataStore } from './dataStore.js'
@@ -20,6 +21,7 @@ const dataStore = new DataStore()
 
 app.use(cors({ origin: '*' }))
 app.use(express.json({ limit: '10mb' }))
+app.use(express.static(path.resolve(process.cwd(), 'public')))
 
 // ── Pixel Board ──
 

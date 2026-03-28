@@ -5,6 +5,7 @@ import happyBird from '../../assets/happy_bird.png'
 export function MainMenu() {
   const setPhase = useGameStore((s) => s.setPhase)
   const phase = useGameStore((s) => s.phase)
+  const highScore = useGameStore((s) => s.highScore)
 
   if (phase !== 'menu') return null
 
@@ -37,7 +38,7 @@ export function MainMenu() {
         <div className="glass-panel-strong rounded-[var(--radius-card)] p-4">
           <div className="glass-panel rounded-[22px] px-5 py-3 flex items-center justify-between">
             <span className="text-[18px] font-semibold text-[color:var(--text-dark)]">Рекорд</span>
-            <span className="text-[20px] font-semibold text-[color:var(--text-dark)]">1876</span>
+            <span className="text-[20px] font-semibold text-[color:var(--text-dark)]">{Math.floor(highScore)}</span>
           </div>
           <button
             onClick={onStart}
