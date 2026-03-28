@@ -14,6 +14,19 @@ export default function App() {
     init()
   }, [init])
 
+  useEffect(() => {
+    const tg = (window as any).Telegram?.WebApp
+    if (!tg) return
+    tg.ready?.()
+    if (typeof tg.disableVerticalSwipes === 'function') {
+      tg.disableVerticalSwipes()
+    } else if (typeof tg.postEvent === 'function') {
+      tg.postEvent('web_app_setup_swipe_behavior', {
+        allow_vertical_swipes: false,
+      })
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <div className="w-full h-full flex flex-col" style={{ background: 'var(--app-bg)' }}>
