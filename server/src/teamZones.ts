@@ -8,25 +8,47 @@ export type ZoneBounds = {
   y1: number
 }
 
-let cachedWidth = 0
+let cachedKey = ''
 let cachedZones: ZoneBounds[] = []
 
+/**
+ * Build near-square rectangular zones by rows.
+ * Strategy: choose row count close to sqrt(N) and distribute columns per row.
+ */
 function buildZones(width: number, height: number): ZoneBounds[] {
-  const base = Math.floor(width / TEAM_ZONE_COUNT)
-  const remainder = width % TEAM_ZONE_COUNT
   const zones: ZoneBounds[] = []
-  let x = 0
-  for (let i = 0; i < TEAM_ZONE_COUNT; i++) {
-    const w = base + (i < remainder ? 1 : 0)
-    zones.push({ id: i, x0: x, x1: x + w, y0: 0, y1: height })
-    x += w
+  const rows = Math.max(1, Math.round(Math.sqrt(TEAM_ZONE_COUNT)))
+  const baseCols = Math.floor(TEAM_ZONE_COUNT / rows)
+  const extra = TEAM_ZONE_COUNT % rows
+
+  const baseRowH = Math.floor(height / rows)
+  const extraRowH = height % rows
+
+  let zoneId = 0
+  let y = 0
+  for (let r = 0; r < rows; r++) {
+    const cols = baseCols + (r < extra ? 1 : 0)
+    const rowH = baseRowH + (r < extraRowH ? 1 : 0)
+    const baseColW = Math.floor(width / cols)
+    const extraColW = width % cols
+
+    let x = 0
+    for (let c = 0; c < cols; c++) {
+      const colW = baseColW + (c < extraColW ? 1 : 0)
+      zones.push({ id: zoneId++, x0: x, x1: x + colW, y0: y, y1: y + rowH })
+      x += colW
+      if (zoneId >= TEAM_ZONE_COUNT) break
+    }
+    y += rowH
+    if (zoneId >= TEAM_ZONE_COUNT) break
   }
   return zones
 }
 
 function getZones(width: number, height: number): ZoneBounds[] {
-  if (width !== cachedWidth || cachedZones.length === 0) {
-    cachedWidth = width
+  const key = `${width}x${height}`
+  if (key !== cachedKey || cachedZones.length === 0) {
+    cachedKey = key
     cachedZones = buildZones(width, height)
   }
   return cachedZones
