@@ -7,6 +7,8 @@ import { api } from '../shared/api'
 import {
   connectSocket,
   subscribePixelUpdates,
+  subscribeZoneUpdates,
+  subscribeBoardReset,
   subscribeStatus,
 } from './socketClient'
 import { centerViewport } from './utils/viewportMath'
@@ -47,9 +49,13 @@ export function PixelBoardPage() {
     let cancelled = false
     ;(async () => {
       try {
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('gameStart') === '1') {
+          await api.startGame()
+        }
         const state = await api.getBoardState()
         if (cancelled) return
-        usePixelBoardStore.getState().loadBoard(state.width, state.height, state.pixels)
+        usePixelBoardStore.getState().loadBoard(state.width, state.height, state.pixels, state.zoneOwners)
       } catch (e) {
         console.error(e)
         if (!cancelled) {
@@ -83,8 +89,16 @@ export function PixelBoardPage() {
     const unsubPixels = subscribePixelUpdates((update) => {
       usePixelBoardStore.getState().applyRemotePixel(update.x, update.y, update.color)
     })
+    const unsubZones = subscribeZoneUpdates((zoneOwners) => {
+      usePixelBoardStore.getState().setZoneOwners(zoneOwners)
+    })
+    const unsubReset = subscribeBoardReset((state) => {
+      usePixelBoardStore.getState().resetBoard(state.width, state.height, state.pixels, state.zoneOwners)
+    })
     return () => {
       unsubPixels()
+      unsubZones()
+      unsubReset()
       unsubStatus()
     }
   }, [])

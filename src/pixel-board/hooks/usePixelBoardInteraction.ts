@@ -4,6 +4,8 @@ import { screenToBoardCoords, zoomAtPoint, clampScale } from '../utils/viewportM
 import { pixelKey } from '../utils/boardMath'
 import { ERASER_COLOR, PINCH_COOLDOWN_MS } from '../constants/pixelBoard.config'
 import { api } from '../../shared/api'
+import { useUserStore } from '../../shared/userStore'
+import { getZoneByPixel } from '../../shared/teamZones'
 import { emitPixelUpdate } from '../socketClient'
 
 type GestureState = 'idle' | 'drawing' | 'panning' | 'single-pan' | 'cooldown'
@@ -40,7 +42,7 @@ export function usePixelBoardInteraction(
     cooldownTimer: 0,
   })
 
-  const paintCell = useCallback((screenX: number, screenY: number) => {
+  const paintCell = useCallback(async (screenX: number, screenY: number) => {
     const el = containerRef.current
     if (!el) return
 
@@ -51,6 +53,30 @@ export function usePixelBoardInteraction(
     const s = usePixelBoardStore.getState()
     const [bx, by] = screenToBoardCoords(sx, sy, s.viewportX, s.viewportY, s.scale)
     if (bx < 0 || bx >= s.boardWidth || by < 0 || by >= s.boardHeight) return
+
+    const userId = useUserStore.getState().user?.id
+    if (!userId) return
+
+    const zoneId = getZoneByPixel(bx, by, s.boardWidth, s.boardHeight)
+    if (zoneId === null) return
+
+    const owners = s.zoneOwners || {}
+    const owner = owners[zoneId]
+    const myZoneId = Object.entries(owners).find(([, id]) => id === userId)?.[0]
+    const myZone = myZoneId ? Number(myZoneId) : null
+
+    if (!owner) {
+      if (myZone !== null && myZone !== zoneId) return
+      try {
+        await api.claimZone(userId, zoneId)
+        const next = { ...owners, [zoneId]: userId }
+        s.setZoneOwners(next)
+      } catch {
+        return
+      }
+    } else if (owner !== userId) {
+      return
+    }
 
     const key = pixelKey(bx, by)
     const g = gestureRef.current
@@ -69,8 +95,8 @@ export function usePixelBoardInteraction(
     }
 
     const update = { x: bx, y: by, color }
-    api.setPixel(update).catch(() => {})
-    emitPixelUpdate(update)
+    api.setPixel({ ...update, userId }).catch(() => {})
+    emitPixelUpdate({ ...update, userId })
   }, [containerRef])
 
   useEffect(() => {
@@ -93,7 +119,7 @@ export function usePixelBoardInteraction(
         } else {
           g.state = 'drawing'
           g.drawnCells.clear()
-          paintCell(e.clientX, e.clientY)
+          void paintCell(e.clientX, e.clientY)
         }
       }
 
@@ -141,7 +167,7 @@ export function usePixelBoardInteraction(
       }
 
       if (g.state === 'drawing' && g.pointers.size === 1) {
-        paintCell(e.clientX, e.clientY)
+        void paintCell(e.clientX, e.clientY)
       }
 
       if (g.state === 'single-pan' && g.pointers.size === 1) {

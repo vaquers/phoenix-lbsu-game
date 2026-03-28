@@ -5,9 +5,13 @@ import type { PixelUpdate } from '../shared/types'
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected'
 
 export type PixelUpdateHandler = (update: PixelUpdate) => void
+export type ZoneUpdateHandler = (zoneOwners: Record<number, string | null>) => void
+export type BoardResetHandler = (state: { width: number; height: number; pixels: string[]; zoneOwners: Record<number, string | null> }) => void
 
 let socket: Socket | null = null
 let listeners: Set<PixelUpdateHandler> = new Set()
+let zoneListeners: Set<ZoneUpdateHandler> = new Set()
+let resetListeners: Set<BoardResetHandler> = new Set()
 let status: ConnectionStatus = 'disconnected'
 let statusListeners: Set<(status: ConnectionStatus) => void> = new Set()
 
@@ -48,6 +52,14 @@ export function connectSocket() {
     listeners.forEach((cb) => cb(update))
   })
 
+  socket.on('zone:update', (payload: { zoneOwners: Record<number, string | null> }) => {
+    zoneListeners.forEach((cb) => cb(payload.zoneOwners))
+  })
+
+  socket.on('board:reset', (state: { width: number; height: number; pixels: string[]; zoneOwners: Record<number, string | null> }) => {
+    resetListeners.forEach((cb) => cb(state))
+  })
+
   socket.io.on('reconnect_attempt', () => {
     notifyStatus('connecting')
   })
@@ -69,6 +81,22 @@ export function subscribePixelUpdates(handler: PixelUpdateHandler) {
 
   return () => {
     listeners.delete(handler)
+  }
+}
+
+export function subscribeZoneUpdates(handler: ZoneUpdateHandler) {
+  zoneListeners.add(handler)
+  connectSocket()
+  return () => {
+    zoneListeners.delete(handler)
+  }
+}
+
+export function subscribeBoardReset(handler: BoardResetHandler) {
+  resetListeners.add(handler)
+  connectSocket()
+  return () => {
+    resetListeners.delete(handler)
   }
 }
 

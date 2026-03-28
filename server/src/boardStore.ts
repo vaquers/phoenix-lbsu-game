@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { TEAM_ZONE_COUNT, getZoneByPixel } from './teamZones.js'
 
 export type Pixel = string
 
@@ -7,6 +8,7 @@ export type BoardState = {
   width: number
   height: number
   pixels: Pixel[]
+  zoneOwners: Record<number, string | null>
 }
 
 const BOARD_WIDTH = 256
@@ -22,10 +24,13 @@ function ensureDataDir() {
 }
 
 function createEmptyBoard(): BoardState {
+  const zoneOwners: Record<number, string | null> = {}
+  for (let i = 0; i < TEAM_ZONE_COUNT; i++) zoneOwners[i] = null
   return {
     width: BOARD_WIDTH,
     height: BOARD_HEIGHT,
     pixels: new Array(BOARD_WIDTH * BOARD_HEIGHT).fill('#ffffff'),
+    zoneOwners,
   }
 }
 
@@ -47,6 +52,11 @@ export class BoardStore {
           typeof parsed.height === 'number' &&
           Array.isArray(parsed.pixels)
         ) {
+          if (!parsed.zoneOwners) {
+            const zoneOwners: Record<number, string | null> = {}
+            for (let i = 0; i < TEAM_ZONE_COUNT; i++) zoneOwners[i] = null
+            parsed.zoneOwners = zoneOwners
+          }
           return parsed
         }
       }
@@ -70,7 +80,54 @@ export class BoardStore {
     return this.state
   }
 
-  setPixel(x: number, y: number, color: string): BoardState {
+  reset(): BoardState {
+    const next = createEmptyBoard()
+    this.state = next
+    this.save(this.state)
+    return this.state
+  }
+
+  private getUserZone(userId: string): number | null {
+    for (const [zoneId, owner] of Object.entries(this.state.zoneOwners)) {
+      if (owner === userId) return Number(zoneId)
+    }
+    return null
+  }
+
+  claimZone(userId: string, zoneId: number) {
+    if (!Number.isFinite(zoneId) || zoneId < 0 || zoneId >= TEAM_ZONE_COUNT) {
+      return { ok: false, error: 'invalid_zone' as const }
+    }
+    const currentOwner = this.state.zoneOwners[zoneId]
+    if (currentOwner && currentOwner !== userId) {
+      return { ok: false, error: 'zone_taken' as const, ownerId: currentOwner }
+    }
+    const existingZone = this.getUserZone(userId)
+    if (existingZone !== null && existingZone !== zoneId) {
+      return { ok: false, error: 'user_already_claimed' as const, zoneId: existingZone }
+    }
+    this.state.zoneOwners[zoneId] = userId
+    this.save(this.state)
+    return { ok: true, zoneId }
+  }
+
+  canDraw(userId: string | undefined, x: number, y: number) {
+    if (!userId) return { ok: false, error: 'user_required' as const }
+    const zoneId = getZoneByPixel(x, y, this.state.width, this.state.height)
+    if (zoneId === null) return { ok: false, error: 'invalid_pixel' as const }
+    const owner = this.state.zoneOwners[zoneId]
+    if (!owner) {
+      const claim = this.claimZone(userId, zoneId)
+      if (claim.ok) return { ok: true, zoneId, claimed: true }
+      return { ok: false, error: claim.error, zoneId, ownerId: (claim as any).ownerId }
+    }
+    if (owner !== userId) {
+      return { ok: false, error: 'zone_taken' as const, zoneId, ownerId: owner }
+    }
+    return { ok: true, zoneId }
+  }
+
+  setPixel(userId: string | undefined, x: number, y: number, color: string) {
     if (
       x < 0 ||
       y < 0 ||
@@ -78,12 +135,13 @@ export class BoardStore {
       y >= this.state.height ||
       typeof color !== 'string'
     ) {
-      return this.state
+      return { ok: false, error: 'invalid_pixel' as const }
     }
+    const allowed = this.canDraw(userId, x, y)
+    if (!allowed.ok) return { ok: false, error: allowed.error, zoneId: allowed.zoneId, ownerId: (allowed as any).ownerId }
     const idx = y * this.state.width + x
     this.state.pixels[idx] = color
     this.save(this.state)
-    return this.state
+    return { ok: true, zoneId: allowed.zoneId, claimed: (allowed as any).claimed }
   }
 }
-

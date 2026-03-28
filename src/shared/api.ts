@@ -95,4 +95,15 @@ export const api = {
       body: JSON.stringify(update),
     })
   },
+
+  claimZone(userId: string, zoneId: number) {
+    return request<{ ok: boolean; zoneId: number }>('/api/zone/claim', {
+      method: 'POST',
+      body: JSON.stringify({ userId, zoneId }),
+    })
+  },
+
+  startGame() {
+    return request<{ ok: boolean }>('/api/game/start', { method: 'POST' })
+  },
 }

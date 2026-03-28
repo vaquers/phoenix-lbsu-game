@@ -29,15 +29,22 @@ app.get('/api/board', (_req, res) => {
 })
 
 app.post('/api/pixel', (req, res) => {
-  const { x, y, color } = req.body as { x: number; y: number; color: string }
-  if (typeof x !== 'number' || typeof y !== 'number' || typeof color !== 'string') {
+  const { x, y, color, userId } = req.body as { x: number; y: number; color: string; userId?: string }
+  if (typeof x !== 'number' || typeof y !== 'number' || typeof color !== 'string' || !userId) {
     res.status(400).json({ error: 'Invalid pixel payload' })
     return
   }
 
-  boardStore.setPixel(x, y, color)
+  const result = boardStore.setPixel(userId, x, y, color)
+  if (!result.ok) {
+    res.status(403).json({ error: result.error, zoneId: result.zoneId, ownerId: result.ownerId })
+    return
+  }
   io.emit('pixel:update', { x, y, color })
-  res.json({ ok: true })
+  if (result.claimed) {
+    io.emit('zone:update', { zoneOwners: boardStore.getState().zoneOwners })
+  }
+  res.json({ ok: true, zoneId: result.zoneId })
 })
 
 // ── Users ──
@@ -110,6 +117,32 @@ app.get('/api/leaderboard', (_req, res) => {
   res.json(dataStore.getLeaderboard())
 })
 
+// ── Zones ──
+app.post('/api/zone/claim', (req, res) => {
+  const { userId, zoneId } = req.body as { userId?: string; zoneId?: number }
+  if (!userId || typeof zoneId !== 'number') {
+    res.status(400).json({ error: 'userId and zoneId are required' })
+    return
+  }
+  const result = boardStore.claimZone(userId, zoneId)
+  if (!result.ok) {
+    res.status(409).json(result)
+    return
+  }
+  io.emit('zone:update', { zoneOwners: boardStore.getState().zoneOwners })
+  res.json({ ok: true, zoneId })
+})
+
+// ── Game Start / Reset ──
+app.post('/api/game/start', (_req, res) => {
+  const boardState = boardStore.reset()
+  dataStore.resetLeaderboard()
+  io.emit('board:reset', boardState)
+  io.emit('zone:update', { zoneOwners: boardState.zoneOwners })
+  io.emit('leaderboard:update')
+  res.json({ ok: true })
+})
+
 // ── Merch ──
 
 app.get('/api/merch', (_req, res) => {
@@ -171,10 +204,17 @@ app.get('/api/team-photos', (_req, res) => {
 io.on('connection', (socket) => {
   console.log('Client connected', socket.id)
 
-  socket.on('pixel:set', (payload: { x: number; y: number; color: string }) => {
-    const { x, y, color } = payload
-    boardStore.setPixel(x, y, color)
+  socket.on('pixel:set', (payload: { x: number; y: number; color: string; userId?: string }) => {
+    const { x, y, color, userId } = payload
+    const result = boardStore.setPixel(userId, x, y, color)
+    if (!result.ok) {
+      socket.emit('pixel:denied', result)
+      return
+    }
     io.emit('pixel:update', { x, y, color })
+    if (result.claimed) {
+      io.emit('zone:update', { zoneOwners: boardStore.getState().zoneOwners })
+    }
   })
 
   socket.on('disconnect', () => {

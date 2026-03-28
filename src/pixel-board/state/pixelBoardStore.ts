@@ -24,6 +24,7 @@ interface PixelBoardState {
   boardHeight: number
   boardLoaded: boolean
   pixelVersion: number
+  zoneOwners: Record<number, string | null>
 
   viewportX: number
   viewportY: number
@@ -55,8 +56,10 @@ interface PixelBoardActions {
   setConnectionStatus: (status: ConnectionStatus) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
-  loadBoard: (width: number, height: number, pixels: string[]) => void
+  loadBoard: (width: number, height: number, pixels: string[], zoneOwners?: Record<number, string | null>) => void
   applyRemotePixel: (x: number, y: number, color: string) => void
+  setZoneOwners: (zoneOwners: Record<number, string | null>) => void
+  resetBoard: (width: number, height: number, pixels: string[], zoneOwners: Record<number, string | null>) => void
 }
 
 export type PixelBoardStore = PixelBoardState & PixelBoardActions
@@ -66,6 +69,7 @@ export const usePixelBoardStore = create<PixelBoardStore>()((set, get) => ({
   boardHeight: 256,
   boardLoaded: false,
   pixelVersion: 0,
+  zoneOwners: {},
 
   viewportX: 0,
   viewportY: 0,
@@ -141,7 +145,7 @@ export const usePixelBoardStore = create<PixelBoardStore>()((set, get) => ({
 
   setError: (error) => set({ error }),
 
-  loadBoard: (width, height, flatPixels) => {
+  loadBoard: (width, height, flatPixels, zoneOwners) => {
     _pixelData = flatArrayToSparseMap(flatPixels, width)
     const { stageWidth, stageHeight } = get()
     set((s) => ({
@@ -152,6 +156,7 @@ export const usePixelBoardStore = create<PixelBoardStore>()((set, get) => ({
       error: null,
       pixelVersion: s.pixelVersion + 1,
       minScale: computeMinScale(stageWidth, stageHeight, width, height),
+      zoneOwners: zoneOwners ?? s.zoneOwners,
     }))
   },
 
@@ -169,5 +174,22 @@ export const usePixelBoardStore = create<PixelBoardStore>()((set, get) => ({
       _pixelData.set(key, color)
     }
     set((s) => ({ pixelVersion: s.pixelVersion + 1 }))
+  },
+
+  setZoneOwners: (zoneOwners) => set({ zoneOwners }),
+
+  resetBoard: (width, height, flatPixels, zoneOwners) => {
+    _pixelData = flatArrayToSparseMap(flatPixels, width)
+    const { stageWidth, stageHeight } = get()
+    set((s) => ({
+      boardWidth: width,
+      boardHeight: height,
+      boardLoaded: true,
+      loading: false,
+      error: null,
+      pixelVersion: s.pixelVersion + 1,
+      minScale: computeMinScale(stageWidth, stageHeight, width, height),
+      zoneOwners,
+    }))
   },
 }))

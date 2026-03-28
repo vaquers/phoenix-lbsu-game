@@ -4,6 +4,8 @@ import Konva from 'konva'
 import { usePixelBoardStore, getPixelData } from '../state/pixelBoardStore'
 import { getVisibleRange } from '../utils/viewportMath'
 import { pixelKey, parsePixelKey } from '../utils/boardMath'
+import { useUserStore } from '../../shared/userStore'
+import { getZoneBounds } from '../../shared/teamZones'
 import {
   GRID_VISIBLE_MIN_SCALE,
   MAJOR_GRID_INTERVAL,
@@ -20,6 +22,8 @@ export const PixelBoardStage = memo(function PixelBoardStage() {
   const stageH = usePixelBoardStore((s) => s.stageHeight)
   const showGrid = usePixelBoardStore((s) => s.showGrid)
   const pixelVersion = usePixelBoardStore((s) => s.pixelVersion)
+  const zoneOwners = usePixelBoardStore((s) => s.zoneOwners)
+  const userId = useUserStore((s) => s.user?.id)
 
   const pixelLayerRef = useRef<Konva.Layer>(null)
   const gridLayerRef = useRef<Konva.Layer>(null)
@@ -115,6 +119,13 @@ export const PixelBoardStage = memo(function PixelBoardStage() {
   )
 
   if (stageW === 0 || stageH === 0) return null
+  const myZoneId = userId
+    ? Number(Object.entries(zoneOwners || {}).find(([, id]) => id === userId)?.[0])
+    : null
+  const zoneBounds =
+    Number.isFinite(myZoneId) && myZoneId !== null
+      ? getZoneBounds(myZoneId, boardW, boardH)
+      : null
 
   return (
     <Stage
@@ -161,6 +172,21 @@ export const PixelBoardStage = memo(function PixelBoardStage() {
           scaleY={scale}
         >
           <Shape sceneFunc={drawGrid} listening={false} perfectDrawEnabled={false} />
+        </Layer>
+      )}
+
+      {zoneBounds && (
+        <Layer listening={false} x={vpX} y={vpY} scaleX={scale} scaleY={scale}>
+          <Rect
+            x={zoneBounds.x0}
+            y={zoneBounds.y0}
+            width={zoneBounds.x1 - zoneBounds.x0}
+            height={zoneBounds.y1 - zoneBounds.y0}
+            stroke="#EC432D"
+            strokeWidth={2 / scale}
+            dash={[4 / scale, 4 / scale]}
+            listening={false}
+          />
         </Layer>
       )}
     </Stage>

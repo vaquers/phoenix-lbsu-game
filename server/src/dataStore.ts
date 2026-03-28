@@ -245,6 +245,13 @@ export class DataStore {
     return entries
   }
 
+  resetLeaderboard() {
+    Object.values(this.state.users).forEach((u) => {
+      u.bestScore = 0
+    })
+    this.persist()
+  }
+
   getMerch(): MerchItem[] {
     return MERCH_CATALOG
   }

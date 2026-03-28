@@ -88,6 +88,7 @@ export interface PixelBoardState {
   width: number
   height: number
   pixels: string[]
+  zoneOwners: Record<number, string | null>
   updatedAt: string
 }
 
@@ -95,4 +96,5 @@ export type PixelUpdate = {
   x: number
   y: number
   color: string
+  userId?: string
 }

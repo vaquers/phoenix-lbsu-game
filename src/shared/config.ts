@@ -8,6 +8,7 @@ export const COINS_PER_SCORE_DIVISOR = 10
 
 export const BOARD_WIDTH = 256
 export const BOARD_HEIGHT = 256
+export const TEAM_ZONE_COUNT = 31
 
 export const COLOR_PALETTE: string[] = [
   '#000000',
