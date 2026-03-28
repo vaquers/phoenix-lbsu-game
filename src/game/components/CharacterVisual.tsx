@@ -85,7 +85,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
           scene.children.length === 1 ? (scene.children[0] as Group) : scene
         visualRef.current = visualNode
         // Reset orientation, then apply final upright + facing rotation
-        visualNode.rotation.set(Math.PI / 2, Math.PI, 0)
+        visualNode.rotation.set(Math.PI / 2, Math.PI, Math.PI)
         appliedRotationY.current = Math.PI
 
         const baseOffset = variant === 'shop' ? character.shopGroundOffset : character.gameGroundOffset
@@ -157,7 +157,7 @@ export function CharacterVisual({ character, variant = 'game' }: { character: Ch
               const visualNode =
                 scene.children.length === 1 ? (scene.children[0] as Group) : scene
               visualRef.current = visualNode
-              visualNode.rotation.set(Math.PI / 2, Math.PI, 0)
+              visualNode.rotation.set(Math.PI / 2, Math.PI, Math.PI)
               appliedRotationY.current = Math.PI
 
               const baseOffset =
