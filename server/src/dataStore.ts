@@ -148,11 +148,12 @@ const MERCH_CATALOG: MerchItem[] = [
 ]
 
 const TEAM_PHOTOS: TeamPhoto[] = [
-  { id: 'tp-1', image: '/team/team1.jpg', caption: 'Phoenix Team — Together we rise!', order: 1 },
-  { id: 'tp-2', image: '/team/team2.jpg', caption: 'Рабочий процесс', order: 2 },
-  { id: 'tp-3', image: '/team/team3.jpg', caption: 'Наша команда на мероприятии', order: 3 },
-  { id: 'tp-4', image: '/team/team4.jpg', caption: 'Мозговой штурм', order: 4 },
-  { id: 'tp-5', image: '/team/team5.jpg', caption: 'Победа!', order: 5 },
+  { id: 'tp-1', image: '/team/hacaton.jpg', caption: 'Хакатон: заряжаем идеи', order: 1 },
+  { id: 'tp-2', image: '/team/indev.jpg', caption: 'В разработке: кипит работа', order: 2 },
+  { id: 'tp-3', image: '/team/minsk.jpg', caption: 'Минск: команда в деле', order: 3 },
+  { id: 'tp-4', image: '/team/moscow.jpg', caption: 'Москва: большой город — большие планы', order: 4 },
+  { id: 'tp-5', image: '/team/win1.jpg', caption: 'Победа №1: наш момент', order: 5 },
+  { id: 'tp-6', image: '/team/win2.jpg', caption: 'Победа №2: закрепляем успех', order: 6 },
 ]
 
 function ensureDataDir() {
