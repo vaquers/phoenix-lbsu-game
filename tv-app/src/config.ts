@@ -7,8 +7,6 @@ export interface ScreenConfig {
 }
 
 export const SCREEN_ROTATION: ScreenConfig[] = [
-  { id: 'team-photos', duration: 60 },
-  { id: 'leaderboard', duration: 60 },
   { id: 'user-photos', duration: 60 },
   { id: 'pixel-board', duration: 60 },
 ]

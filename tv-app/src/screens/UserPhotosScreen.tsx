@@ -65,11 +65,11 @@ export function UserPhotosScreen() {
         className="relative w-full flex items-center justify-center transition-opacity duration-500"
         style={{ opacity: fade ? 1 : 0 }}
       >
-        <div className="grid grid-cols-2 gap-8 w-[80vw] max-w-[1100px]">
+        <div className="grid grid-cols-2 gap-6 w-[74vw] max-w-[980px]">
           {visible.map((submission) => (
             <div
               key={submission.id}
-              className="relative aspect-square rounded-[40px] overflow-hidden shadow-2xl bg-black/15 border border-white/10"
+              className="relative aspect-square rounded-[32px] overflow-hidden shadow-2xl bg-black/15 border border-white/10"
             >
               <img
                 src={resolveImage(submission)}
