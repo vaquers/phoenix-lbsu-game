@@ -53,9 +53,10 @@ export function PhotoSubmission() {
 
     const reader = new FileReader()
     reader.onload = () => {
-      setImage(reader.result as string)
-      setStep('customize')
+      const dataUrl = reader.result as string
+      setImage(dataUrl)
       setMessage(null)
+      void submitImage(dataUrl)
     }
     reader.onerror = () => {
       setMessage({ text: 'Ошибка чтения', type: 'error' })
@@ -63,8 +64,8 @@ export function PhotoSubmission() {
     reader.readAsDataURL(file)
   }, [])
 
-  const handleSubmit = async () => {
-    if (!user || !image) return
+  const submitImage = async (dataUrl: string) => {
+    if (!user || !dataUrl) return
     if (!canAfford) {
       setMessage({
         text: `Не хватает коинов! Нужно ${DISPLAY_SUBMISSION_COST}, у вас ${Math.floor(user.coins)}`,
@@ -75,47 +76,36 @@ export function PhotoSubmission() {
 
     setSubmitting(true)
     try {
-      const square = await createSquareCrop(image)
-      const previewSize = previewRef.current?.getBoundingClientRect().width || 0
-      const fontSizePercent = previewSize > 0 ? fontSize / previewSize : undefined
-      const fontVariant = fontVariants[fontIndex] ?? fontVariants[0]
-      const overlayText = isUppercase ? text.toUpperCase() : text
+      const square = await createSquareCrop(dataUrl)
       const composition = {
         photos: [
           {
             id: `photo-${Date.now()}`,
-            imageUri: image,
+            imageUri: dataUrl,
             croppedImageUri: square.dataUrl,
             crop: square.crop,
             displayMode: 'square' as const,
           },
         ],
-        textOverlay: {
-          text: overlayText,
-          fontStyle: fontVariant.style,
-          fontWeight: fontVariant.weight,
-          fontSize,
-          fontSizePercent,
-          color,
-          xPercent: textPos.x,
-          yPercent: textPos.y,
-          align: 'center' as const,
-          rotation: 0,
-          opacity: 1,
-        },
       }
-      await api.submitDisplayPhoto(user.id, square.dataUrl, overlayText, composition)
+      await api.submitDisplayPhoto(user.id, square.dataUrl, '', composition)
       spendCoins(DISPLAY_SUBMISSION_COST)
       setImage(null)
       setStep('upload')
       if (fileRef.current) fileRef.current.value = ''
       setMessage({ text: 'Фото отправлено на TV!', type: 'success' })
+      window.alert('Фото загружено и отправлено на TV!')
     } catch (e: any) {
       setMessage({ text: e.message || 'Ошибка отправки', type: 'error' })
     } finally {
       setSubmitting(false)
       setTimeout(() => setMessage(null), 4000)
     }
+  }
+
+  const handleSubmit = async () => {
+    if (!image) return
+    await submitImage(image)
   }
 
   const handleReset = () => {
@@ -190,7 +180,7 @@ export function PhotoSubmission() {
         <div className="glass-panel-strong rounded-[var(--radius-card)] p-5 mt-2">
           <h3 className="font-bold text-[20px] text-black mb-2">Разместить фото на ТВ</h3>
           <p className="text-[rgba(0,0,0,0.6)] text-[16px] mb-4 leading-snug">
-            Загрузите фото и добавьте текст — оно появится на большом экране на 60 секунд!
+            Загрузите фото — оно появится на большом экране на 60 секунд!
           </p>
           <div className="flex items-center justify-between">
             <span className="font-semibold text-black flex items-center gap-1">
