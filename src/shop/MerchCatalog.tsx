@@ -64,7 +64,7 @@ export function MerchCatalog() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-[14px] pb-6">
+      <div className="grid grid-cols-2 gap-4 pb-6">
         {items.map((item) => {
           const canAfford = (user?.coins ?? 0) >= item.price
           const isBuying = purchasing === item.id
@@ -72,47 +72,46 @@ export function MerchCatalog() {
           return (
             <div
               key={item.id}
-              className="glass-panel-strong rounded-[var(--radius-card)] p-3.5 flex flex-col h-full"
+              className="glass-panel-strong rounded-[var(--radius-card)] p-4 flex flex-col h-full"
             >
-              <div className="w-full aspect-square rounded-[24px] mb-3 flex items-center justify-center overflow-hidden bg-white/80">
-                {/* Dynamically fallback to procedural initials if image is missing */}
-                <img 
-                  src="/merch/stickers.png" 
+              <div className="w-full aspect-square rounded-[26px] mb-3 flex items-center justify-center overflow-hidden bg-white/80">
+                <img
+                  src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-contain transform hover:scale-105 transition duration-300"
-                  onError={(e) => { 
-                    e.currentTarget.src = `https://api.dicebear.com/7.x/shapes/svg?seed=${item.id}&backgroundColor=ffffff` 
-                  }} 
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = `https://api.dicebear.com/7.x/shapes/svg?seed=${item.id}&backgroundColor=ffffff`
+                  }}
                 />
               </div>
               
-              <h3 className="font-bold text-[15px] leading-tight text-black line-clamp-2">
+              <h3 className="font-bold text-[16px] leading-tight text-black line-clamp-2">
                 {item.title}
               </h3>
               
-              <p className="text-[rgba(0,0,0,0.7)] text-[13px] mt-1.5 mb-3 leading-snug flex-1 line-clamp-2 font-medium">
+              <p className="text-[rgba(0,0,0,0.7)] text-[13px] mt-1.5 mb-4 leading-snug flex-1 line-clamp-3 font-medium">
                 {item.description}
               </p>
               
-              <div className="flex items-center justify-between mt-auto">
+              <div className="flex items-center justify-between mt-auto mb-3">
                 <span className="text-black font-semibold text-[16px] flex items-center gap-1">
                   {item.price}
                   <img src={bitcoinSign} alt="btc" className="w-4 h-4" />
                 </span>
-                
-                <button
-                  onClick={() => handlePurchase(item)}
-                  disabled={!canAfford || !item.available || isBuying}
-                  className={[
-                    'px-[14px] py-1.5 rounded-full text-[13px] font-semibold transition',
-                    canAfford && item.available
-                      ? 'bg-[color:var(--accent)] text-white active:scale-95'
-                      : 'bg-[color:var(--secondary-btn)] text-white/70 cursor-not-allowed',
-                  ].join(' ')}
-                >
-                  {isBuying ? '...' : 'Купить'}
-                </button>
               </div>
+
+              <button
+                onClick={() => handlePurchase(item)}
+                disabled={!canAfford || !item.available || isBuying}
+                className={[
+                  'w-full py-2 rounded-full text-[14px] font-semibold transition',
+                  canAfford && item.available
+                    ? 'bg-[color:var(--accent)] text-white active:scale-95'
+                    : 'bg-[color:var(--secondary-btn)] text-white/70 cursor-not-allowed',
+                ].join(' ')}
+              >
+                {isBuying ? '...' : 'Купить'}
+              </button>
             </div>
           )
         })}

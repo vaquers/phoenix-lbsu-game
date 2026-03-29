@@ -40,14 +40,14 @@ export function LeaderboardScreen({ compact = false }: { compact?: boolean }) {
       <h1 className={compact ? 'text-3xl font-bold tracking-tight mb-1' : 'text-6xl font-bold tracking-tight mb-2'}>
         🏆 Рейтинг
       </h1>
-      <p className={compact ? 'text-sm text-[color:var(--text-muted)] mb-4' : 'text-2xl text-[color:var(--text-muted)] mb-10'}>
+      <p className={compact ? 'text-sm text-white/70 mb-4' : 'text-2xl text-white/70 mb-10'}>
         Лучшие игроки
       </p>
 
       {top10.length === 0 && (
-        <div className={compact ? 'text-left text-[color:var(--text-muted)]' : 'text-center text-[color:var(--text-muted)]'}>
+        <div className={compact ? 'text-left text-white/70' : 'text-center text-white/70'}>
           <p className={compact ? 'text-4xl mb-2' : 'text-6xl mb-4'}>🎮</p>
-          <p className={compact ? 'text-lg' : 'text-3xl'}>Пока нет результатов</p>
+          <p className={compact ? 'text-lg text-white' : 'text-3xl text-white'}>Пока нет результатов</p>
           <p className={compact ? 'text-sm mt-1' : 'text-xl mt-2'}>Сыграй первым!</p>
         </div>
       )}
@@ -68,15 +68,15 @@ export function LeaderboardScreen({ compact = false }: { compact?: boolean }) {
               >
                 <span
                   className={[
-                    'font-bold shrink-0 w-16 text-center',
-                    compact ? 'text-lg w-10' : isTop3 ? 'text-5xl' : 'text-2xl text-[color:var(--text-muted)]',
+                    'font-bold shrink-0 w-16 text-center text-white',
+                    compact ? 'text-lg w-10' : isTop3 ? 'text-5xl' : 'text-2xl',
                   ].join(' ')}
                 >
                   {medal ?? `#${entry.rank}`}
                 </span>
                 <span
                   className={[
-                    'flex-1 truncate font-semibold',
+                    'flex-1 truncate font-semibold text-white',
                     compact ? 'text-base' : isTop3 ? 'text-4xl' : 'text-2xl',
                   ].join(' ')}
                 >
@@ -84,7 +84,7 @@ export function LeaderboardScreen({ compact = false }: { compact?: boolean }) {
                 </span>
                 <span
                   className={[
-                    'font-bold text-[color:var(--text-secondary)] shrink-0',
+                    'font-bold text-white shrink-0',
                     compact ? 'text-base' : isTop3 ? 'text-4xl' : 'text-2xl',
                   ].join(' ')}
                 >

@@ -6,6 +6,8 @@ import { LeaderboardPage } from './leaderboard/LeaderboardPage'
 import { ShopPage } from './shop/ShopPage'
 import { TabBar } from './game/components/TabBar/TabBar'
 import { useUserStore } from './shared/userStore'
+import { useGameStore } from './game/store/gameStore'
+import { HIGH_SCORE_KEY } from './game/utils/constants'
 
 export default function App() {
   const init = useUserStore((s) => s.init)
@@ -13,6 +15,13 @@ export default function App() {
   useEffect(() => {
     init()
   }, [init])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(HIGH_SCORE_KEY, '0')
+    } catch {}
+    useGameStore.getState().resetScores()
+  }, [])
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp
