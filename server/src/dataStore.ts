@@ -332,6 +332,28 @@ export class DataStore {
     this.persist()
   }
 
+  deleteDisplaySubmission(id: string) {
+    const before = this.state.displaySubmissions.length
+    this.state.displaySubmissions = this.state.displaySubmissions.filter((s) => s.id !== id)
+    if (this.state.displaySubmissions.length === before) {
+      return { ok: false, error: 'not_found' as const }
+    }
+    this.persist()
+    return { ok: true }
+  }
+
+  deleteDisplaySubmissionByIndex(index: number) {
+    if (!Number.isFinite(index) || index < 0) {
+      return { ok: false, error: 'invalid_index' as const }
+    }
+    const approved = this.state.displaySubmissions.filter((s) => s.status === 'approved')
+    const target = approved[index]
+    if (!target) {
+      return { ok: false, error: 'not_found' as const }
+    }
+    return this.deleteDisplaySubmission(target.id)
+  }
+
   getTeamPhotos(): TeamPhoto[] {
     return TEAM_PHOTOS
   }

@@ -6,13 +6,18 @@ const SLIDE_INTERVAL = 6000
 
 export function UserPhotosScreen() {
   const [submissions, setSubmissions] = useState<DisplaySubmission[]>([])
+  const [loading, setLoading] = useState(true)
   const [pageIndex, setPageIndex] = useState(0)
   const [fade, setFade] = useState(true)
   const intervalRef = useRef<ReturnType<typeof setInterval>>()
 
   useEffect(() => {
     const load = () => {
-      tvApi.getDisplaySubmissions().then(setSubmissions).catch(console.error)
+      tvApi
+        .getDisplaySubmissions()
+        .then(setSubmissions)
+        .catch(console.error)
+        .finally(() => setLoading(false))
     }
     load()
     const interval = setInterval(load, 30000)
@@ -32,10 +37,22 @@ export function UserPhotosScreen() {
     return () => clearInterval(intervalRef.current)
   }, [submissions])
 
+  if (loading) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center text-[color:var(--text-primary)]">
+        <h1 className="text-6xl font-bold mb-6">📸 Фото пользователей</h1>
+        <div className="text-center text-[color:var(--text-muted)]">
+          <p className="text-5xl mb-4">⏳</p>
+          <p className="text-3xl">Загрузка фотографий...</p>
+        </div>
+      </div>
+    )
+  }
+
   if (submissions.length === 0) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center text-[color:var(--text-primary)]">
-        <h1 className="text-6xl font-bold mb-6">📸 Фото от участников</h1>
+        <h1 className="text-6xl font-bold mb-6">📸 Фото пользователей</h1>
         <div className="text-center text-[color:var(--text-muted)]">
           <p className="text-5xl mb-4">🖼️</p>
           <p className="text-3xl">Пока нет фотографий</p>
@@ -58,7 +75,7 @@ export function UserPhotosScreen() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative text-[color:var(--text-primary)]">
       <div className="absolute top-8 left-10 z-10">
-        <h1 className="text-4xl font-bold tracking-tight opacity-80">📸 Фото участников</h1>
+        <h1 className="text-4xl font-bold tracking-tight opacity-80">📸 Фото пользователей</h1>
       </div>
 
       <div

@@ -3,9 +3,6 @@ import { usePixelBoardStore } from '../state/pixelBoardStore'
 import { useUserStore } from '../../shared/userStore'
 import { COLOR_PALETTE, ERASER_COLOR } from '../constants/pixelBoard.config'
 import { centerViewport, fitBoardScale } from '../utils/viewportMath'
-import { api } from '../../shared/api'
-import { emitPixelUpdate } from '../socketClient'
-import { getZoneBounds } from '../../shared/teamZones'
 
 import pencilIcon from '../../../assets/symbols/pencil.svg'
 import eraserIcon from '../../../assets/symbols/eraser.line.dashed.svg'
@@ -63,25 +60,6 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
   const isErase = tool === 'erase'
   const displayColor = isErase ? ERASER_COLOR : selectedColor
 
-  const handleClearBoard = useCallback(() => {
-    if (!window.confirm('Clear your zone?')) return
-    const userId = useUserStore.getState().user?.id
-    if (!userId) return
-    const myZoneIdRaw = userId
-      ? Object.entries(usePixelBoardStore.getState().zoneOwners || {}).find(([, id]) => id === userId)?.[0]
-      : undefined
-    const myZoneId = myZoneIdRaw !== undefined ? Number(myZoneIdRaw) : null
-    if (!Number.isFinite(myZoneId) || myZoneId === null) return
-    const bounds = getZoneBounds(Number(myZoneId), usePixelBoardStore.getState().boardWidth, usePixelBoardStore.getState().boardHeight)
-    if (!bounds) return
-    const coords = usePixelBoardStore.getState().clearBoard()
-    for (const { x, y } of coords) {
-      if (x < bounds.x0 || x >= bounds.x1 || y < bounds.y0 || y >= bounds.y1) continue
-      const update = { x, y, color: ERASER_COLOR }
-      api.setPixel({ ...update, userId }).catch(() => {})
-      emitPixelUpdate({ ...update, userId })
-    }
-  }, [])
 
 
   const handleFitBoard = useCallback(() => {
@@ -233,12 +211,6 @@ export const PixelBoardToolbar = memo(function PixelBoardToolbar() {
                   }}
                 />
                 Eraser
-              </button>
-              <button
-                onClick={handleClearBoard}
-                className="h-10 px-4 rounded-xl flex items-center justify-center text-sm font-medium bg-white/30 text-black/70 transition-all border border-white/40"
-              >
-                Clear
               </button>
             </div>
           </div>

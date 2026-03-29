@@ -88,6 +88,20 @@ export const api = {
     })
   },
 
+  deleteDisplaySubmission(id: string, adminKey?: string) {
+    return request<{ ok: boolean }>(`/api/display-submissions/${id}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ adminKey }),
+    })
+  },
+
+  deleteDisplaySubmissionByIndex(index: number, adminKey?: string) {
+    return request<{ ok: boolean }>('/api/display-submissions/delete-by-index', {
+      method: 'POST',
+      body: JSON.stringify({ index, adminKey }),
+    })
+  },
+
   getTeamPhotos() {
     return request<TeamPhoto[]>('/api/team-photos')
   },

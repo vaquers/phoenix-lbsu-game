@@ -216,6 +216,46 @@ app.post('/api/display-submissions/clear', (req, res) => {
   res.json({ ok: true })
 })
 
+app.delete('/api/display-submissions/:id', (req, res) => {
+  const { adminKey } = req.body as { adminKey?: string }
+  if (ADMIN_TOKEN && adminKey !== ADMIN_TOKEN) {
+    res.status(403).json({ error: 'forbidden' })
+    return
+  }
+  if (!ADMIN_TOKEN && !adminKey) {
+    console.warn('ADMIN_TOKEN is not set; deleting display submission without auth.')
+  }
+  const result = dataStore.deleteDisplaySubmission(req.params.id)
+  if (!result.ok) {
+    res.status(404).json({ error: 'not_found' })
+    return
+  }
+  io.emit('display:update')
+  res.json({ ok: true })
+})
+
+app.post('/api/display-submissions/delete-by-index', (req, res) => {
+  const { adminKey, index } = req.body as { adminKey?: string; index?: number }
+  if (ADMIN_TOKEN && adminKey !== ADMIN_TOKEN) {
+    res.status(403).json({ error: 'forbidden' })
+    return
+  }
+  if (!ADMIN_TOKEN && !adminKey) {
+    console.warn('ADMIN_TOKEN is not set; deleting display submission without auth.')
+  }
+  if (typeof index !== 'number') {
+    res.status(400).json({ error: 'index is required' })
+    return
+  }
+  const result = dataStore.deleteDisplaySubmissionByIndex(index)
+  if (!result.ok) {
+    res.status(404).json({ error: result.error })
+    return
+  }
+  io.emit('display:update')
+  res.json({ ok: true })
+})
+
 // ── Team Photos ──
 
 app.get('/api/team-photos', (_req, res) => {
